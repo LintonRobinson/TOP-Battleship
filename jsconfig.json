@@ -1,0 +1,6 @@
+{
+  "typeAcquisition": { "include": ["jest"] },
+  "compilerOptions": {
+    "types": ["jest", "node"]
+  }
+}
