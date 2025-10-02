@@ -15,11 +15,6 @@ class Ship {
         this.shipLength = 4;
         break;
       case "cruiser":
-        this.shipLength = 3;
-        break;
-      case "submarine":
-        this.shipLength = 3;
-        break;
       case "submarine":
         this.shipLength = 3;
         break;
