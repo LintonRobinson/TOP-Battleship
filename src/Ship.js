@@ -14,6 +14,9 @@ class Ship {
       case "battleship":
         this.shipLength = 4;
         break;
+      case "cruiser":
+        this.shipLength = 3;
+        break;
     }
   }
 }
@@ -21,3 +24,5 @@ class Ship {
 export default Ship;
 
 // git add Ship.js
+
+// feat(Ship): return correct length for battleship

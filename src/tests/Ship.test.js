@@ -18,6 +18,7 @@ describe("Ship", () => {
     it.each([
       ["aircraftCarrier", 5],
       ["battleship", 4],
+      ["cruiser", 3],
     ])(
       "initializes with shipLength based on passed ship name '%s",
       (testShip, expectation) => {
@@ -40,3 +41,5 @@ describe("Ship", () => {
 });
 
 //npm test Ship.test.js
+
+// // git add Ship.test.js
