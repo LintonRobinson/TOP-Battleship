@@ -35,3 +35,5 @@ describe("Ship", () => {
 
   */
 });
+
+//npm test Ship.test.js
