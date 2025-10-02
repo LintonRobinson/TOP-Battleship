@@ -22,6 +22,11 @@ class Ship {
         this.shipLength = 2;
         break;
     }
+    this.timesHit = 0;
+  }
+
+  hitShip() {
+    this.timesHit = this.timesHit + 1;
   }
 }
 
@@ -30,3 +35,5 @@ export default Ship;
 // git add Ship.js
 
 // feat(Ship): return correct length for battleship
+
+// feat(Ship): increments timesHit by 1 when called
