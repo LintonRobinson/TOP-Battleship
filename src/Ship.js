@@ -28,6 +28,14 @@ class Ship {
   hitShip() {
     this.timesHit = this.timesHit + 1;
   }
+
+  isSunk() {
+    if (this.shipLength === this.timesHit) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
 export default Ship;
@@ -36,4 +44,6 @@ export default Ship;
 
 // feat(Ship): return correct length for battleship
 
-// feat(Ship): increments timesHit by 1 when called
+// feat(Ship/hitShip): increments timesHit by 1 when called
+
+// feat(Ship.test/isSunk): return true if timesHit is equal to aircraftCarrier shipLength
