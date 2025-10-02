@@ -15,7 +15,10 @@ describe("Ship", () => {
   });
 
   describe("shipLength property", () => {
-    it.each([["aircraftCarrier", 5]])(
+    it.each([
+      ["aircraftCarrier", 5],
+      ["battleship", 4],
+    ])(
       "initializes with shipLength based on passed ship name '%s",
       (testShip, expectation) => {
         let ship = new Ship(testShip);
