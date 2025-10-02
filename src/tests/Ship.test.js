@@ -19,6 +19,7 @@ describe("Ship", () => {
       ["aircraftCarrier", 5],
       ["battleship", 4],
       ["cruiser", 3],
+      ["submarine", 3],
     ])(
       "initializes with shipLength based on passed ship name '%s",
       (testShip, expectation) => {
@@ -43,3 +44,5 @@ describe("Ship", () => {
 //npm test Ship.test.js
 
 // // git add Ship.test.js
+
+//add failing spec for "battleship returning correct length
