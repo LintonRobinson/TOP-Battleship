@@ -20,6 +20,12 @@ class Ship {
       case "submarine":
         this.shipLength = 3;
         break;
+      case "submarine":
+        this.shipLength = 3;
+        break;
+      case "destroyer":
+        this.shipLength = 2;
+        break;
     }
   }
 }
