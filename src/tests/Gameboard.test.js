@@ -1,3 +1,13 @@
+jest.mock("../Ship", () => {
+  return jest.fn((shipName) => {
+    const shipLengths = { aircraftCarrier: 5, submarine: 3 };
+    return {
+      shipName: "aircraftCarrier",
+      shipLength: shipLengths[shipName],
+    };
+  });
+});
+
 import Gameboard from "../Gameboard.js";
 import Ship from "../Ship.js";
 
@@ -11,43 +21,31 @@ describe("Gameboard Class", () => {
   );
 });
 
-describe("placeShip method", () => {
-  jest.mock("../Ship", () => {
-    return jest.fn(() => {
-      return {
-        shipName: "aircraftCarrier",
-        shipLength: 5,
-      };
-    });
+describe("Gameboard.placeShip ", () => {
+  let testGameboard;
+  beforeEach(() => {
+    testGameboard = new Gameboard();
+    jest.clearAllMocks();
   });
 
-  describe("placeShip horizontal", () => {
-    const testGameboard = new Gameboard();
-    const testShip = new Ship("aircraftCarrier");
+  const orientationLengthTestCases = [
+    ["aircraftCarrier", "A1", "horizontal", ["A1", "B1", "C1", "D1", "E1"]],
+    ["submarine", "C2", "vertical", ["C2", "C3", "C4"]],
+  ];
 
-    testGameboard.placeShip("aircraftCarrier", "A1", "horizontal");
-    it.each([["A1"], ["B1"], ["C1"], ["D1"], ["E1"]])(
-      "adds shipLength number of entries to activeShipCells Map with cells as keys and the ship instance as values, starting from the passed coordinate and extending based on horizontal orientation",
-      (expectationCell) => {
+  it.each(orientationLengthTestCases)(
+    "maps shipLength cells to the same ship instance (cells as keys, ship instance as value) starting at %s %s %s",
+    (currentShipName, startingCell, shipOrientation, expectationCells) => {
+      testGameboard.placeShip(currentShipName, startingCell, shipOrientation);
+      // test ship should be instance of ship
+      const testShip = Ship.mock.results[0].value;
+      expectationCells.forEach((expectationCell) => {
         expect(testGameboard.activeShipCells.has(expectationCell)).toBe(true);
         expect(testGameboard.activeShipCells.get(expectationCell)).toEqual(testShip);
-      },
-    );
-  });
-
-  describe("placeShip vertical", () => {
-    const testGameboard = new Gameboard();
-    const testShip = new Ship("submarine");
-
-    testGameboard.placeShip("submarine", "C2", "vertical");
-    it.each([["C2"], ["C3"], ["C4"]])(
-      "adds shipLength number of entries to activeShipCells Map with cells as keys and the ship instance as values, starting from the passed coordinate and extending based on vertical orientation",
-      (expectationCell) => {
-        expect(testGameboard.activeShipCells.has(expectationCell)).toBe(true);
-        expect(testGameboard.activeShipCells.get(expectationCell)).toEqual(testShip);
-      },
-    );
-  });
+      });
+      expect(testGameboard.activeShipCells.size).toEqual(testShip.shipLength);
+    },
+  );
 
   // Arguments: shipName, shipPlacementCell, orientation
   // Create new variable ship for new instance of Ship's (new Ship(shipName)), and variable shipLength for ship length (ship.length)
