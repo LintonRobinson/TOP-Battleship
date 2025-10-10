@@ -2,7 +2,7 @@ import Ship from "./Ship.js";
 
 class Gameboard {
   constructor() {
-    this.activeShipFleet = ["aircraftCarrier", "battleship", "cruiser", "submarine", "destroyer"];
+    this.unplacedShips = new Set(["aircraftCarrier", "battleship", "cruiser", "submarine", "destroyer"]);
     this.activeShipCells = new Map();
   }
   placeShip(shipName, shipPlacementCell, orientation) {
@@ -22,7 +22,7 @@ class Gameboard {
         const currentCellColumn = currentCell.split("")[0].toUpperCase();
         // Get index of gameboardColumns item that matches currentCellColumn
         const letterIndex = gameboardColumns.indexOf(currentCellColumn);
-        // Return a string (joined array) that its former array consisted of the incremented column and same row
+        // Return a string (joined array) that its former array consisted of the incremented column, and same row
         let nextCoordinate = [gameboardColumns[letterIndex + 1], currentCell.split("")[1]];
         nextCoordinate = nextCoordinate.join("");
         return nextCoordinate;
