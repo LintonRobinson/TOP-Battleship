@@ -12,45 +12,48 @@ import Gameboard from "../Gameboard.js";
 import Ship from "../Ship.js";
 
 describe("Gameboard Class", () => {
-  it.each([["aircraftCarrier"], ["battleship"], ["cruiser"], ["submarine"], ["destroyer"]])(
-    "activeShipFleet initializes with an array with string values; aircraftCarrier, battleship, cruiser, submarine, destroyer",
-    (testShip) => {
+  describe("Gameboard.unplacedShips", () => {
+    it("initializes with array unplacedShips with string values; aircraftCarrier, battleship, cruiser, submarine, destroyer", () => {
       const testGameboard = new Gameboard();
-      expect(testGameboard.activeShipFleet).toContain(testShip);
-    },
-  );
-});
-
-describe("Gameboard.placeShip ", () => {
-  let testGameboard;
-  beforeEach(() => {
-    testGameboard = new Gameboard();
-    jest.clearAllMocks();
+      const unplacedShips = ["aircraftCarrier", "battleship", "cruiser", "submarine", "destroyer"];
+      unplacedShips.forEach((unplacedShip) => {
+        expect(testGameboard.unplacedShips).toContain(unplacedShip);
+      });
+    });
   });
 
-  const orientationLengthTestCases = [
-    ["aircraftCarrier", "A1", "horizontal", ["A1", "B1", "C1", "D1", "E1"]],
-    ["submarine", "C2", "vertical", ["C2", "C3", "C4"]],
-  ];
+  describe("Gameboard.placeShip ", () => {
+    let testGameboard;
+    beforeEach(() => {
+      testGameboard = new Gameboard();
+      jest.clearAllMocks();
+    });
 
-  it.each(orientationLengthTestCases)(
-    "maps shipLength cells to the same ship instance (cells as keys, ship instance as value) starting at %s %s %s",
-    (currentShipName, startingCell, shipOrientation, expectationCells) => {
-      testGameboard.placeShip(currentShipName, startingCell, shipOrientation);
-      // test ship should be instance of ship
-      const testShip = Ship.mock.results[0].value;
-      expectationCells.forEach((expectationCell) => {
-        expect(testGameboard.activeShipCells.has(expectationCell)).toBe(true);
-        expect(testGameboard.activeShipCells.get(expectationCell)).toEqual(testShip);
-      });
-      expect(testGameboard.activeShipCells.size).toEqual(testShip.shipLength);
-    },
-  );
+    const orientationLengthTestCases = [
+      ["aircraftCarrier", "A1", "horizontal", ["A1", "B1", "C1", "D1", "E1"]],
+      ["submarine", "C2", "vertical", ["C2", "C3", "C4"]],
+    ];
 
-  // Arguments: shipName, shipPlacementCell, orientation
-  // Create new variable ship for new instance of Ship's (new Ship(shipName)), and variable shipLength for ship length (ship.length)
-  // Dependent on shipLength, passed shipPlacementCell, orientation the following actions iterate the same amount of times as shipLength: iteravley increments cell entries either "column letter" or "row number" based on orientation, and entry to activeCells with cell entry being key and ship being value
+    it.each(orientationLengthTestCases)(
+      "maps shipLength cells to the same ship instance (cells as keys, ship instance as value) starting at %s %s %s",
+      (currentShipName, startingCell, shipOrientation, expectationCells) => {
+        testGameboard.placeShip(currentShipName, startingCell, shipOrientation);
+        // test ship should be instance of ship
+        const testShip = Ship.mock.results[0].value;
+        expectationCells.forEach((expectationCell) => {
+          expect(testGameboard.activeShipCells.has(expectationCell)).toBe(true);
+          expect(testGameboard.activeShipCells.get(expectationCell)).toEqual(testShip);
+        });
+        expect(testGameboard.activeShipCells.size).toEqual(testShip.shipLength);
+      },
+    );
+
+    // Arguments: shipName, shipPlacementCell, orientation
+    // Create new variable ship for new instance of Ship's (new Ship(shipName)), and variable shipLength for ship length (ship.length)
+    // Dependent on shipLength, passed shipPlacementCell, orientation the following actions iterate the same amount of times as shipLength: iteravley increments cell entries either "column letter" or "row number" based on orientation, and entry to activeCells with cell entry being key and ship being value
+  });
 });
+
 //
 
 // Gameboards should be able to place ships at specific coordinates by calling the ship factory or class.
