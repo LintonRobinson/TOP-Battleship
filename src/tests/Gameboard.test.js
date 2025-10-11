@@ -48,13 +48,25 @@ describe("Gameboard Class", () => {
       },
     );
 
-    // Arguments: shipName, shipPlacementCell, orientation
-    // Create new variable ship for new instance of Ship's (new Ship(shipName)), and variable shipLength for ship length (ship.length)
-    // Dependent on shipLength, passed shipPlacementCell, orientation the following actions iterate the same amount of times as shipLength: iteravley increments cell entries either "column letter" or "row number" based on orientation, and entry to activeCells with cell entry being key and ship being value
+    const removeShipNameTestCases = [
+      ["aircraftCarrier", "A1", "horizontal"],
+      ["submarine", "C2", "vertical"],
+    ];
+
+    it.each(removeShipNameTestCases)(
+      "removes shipName %s of placed ship from unplacedShips Set",
+      (currentShipName, startingCell, shipOrientation) => {
+        expect(testGameboard.unplacedShips.has(currentShipName)).toBe(true);
+        testGameboard.placeShip(currentShipName, startingCell, shipOrientation);
+        expect(testGameboard.unplacedShips.has(currentShipName)).toBe(false);
+      },
+    );
+
+    // One more test that will not fontinue if ship is not in unplaced ships
   });
 });
 
-//
+// Stay on board edge case
 
 // Gameboards should be able to place ships at specific coordinates by calling the ship factory or class.
 

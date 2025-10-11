@@ -14,6 +14,9 @@ class Gameboard {
       this.activeShipCells.set(currentCell, shipToPlace);
       currentCell = getNextCell(currentCell, orientation);
     }
+
+    this.unplacedShips.delete(shipName);
+
     function getNextCell(currentCell, orientation) {
       const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
       const gameboardRows = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
