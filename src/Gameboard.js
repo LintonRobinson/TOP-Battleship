@@ -6,6 +6,10 @@ class Gameboard {
     this.activeShipCells = new Map();
   }
   placeShip(shipName, shipPlacementCell, orientation) {
+    if (!this.unplacedShips.has(shipName)) {
+      return;
+    }
+
     const shipToPlace = new Ship(shipName);
     const shipLength = shipToPlace.shipLength;
     let currentCell = shipPlacementCell;

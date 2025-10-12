@@ -62,6 +62,21 @@ describe("Gameboard Class", () => {
       },
     );
 
+    const preventExecutionTestCases = [
+      ["aircraftCarrier", "A1", "horizontal", "A2"],
+      ["submarine", "C2", "vertical", "B2"],
+    ];
+
+    it.each(preventExecutionTestCases)(
+      "prevents the continuation of this function if shipName %s is not in unplacedShips Set and already been placed",
+      (currentShipName, firstStartingCell, shipOrientation, secondStartingCell) => {
+        testGameboard.placeShip(currentShipName, firstStartingCell, shipOrientation);
+        const activeShipCellsSize = testGameboard.activeShipCells.size;
+        testGameboard.placeShip(currentShipName, secondStartingCell, shipOrientation);
+        expect(testGameboard.activeShipCells.size).toBe(activeShipCellsSize);
+      },
+    );
+
     // One more test that will not fontinue if ship is not in unplaced ships
   });
 });
