@@ -77,6 +77,18 @@ describe("Gameboard Class", () => {
       },
     );
 
+    it.each([
+      ["aircraftCarrier", "I1", "horizontal"],
+      ["battleship", "A8", "vertical"],
+    ])(
+      "prevents placing ship on the board if activeShipCells mapping extends beyond the board grid",
+      (currentShipName, firstStartingCell, shipOrientation) => {
+        const activeShipCellsSize = testGameboard.activeShipCells.size;
+        testGameboard.placeShip(currentShipName, firstStartingCell, shipOrientation);
+        expect(testGameboard.activeShipCells.size).toBe(activeShipCellsSize);
+      },
+    );
+
     // One more test that will not fontinue if ship is not in unplaced ships
   });
 });
