@@ -2,7 +2,7 @@ jest.mock("../Ship", () => {
   return jest.fn((shipName) => {
     const shipLengths = { aircraftCarrier: 5, submarine: 3 };
     return {
-      shipName: "aircraftCarrier",
+      shipName: shipName,
       shipLength: shipLengths[shipName],
     };
   });
@@ -29,83 +29,105 @@ describe("Gameboard Class", () => {
       jest.clearAllMocks();
     });
 
-    const orientationLengthTestCases = [
-      ["aircraftCarrier", "A1", "horizontal", ["A1", "B1", "C1", "D1", "E1"]],
-      ["submarine", "C2", "vertical", ["C2", "C3", "C4"]],
-    ];
+    describe("when placeShip runs with no errors", () => {
+      it("returns the expected success result", () => {
+        // test code
+      });
 
-    it.each(orientationLengthTestCases)(
-      "maps shipLength cells to the same ship instance (cells as keys, ship instance as value) starting at %s %s %s",
-      (currentShipName, startingCell, shipOrientation, expectationCells) => {
-        testGameboard.placeShip(currentShipName, startingCell, shipOrientation);
-        // test ship should be instance of ship
-        const testShip = Ship.mock.results[0].value;
-        expectationCells.forEach((expectationCell) => {
-          expect(testGameboard.activeShipCells.has(expectationCell)).toBe(true);
-          expect(testGameboard.activeShipCells.get(expectationCell)).toEqual(testShip);
-        });
-        expect(testGameboard.activeShipCells.size).toEqual(testShip.shipLength);
-      },
-    );
+      it.each([
+        ["aircraftCarrier", "A1", "horizontal"],
+        ["submarine", "C2", "vertical"],
+      ])(
+        "removes shipName %s of placed ship from unplacedShips Set",
+        (currentShipName, startingCell, shipOrientation) => {
+          expect(testGameboard.unplacedShips.has(currentShipName)).toBe(true);
+          testGameboard.placeShip(currentShipName, startingCell, shipOrientation);
+          expect(testGameboard.unplacedShips.has(currentShipName)).toBe(false);
+        },
+      );
 
-    const removeShipNameTestCases = [
-      ["aircraftCarrier", "A1", "horizontal"],
-      ["submarine", "C2", "vertical"],
-    ];
+      it.each([
+        ["aircraftCarrier", "A1", "horizontal", ["A1", "B1", "C1", "D1", "E1"]],
+        ["submarine", "C2", "vertical", ["C2", "C3", "C4"]],
+      ])(
+        "maps shipLength cells to the same ship instance (cells as keys, ship instance as value) starting at %s %s %s",
+        (currentShipName, startingCell, shipOrientation, expectationCells) => {
+          testGameboard.placeShip(currentShipName, startingCell, shipOrientation);
+          // test ship should be instance of ship
+          const testShip = Ship.mock.results[0].value;
+          expectationCells.forEach((expectationCell) => {
+            expect(testGameboard.activeShipCells.has(expectationCell)).toBe(true);
+            expect(testGameboard.activeShipCells.get(expectationCell)).toEqual(testShip);
+          });
+          expect(testGameboard.activeShipCells.size).toEqual(testShip.shipLength);
+        },
+      );
 
-    it.each(removeShipNameTestCases)(
-      "removes shipName %s of placed ship from unplacedShips Set",
-      (currentShipName, startingCell, shipOrientation) => {
-        expect(testGameboard.unplacedShips.has(currentShipName)).toBe(true);
-        testGameboard.placeShip(currentShipName, startingCell, shipOrientation);
-        expect(testGameboard.unplacedShips.has(currentShipName)).toBe(false);
-      },
-    );
+      it.each([
+        ["aircraftCarrier", "A1", "horizontal", "A2"],
+        ["submarine", "C2", "vertical", "B2"],
+      ])(
+        "prevents the continuation of this function if shipName %s is not in unplacedShips Set and already been placed",
+        (currentShipName, firstStartingCell, shipOrientation, secondStartingCell) => {
+          testGameboard.placeShip(currentShipName, firstStartingCell, shipOrientation);
+          const activeShipCellsSize = testGameboard.activeShipCells.size;
+          testGameboard.placeShip(currentShipName, secondStartingCell, shipOrientation);
+          expect(testGameboard.activeShipCells.size).toBe(activeShipCellsSize);
+        },
+      );
 
-    const preventExecutionTestCases = [
-      ["aircraftCarrier", "A1", "horizontal", "A2"],
-      ["submarine", "C2", "vertical", "B2"],
-    ];
+      it.each([
+        ["aircraftCarrier", "I1", "horizontal"],
+        ["battleship", "A8", "vertical"],
+      ])(
+        "prevents placing ship on the board if activeShipCells mapping extends beyond the board grid",
+        (currentShipName, startingCell, shipOrientation) => {
+          const activeShipCellsSize = testGameboard.activeShipCells.size;
+          testGameboard.placeShip(currentShipName, startingCell, shipOrientation);
+          expect(testGameboard.activeShipCells.size).toBe(activeShipCellsSize);
+        },
+      );
+      // feat(Gameboard.placeShip): prevents ship placement if proposed cells overlap existing activeShipCells
+      // while: preventing the increase of the size of activeShipCells, adding no cells from the second (rejected) ship placement to activeShipCells, and not construct instance of second ship when placeShip is called a second time
+      it.each([
+        ["aircraftCarrier", "A1", "horizontal", "submarine", "A1", "vertical"],
+        ["aircraftCarrier", "C3", "horizontal", "submarine", "C1", "vertical"],
+      ])(
+        "prevents ship placement if proposed cells overlap existing activeShipCells",
+        (
+          firstShipName,
+          firstStartingCell,
+          firstShipOrientation,
+          secondShipName,
+          secondStartingCell,
+          secondShipOrientation,
+        ) => {
+          // First ship placement attempt
+          testGameboard.placeShip(firstShipName, firstStartingCell, firstShipOrientation);
+          const activeShipCellsSize = testGameboard.activeShipCells.size;
+          testGameboard.placeShip(secondShipName, secondStartingCell, secondShipOrientation);
 
-    it.each(preventExecutionTestCases)(
-      "prevents the continuation of this function if shipName %s is not in unplacedShips Set and already been placed",
-      (currentShipName, firstStartingCell, shipOrientation, secondStartingCell) => {
-        testGameboard.placeShip(currentShipName, firstStartingCell, shipOrientation);
-        const activeShipCellsSize = testGameboard.activeShipCells.size;
-        testGameboard.placeShip(currentShipName, secondStartingCell, shipOrientation);
-        expect(testGameboard.activeShipCells.size).toBe(activeShipCellsSize);
-      },
-    );
+          // does not increase the size of activeShipCells map
+          expect(testGameboard.activeShipCells.size).toBe(activeShipCellsSize);
+          // adds no cells from the second (rejected) ship placement to activeShipCells
+          testGameboard.activeShipCells.forEach((activeShipCellValue) => {
+            expect(activeShipCellValue.shipName).not.toBe(secondShipName);
+          });
 
-    it.each([
-      ["aircraftCarrier", "I1", "horizontal"],
-      ["battleship", "A8", "vertical"],
-    ])(
-      "prevents placing ship on the board if activeShipCells mapping extends beyond the board grid",
-      (currentShipName, firstStartingCell, shipOrientation) => {
-        const activeShipCellsSize = testGameboard.activeShipCells.size;
-        testGameboard.placeShip(currentShipName, firstStartingCell, shipOrientation);
-        expect(testGameboard.activeShipCells.size).toBe(activeShipCellsSize);
-      },
-    );
-
-    // One more test that will not fontinue if ship is not in unplaced ships
+          //does not construct instance of second ship when placeShip is called a second time
+          expect(Ship.mock.instances.length).toBe(1);
+          expect(Ship.mock.results[0].value.shipName).toBe(firstShipName);
+          expect(testGameboard.unplacedShips.has(secondShipName)).toBe(true);
+        },
+      );
+    });
+    describe("when placeShip runs with no errors", () => {});
   });
 });
-
-// Stay on board edge case
-
-// Gameboards should be able to place ships at specific coordinates by calling the ship factory or class.
-
-//Game board limits to adding cells to ships 10 by j10
-
-//Gameboard this.ship is new Shop dependency inject
-
-//Game board has array/map or active  cells that show how many cells each ship takes up, and ship instance . Object. Key A1 Object
 
 // git add Gameboard.test.js
 
 /*
   
-re amend commit
+
   */
