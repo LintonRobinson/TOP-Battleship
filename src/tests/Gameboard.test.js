@@ -30,7 +30,9 @@ describe("Gameboard Class", () => {
     });
 
     describe("when placeShip runs with no errors", () => {
-      it("returns the expected success result", () => {});
+      it("returns the expected success result", () => {
+        expect(testGameboard.placeShip("aircraftCarrier", "A1", "horizontal")).toBe(true);
+      });
 
       it.each([
         ["aircraftCarrier", "A1", "horizontal"],

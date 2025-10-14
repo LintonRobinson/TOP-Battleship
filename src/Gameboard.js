@@ -42,6 +42,8 @@ class Gameboard {
 
     this.unplacedShips.delete(shipName);
 
+    return true;
+
     function isShipPlacedOnGameboard(shipName, shipPlacementCell, shipOrientation) {
       const shipLengths = { aircraftCarrier: 5, battleship: 4, cruiser: 3, submarine: 3, destroyer: 2 };
       const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
