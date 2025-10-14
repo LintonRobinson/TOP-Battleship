@@ -30,9 +30,7 @@ describe("Gameboard Class", () => {
     });
 
     describe("when placeShip runs with no errors", () => {
-      it("returns the expected success result", () => {
-        // test code
-      });
+      it("returns the expected success result", () => {});
 
       it.each([
         ["aircraftCarrier", "A1", "horizontal"],
@@ -121,7 +119,7 @@ describe("Gameboard Class", () => {
         },
       );
     });
-    describe("when placeShip runs with no errors", () => {});
+    describe("when placeShip runs with errors", () => {});
   });
 });
 

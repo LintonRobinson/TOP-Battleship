@@ -6,14 +6,35 @@ class Gameboard {
     this.activeShipCells = new Map();
   }
   placeShip(shipName, shipPlacementCell, shipOrientation) {
-    if (!this.unplacedShips.has(shipName) || !isShipPlacedOnGameboard(shipName, shipPlacementCell, shipOrientation)) {
+    const shipshipLengths = { aircraftCarrier: 5, battleship: 4, cruiser: 3, submarine: 3, destroyer: 1 };
+    const shipLength = shipshipLengths[shipName];
+    let currentCell = shipPlacementCell;
+
+    //
+    const isShipPlacedOverlapping = (shipLength, shipPlacementCell, shipOrientation) => {
+      const shipCells = [];
+      let currentCell = shipPlacementCell;
+      for (let i = 0; i < shipLength; i++) {
+        shipCells.push(currentCell);
+        currentCell = getNextCell(currentCell, shipOrientation);
+      }
+
+      for (const shipCell of shipCells) {
+        if (this.activeShipCells.has(shipCell)) {
+          return true;
+        }
+      }
+    };
+
+    if (
+      !this.unplacedShips.has(shipName) ||
+      !isShipPlacedOnGameboard(shipName, shipPlacementCell, shipOrientation) ||
+      isShipPlacedOverlapping(shipLength, shipPlacementCell, shipOrientation)
+    ) {
       return;
     }
 
     const shipToPlace = new Ship(shipName);
-    const shipLength = shipToPlace.shipLength;
-    let currentCell = shipPlacementCell;
-
     for (let i = 0; i < shipLength; i++) {
       this.activeShipCells.set(currentCell, shipToPlace);
       currentCell = getNextCell(currentCell, shipOrientation);
