@@ -78,17 +78,19 @@ describe("Gameboard Class", () => {
 
       it.each([
         ["aircraftCarrier", "I1", "horizontal"],
-        ["battleship", "A8", "vertical"],
+        ["submarine", "A8", "vertical"],
       ])(
         "prevents placing ship on the board if activeShipCells mapping extends beyond the board grid",
         (currentShipName, startingCell, shipOrientation) => {
           const activeShipCellsSize = testGameboard.activeShipCells.size;
           testGameboard.placeShip(currentShipName, startingCell, shipOrientation);
           expect(testGameboard.activeShipCells.size).toBe(activeShipCellsSize);
+          //does not construct instance of second ship when placeShip is called a second time
+          expect(Ship.mock.instances.length).toBe(0);
+          expect(testGameboard.unplacedShips.has(currentShipName)).toBe(true);
         },
       );
-      // feat(Gameboard.placeShip): prevents ship placement if proposed cells overlap existing activeShipCells
-      // while: preventing the increase of the size of activeShipCells, adding no cells from the second (rejected) ship placement to activeShipCells, and not construct instance of second ship when placeShip is called a second time
+
       it.each([
         ["aircraftCarrier", "A1", "horizontal", "submarine", "A1", "vertical"],
         ["aircraftCarrier", "C3", "horizontal", "submarine", "C1", "vertical"],
@@ -120,8 +122,18 @@ describe("Gameboard Class", () => {
           expect(testGameboard.unplacedShips.has(secondShipName)).toBe(true);
         },
       );
+
+      it.each([
+        ["aircraftCarrier", "A1", "horizontal"],
+        ["submarine", "C1", "vertical"],
+      ])(
+        "number of mapped cells equals the ship’s length for both orientations",
+        (currentShipName, startingCell, shipOrientation) => {
+          testGameboard.placeShip(currentShipName, startingCell, shipOrientation);
+          expect(testGameboard.activeShipCells.size).toBe(testGameboard.activeShipCells.get(startingCell).shipLength);
+        },
+      );
     });
-    describe("when placeShip runs with errors", () => {});
   });
 });
 
