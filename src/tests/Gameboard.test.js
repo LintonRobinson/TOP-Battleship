@@ -87,6 +87,7 @@ describe("Gameboard Class", () => {
           expect(testGameboard.activeShipCells.size).toBe(activeShipCellsSize);
           //does not construct instance of second ship when placeShip is called a second time
           expect(Ship.mock.instances.length).toBe(0);
+          expect(Ship.mock.calls.length).toBe(0);
           expect(testGameboard.unplacedShips.has(currentShipName)).toBe(true);
         },
       );
@@ -118,6 +119,7 @@ describe("Gameboard Class", () => {
 
           //does not construct instance of second ship when placeShip is called a second time
           expect(Ship.mock.instances.length).toBe(1);
+          expect(Ship.mock.calls.length).toBe(1);
           expect(Ship.mock.results[0].value.shipName).toBe(firstShipName);
           expect(testGameboard.unplacedShips.has(secondShipName)).toBe(true);
         },
@@ -134,6 +136,28 @@ describe("Gameboard Class", () => {
         },
       );
     });
+
+    describe("when placeShip runs into an error", () => {
+      describe("when a ship has already been placed", () => {
+        it("returns false", () => {
+          testGameboard.placeShip("aircraftCarrier", "A1", "horizontal");
+          expect(testGameboard.placeShip("aircraftCarrier", "A2", "vertical")).toBe(false);
+        });
+      });
+
+      describe("when a ship would extend off the board", () => {
+        it("returns false", () => {
+          expect(testGameboard.placeShip("aircraftCarrier", "I1", "horizontal")).toBe(false);
+        });
+      });
+
+      describe("when a ship would overlap a previous ship placement", () => {
+        it("returns false", () => {
+          testGameboard.placeShip("aircraftCarrier", "A2", "horizontal");
+          expect(testGameboard.placeShip("submarine", "B1", "vertical")).toBe(false);
+        });
+      });
+    });
   });
 });
 
@@ -141,5 +165,7 @@ describe("Gameboard Class", () => {
 
 /*
   
-
+it("", () => {
+        
+})
   */

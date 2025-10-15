@@ -31,7 +31,7 @@ class Gameboard {
       !isShipPlacedOnGameboard(shipName, shipPlacementCell, shipOrientation) ||
       isShipPlacedOverlapping(shipLength, shipPlacementCell, shipOrientation)
     ) {
-      return;
+      return false;
     }
 
     const shipToPlace = new Ship(shipName);
