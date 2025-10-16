@@ -176,10 +176,18 @@ describe("Gameboard Class", () => {
         testGameboard.receiveAttack("A1");
         expect(testGameboard.activeShipCells.get("A1").timesHit).toBe(1);
       });
+
+      it("returns true", () => {
+        testGameboard.placeShip("aircraftCarrier", "A1", "horizontal");
+        expect(testGameboard.receiveAttack("A1")).toBe(true);
+      });
     });
+
     describe("when the passed attack coordinates misses a ship", () => {
-      it("", () => {
-        expect().toBe();
+      it("adds missed shot coordinate to missedShots Set", () => {
+        testGameboard.placeShip("aircraftCarrier", "A1", "horizontal");
+        testGameboard.receiveAttack("A5");
+        expect(testGameboard.missedShots.has("A5")).toBe(true);
       });
     });
   });

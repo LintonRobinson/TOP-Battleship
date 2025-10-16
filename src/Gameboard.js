@@ -4,6 +4,7 @@ class Gameboard {
   constructor() {
     this.unplacedShips = new Set(["aircraftCarrier", "battleship", "cruiser", "submarine", "destroyer"]);
     this.activeShipCells = new Map();
+    this.missedShots = new Set();
   }
   placeShip(shipName, shipPlacementCell, shipOrientation) {
     const shipshipLengths = { aircraftCarrier: 5, battleship: 4, cruiser: 3, submarine: 3, destroyer: 1 };
@@ -100,8 +101,12 @@ class Gameboard {
   }
 
   receiveAttack(cellToAttack) {
-    this.activeShipCells.get(cellToAttack).hitShip();
-    return;
+    if (this.activeShipCells.has(cellToAttack)) {
+      this.activeShipCells.get(cellToAttack).hitShip();
+      return true;
+    } else {
+      this.missedShots.add(cellToAttack);
+    }
   }
 }
 
