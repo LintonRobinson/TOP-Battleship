@@ -189,6 +189,11 @@ describe("Gameboard Class", () => {
         testGameboard.receiveAttack("A5");
         expect(testGameboard.missedShots.has("A5")).toBe(true);
       });
+
+      it("returns false", () => {
+        testGameboard.placeShip("aircraftCarrier", "A1", "horizontal");
+        expect(testGameboard.receiveAttack("A5")).toBe(false);
+      });
     });
   });
 });

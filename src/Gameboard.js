@@ -106,6 +106,7 @@ class Gameboard {
       return true;
     } else {
       this.missedShots.add(cellToAttack);
+      return false;
     }
   }
 }
