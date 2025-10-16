@@ -4,6 +4,10 @@ jest.mock("../Ship", () => {
     return {
       shipName: shipName,
       shipLength: shipLengths[shipName],
+      timesHit: 0,
+      hitShip() {
+        this.timesHit = this.timesHit + 1;
+      },
     };
   });
 });
@@ -156,6 +160,26 @@ describe("Gameboard Class", () => {
           testGameboard.placeShip("aircraftCarrier", "A2", "horizontal");
           expect(testGameboard.placeShip("submarine", "B1", "vertical")).toBe(false);
         });
+      });
+    });
+  });
+
+  describe("Gameboard.receiveAttack", () => {
+    let testGameboard;
+    beforeEach(() => {
+      testGameboard = new Gameboard();
+      jest.clearAllMocks();
+    });
+    describe("when the passed attack coordinates hits a ship", () => {
+      it("increments the hit count on the Ship instance at the matching activeShipCells key", () => {
+        testGameboard.placeShip("aircraftCarrier", "A1", "horizontal");
+        testGameboard.receiveAttack("A1");
+        expect(testGameboard.activeShipCells.get("A1").timesHit).toBe(1);
+      });
+    });
+    describe("when the passed attack coordinates misses a ship", () => {
+      it("", () => {
+        expect().toBe();
       });
     });
   });

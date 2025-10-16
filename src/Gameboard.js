@@ -98,6 +98,11 @@ class Gameboard {
       }
     }
   }
+
+  receiveAttack(cellToAttack) {
+    this.activeShipCells.get(cellToAttack).hitShip();
+    return;
+  }
 }
 
 //const testGameboard = new Gameboard();
