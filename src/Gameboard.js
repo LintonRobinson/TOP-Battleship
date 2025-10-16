@@ -3,6 +3,7 @@ import Ship from "./Ship.js";
 class Gameboard {
   constructor() {
     this.unplacedShips = new Set(["aircraftCarrier", "battleship", "cruiser", "submarine", "destroyer"]);
+    this.placedShips = new Set();
     this.activeShipCells = new Map();
     this.missedShots = new Set();
   }
@@ -38,6 +39,7 @@ class Gameboard {
     const shipToPlace = new Ship(shipName);
     for (let i = 0; i < shipLength; i++) {
       this.activeShipCells.set(currentCell, shipToPlace);
+      this.placedShips.add(shipToPlace);
       currentCell = getNextCell(currentCell, shipOrientation);
     }
 

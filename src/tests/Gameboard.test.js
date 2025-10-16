@@ -34,8 +34,16 @@ describe("Gameboard Class", () => {
     });
 
     describe("when placeShip runs with no errors", () => {
-      it("returns the expected success result", () => {
+      it("returns true", () => {
         expect(testGameboard.placeShip("aircraftCarrier", "A1", "horizontal")).toBe(true);
+      });
+
+      it("adds new ship instance to placedShips Set", () => {
+        testGameboard.placeShip("aircraftCarrier", "A1", "horizontal");
+        const testShip = Ship.mock.results[0].value;
+        expect(Ship.mock.instances.length).toBe(1);
+        expect(Ship.mock.calls.length).toBe(1);
+        expect(testGameboard.placedShips.has(testShip));
       });
 
       it.each([
@@ -196,6 +204,8 @@ describe("Gameboard Class", () => {
       });
     });
   });
+
+  describe("Gameboard.areAllShipsSunk", () => {});
 });
 
 // git add Gameboard.test.js
