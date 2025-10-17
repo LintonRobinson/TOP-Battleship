@@ -105,6 +105,8 @@ class Gameboard {
   receiveAttack(cellToAttack) {
     if (this.activeShipCells.has(cellToAttack)) {
       this.activeShipCells.get(cellToAttack).hitShip();
+      this.activeShipCells.delete(cellToAttack);
+
       return true;
     } else {
       this.missedShots.add(cellToAttack);

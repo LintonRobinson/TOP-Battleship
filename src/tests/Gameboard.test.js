@@ -1,12 +1,19 @@
 jest.mock("../Ship", () => {
   return jest.fn((shipName) => {
-    const shipLengths = { aircraftCarrier: 5, submarine: 3 };
+    const shipLengths = { aircraftCarrier: 5, battleship: 4, cruiser: 3, submarine: 3, destroyer: 2 };
     return {
       shipName: shipName,
       shipLength: shipLengths[shipName],
       timesHit: 0,
       hitShip() {
         this.timesHit = this.timesHit + 1;
+      },
+      isSunk() {
+        if (this.shipLength === this.timesHit) {
+          return true;
+        } else {
+          return false;
+        }
       },
     };
   });
@@ -182,7 +189,13 @@ describe("Gameboard Class", () => {
       it("increments the hit count on the Ship instance at the matching activeShipCells key", () => {
         testGameboard.placeShip("aircraftCarrier", "A1", "horizontal");
         testGameboard.receiveAttack("A1");
-        expect(testGameboard.activeShipCells.get("A1").timesHit).toBe(1);
+        expect(Ship.mock.results[0].value.timesHit).toBe(1);
+      });
+
+      it("removes matching key and value from activeShipCells Map", () => {
+        testGameboard.placeShip("aircraftCarrier", "A1", "horizontal");
+        testGameboard.receiveAttack("A1");
+        expect(testGameboard.activeShipCells.has("A1")).toBe(false);
       });
 
       it("returns true", () => {
@@ -204,8 +217,6 @@ describe("Gameboard Class", () => {
       });
     });
   });
-
-  describe("Gameboard.areAllShipsSunk", () => {});
 });
 
 // git add Gameboard.test.js
