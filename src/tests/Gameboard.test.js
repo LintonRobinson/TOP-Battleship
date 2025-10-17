@@ -223,6 +223,50 @@ describe("Gameboard Class", () => {
       });
     });
   });
+
+  describe("Gameboard.areAllShipsSunk", () => {
+    let testGameboard;
+    beforeEach(() => {
+      testGameboard = new Gameboard();
+      jest.clearAllMocks();
+    });
+    describe("when all placedShips ship instances' isSunk methods return true", () => {
+      it("returns true", () => {
+        testGameboard.placeShip("aircraftCarrier", "A1", "horizontal");
+        testGameboard.receiveAttack("A1");
+        testGameboard.receiveAttack("B1");
+        testGameboard.receiveAttack("C1");
+        testGameboard.receiveAttack("D1");
+        testGameboard.receiveAttack("E1");
+        testGameboard.placeShip("battleship", "A2", "horizontal");
+        testGameboard.receiveAttack("A2");
+        testGameboard.receiveAttack("B2");
+        testGameboard.receiveAttack("C2");
+        testGameboard.receiveAttack("D2");
+        testGameboard.placeShip("cruiser", "A3", "horizontal");
+        testGameboard.receiveAttack("A3");
+        testGameboard.receiveAttack("B3");
+        testGameboard.receiveAttack("C3");
+        testGameboard.placeShip("submarine", "A4", "horizontal");
+        testGameboard.receiveAttack("A4");
+        testGameboard.receiveAttack("B4");
+        testGameboard.receiveAttack("C4");
+        testGameboard.placeShip("destroyer", "A5", "horizontal");
+        testGameboard.receiveAttack("A5");
+        testGameboard.receiveAttack("B5");
+        expect(testGameboard.areAllShipsSunk()).toBe(true);
+      });
+    });
+
+    describe("when all ships have not been sunk", () => {
+      it("returns false", () => {
+        testGameboard.placeShip("aircraftCarrier", "A1", "horizontal");
+        testGameboard.receiveAttack("A1");
+        testGameboard.placeShip("battleship", "A2", "horizontal");
+        expect(testGameboard.areAllShipsSunk()).toBe(false);
+      });
+    });
+  });
 });
 
 // git add Gameboard.test.js

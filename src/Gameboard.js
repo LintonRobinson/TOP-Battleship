@@ -9,7 +9,7 @@ class Gameboard {
     this.missedShots = new Set();
   }
   placeShip(shipName, shipPlacementCell, shipOrientation) {
-    const shipshipLengths = { aircraftCarrier: 5, battleship: 4, cruiser: 3, submarine: 3, destroyer: 1 };
+    const shipshipLengths = { aircraftCarrier: 5, battleship: 4, cruiser: 3, submarine: 3, destroyer: 2 };
     const shipLength = shipshipLengths[shipName];
     let currentCell = shipPlacementCell;
 
@@ -113,6 +113,11 @@ class Gameboard {
       this.missedShots.add(cellToAttack);
       return false;
     }
+  }
+
+  areAllShipsSunk() {
+    const placedShips = [...this.placedShips];
+    return placedShips.every((ship) => ship.isSunk());
   }
 }
 
