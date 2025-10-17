@@ -5,6 +5,7 @@ class Gameboard {
     this.unplacedShips = new Set(["aircraftCarrier", "battleship", "cruiser", "submarine", "destroyer"]);
     this.placedShips = new Set();
     this.activeShipCells = new Map();
+    this.hitShipCells = new Set();
     this.missedShots = new Set();
   }
   placeShip(shipName, shipPlacementCell, shipOrientation) {
@@ -106,7 +107,7 @@ class Gameboard {
     if (this.activeShipCells.has(cellToAttack)) {
       this.activeShipCells.get(cellToAttack).hitShip();
       this.activeShipCells.delete(cellToAttack);
-
+      this.hitShipCells.add(cellToAttack);
       return true;
     } else {
       this.missedShots.add(cellToAttack);

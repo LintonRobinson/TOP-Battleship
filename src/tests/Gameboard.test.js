@@ -198,6 +198,12 @@ describe("Gameboard Class", () => {
         expect(testGameboard.activeShipCells.has("A1")).toBe(false);
       });
 
+      it("adds matching key to hitShipCells set", () => {
+        testGameboard.placeShip("aircraftCarrier", "A1", "horizontal");
+        testGameboard.receiveAttack("A1");
+        expect(testGameboard.hitShipCells.has("A1")).toBe(true);
+      });
+
       it("returns true", () => {
         testGameboard.placeShip("aircraftCarrier", "A1", "horizontal");
         expect(testGameboard.receiveAttack("A1")).toBe(true);
