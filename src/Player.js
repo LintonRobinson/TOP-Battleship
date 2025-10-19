@@ -1,6 +1,7 @@
 class Player {
-  constructor(playerType) {
+  constructor(playerType, playerName) {
     this.playerType = playerType === "human" ? "human" : "computer";
+    this.playerName = playerType === "human" ? playerName : "AI Opponent";
   }
 }
 
