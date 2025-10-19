@@ -1,5 +1,5 @@
 import Player from "../Player.js";
-import * as GameboardModule from "../Gameboard.js";
+import Gameboard from "../Gameboard.js";
 
 describe("Player", () => {
   describe("when 'human' is the first argument passed to its constructor", () => {
@@ -24,5 +24,10 @@ describe("Player", () => {
       const testPlayer = new Player("computer");
       expect(testPlayer.playerName).toBe("AI Opponent");
     });
+  });
+
+  it("initializes with playerGameboard being its own instance of Gameboard", () => {
+    const testPlayer = new Player("human", "Linton");
+    expect(testPlayer.playerGameboard).toBeInstanceOf(Gameboard);
   });
 });
