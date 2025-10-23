@@ -1,41 +1,55 @@
 /* Box Model Hack */
 * {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 /* Clear fix hack */
 .clearfix:after {
-    content: ".";
-    display: block;
-    clear: both;
-    visibility: hidden;
-    line-height: 0;
-    height: 0;
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
 }
 
 .clear {
-   clear: both;
+  clear: both;
 }
 
 /* Global button reset  */
 button {
-    appearance: none;          
-    -webkit-appearance: none;  
-    -moz-appearance: none;     
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 
-    border: none;              
-    padding: 0;                
-    margin: 0;                 
+  border: none;
+  padding: 0;
+  margin: 0;
 
-    background: none;          
-    font: inherit;             
-    color: inherit;            
-    line-height: inherit;      
+  background: none;
+  font: inherit;
+  color: inherit;
+  line-height: inherit;
 
-    text-align: inherit;       
-    cursor: pointer;           
+  text-align: inherit;
+  cursor: pointer;
+}
+/******************************************
+/* TYPOGRAPHY STYLES
+/*******************************************/
+
+* {
+  font-family: "Zain";
+}
+
+h1 {
+  font-family: "Zen Dots";
+  font-size: 6.5rem;
+  color: white;
+  text-shadow: rgba(62, 160, 69, 0.692) 0px 0px 24px;
 }
 
 /******************************************
@@ -43,21 +57,86 @@ button {
 /*******************************************/
 
 body {
-    
+  width: 100%;
+  height: 100vh;
+  background-color: black;
+  background-image: url(/src/assets/images/app-background.gif);
+  background-repeat: no-repeat;
+  background-size: auto calc(100% - 20px);
+  background-position: center;
+  overflow-x: hidden;
 }
-
 
 /******************************************
 /* LAYOUT
 /*******************************************/
-header {
 
+main {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.684);
+  display: flex;
+  justify-content: center;
 }
 
-footer {
+#start-game-wrapper {
+  height: 100%;
+  padding-top: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
 
+button {
+  font-family: "Zain";
+  font-weight: 700;
+  font-size: 1.6rem;
+  background-color: #82ff6b;
+  color: rgb(0, 0, 0);
+  padding: 10px 20px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 22px 2px rgba(255, 255, 255, 0.365);
+}
+
+button:hover {
+  box-shadow: 0px 0px 22px 2px rgba(255, 255, 255, 0.537);
+  transition: 0.5s;
+  color: rgb(91, 91, 91);
 }
 
 /******************************************
 /* UTILITY STYLES
 /*******************************************/
+
+#github-logo-white {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+#github-logo-white img {
+  width: 50px;
+}
+
+#restart-game-wrapper {
+  position: absolute;
+  gap: 10px;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+#restart-game-wrapper span {
+  display: block;
+  color: white;
+  font-size: 1.2rem;
+}
+
+i {
+  color: white;
+  font-size: 2.5rem;
+}
