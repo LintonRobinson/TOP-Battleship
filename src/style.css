@@ -52,8 +52,29 @@ h1 {
   text-shadow: rgba(62, 160, 69, 0.692) 0px 0px 24px;
 }
 
+h2 {
+  font-size: 3rem;
+  color: white;
+}
+
 /******************************************
 /* BASE STYLES
+/*******************************************/
+
+button {
+  font-family: "Zain";
+  font-weight: 700;
+  font-size: 1.6rem;
+  background-color: #82ff6b;
+  color: rgb(0, 0, 0);
+  padding: 10px 20px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 22px 2px rgba(255, 255, 255, 0.365);
+  transition: 0.5s;
+}
+
+/******************************************
+/* LAYOUT
 /*******************************************/
 
 body {
@@ -67,10 +88,6 @@ body {
   overflow-x: hidden;
 }
 
-/******************************************
-/* LAYOUT
-/*******************************************/
-
 main {
   width: 100%;
   height: 100%;
@@ -79,7 +96,8 @@ main {
   justify-content: center;
 }
 
-#start-game-wrapper {
+#start-game-wrapper,
+#select-mode-wrapper {
   height: 100%;
   padding-top: 300px;
   display: flex;
@@ -88,35 +106,35 @@ main {
   gap: 50px;
 }
 
-button {
-  font-family: "Zain";
-  font-weight: 700;
-  font-size: 1.6rem;
-  background-color: #82ff6b;
-  color: rgb(0, 0, 0);
-  padding: 10px 20px;
-  border-radius: 15px;
-  box-shadow: 0px 0px 22px 2px rgba(255, 255, 255, 0.365);
-}
-
-button:hover {
+#start-game-wrapper button:hover {
   box-shadow: 0px 0px 22px 2px rgba(255, 255, 255, 0.537);
   transition: 0.5s;
   color: rgb(91, 91, 91);
 }
 
-/******************************************
-/* UTILITY STYLES
-/*******************************************/
-
-#github-logo-white {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
+#select-mode-button-wrapper {
+  display: flex;
+  gap: 50px;
 }
 
-#github-logo-white img {
-  width: 50px;
+.select-mode-button {
+  width: 200px;
+  height: 200px;
+  font-size: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.select-mode-button i {
+  color: rgb(0, 0, 0);
+}
+
+.select-mode-button:hover {
+  transition: 0.5s;
+  background-color: #c2feb7;
 }
 
 #restart-game-wrapper {
@@ -130,13 +148,27 @@ button:hover {
   cursor: pointer;
 }
 
+#restart-game-wrapper i {
+  color: white;
+  font-size: 2.5rem;
+}
+
 #restart-game-wrapper span {
   display: block;
   color: white;
   font-size: 1.2rem;
 }
 
-i {
-  color: white;
-  font-size: 2.5rem;
+#github-logo-white {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 }
+
+#github-logo-white img {
+  width: 50px;
+}
+
+/******************************************
+/* UTILITY STYLES
+/*******************************************/
