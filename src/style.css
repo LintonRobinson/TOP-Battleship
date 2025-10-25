@@ -98,7 +98,8 @@ main {
 
 #start-game-wrapper,
 #select-mode-wrapper,
-#enter-player-names-wrapper {
+#enter-player-names-wrapper,
+#enter-player-name-wrapper {
   height: 100%;
   padding-top: 300px;
   display: flex;
@@ -138,7 +139,7 @@ main {
   background-color: #c2feb7;
 }
 
-#enter-player-name-form {
+.enter-player-name-form {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -150,17 +151,20 @@ main {
   gap: 50px;
 }
 
-#enter-player-name-form button {
-  width: 40%;
+.enter-player-name-form button {
+  width: 270px;
   text-align: center;
   background-color: white;
   transition: 0.5s;
 }
 
-#enter-player-name-form button:hover {
-  width: 40%;
+#enter-player-name-wrapper .enter-player-name-form button {
+  width: 100%;
+}
+
+.enter-player-name-form button:hover {
   text-align: center;
-  background-color: #ccffc4;
+  background-color: #d5facf;
   transition: 0.5s;
 }
 
