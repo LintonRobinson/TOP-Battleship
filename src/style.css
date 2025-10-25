@@ -53,7 +53,7 @@ h1 {
 }
 
 h2 {
-  font-size: 3rem;
+  font-size: 4rem;
   color: white;
 }
 
@@ -97,7 +97,8 @@ main {
 }
 
 #start-game-wrapper,
-#select-mode-wrapper {
+#select-mode-wrapper,
+#enter-player-names-wrapper {
   height: 100%;
   padding-top: 300px;
   display: flex;
@@ -135,6 +136,76 @@ main {
 .select-mode-button:hover {
   transition: 0.5s;
   background-color: #c2feb7;
+}
+
+#enter-player-name-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
+
+#form-group-wrapper {
+  display: flex;
+  gap: 50px;
+}
+
+#enter-player-name-form button {
+  width: 40%;
+  text-align: center;
+  background-color: white;
+  transition: 0.5s;
+}
+
+#enter-player-name-form button:hover {
+  width: 40%;
+  text-align: center;
+  background-color: #ccffc4;
+  transition: 0.5s;
+}
+
+.player-name-form-group {
+  font-family: "Zain";
+  font-weight: 700;
+  font-size: 1.6rem;
+  background-color: #82ff6b;
+  color: rgb(0, 0, 0);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 22px 2px rgba(255, 255, 255, 0.365);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+label {
+  font-size: 2.5rem;
+  border-bottom: 2px solid;
+}
+
+.player-name-form-group input {
+  width: 80%;
+  height: 50px;
+  font-size: 1.1rem;
+  padding: 5px 10px;
+  border-radius: 15px;
+  border: rgb(0, 0, 0) 1.5px solid;
+}
+
+.player-name-form-group input:focus {
+  border: rgb(218, 218, 218) 1.5px solid;
+  outline: none;
+}
+
+.player-name-form-group input:user-invalid {
+  border: rgb(255, 0, 0) 1.5px solid;
+  outline: none;
+}
+
+.player-name-form-group input:user-valid {
+  border: rgb(30, 157, 81) 1.5px solid;
+  outline: none;
 }
 
 #restart-game-wrapper {
