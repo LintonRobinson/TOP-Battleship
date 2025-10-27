@@ -261,3 +261,77 @@ label {
 /******************************************
 /* UTILITY STYLES
 /*******************************************/
+
+#place-ships-screen-wrapper {
+  height: 100%;
+  padding-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 90px;
+
+  background-color: skyblue;
+}
+
+#ship-placement-instructions {
+  width: 375px;
+  background: rgba(255, 255, 255, 0.165);
+  border-radius: 15px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  border-left: #82ff6b solid 6px;
+  padding: 15px;
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  color: white;
+}
+
+#ship-placement-instructions h3 {
+  font-size: 1.8rem;
+  text-decoration: underline;
+}
+
+#ship-placement-instructions p {
+  font-size: 1.3rem;
+  line-height: 1.4rem;
+}
+
+#ships-board-wrapper {
+  display: flex;
+  gap: 100px;
+}
+
+#place-ships-wrapper * {
+}
+
+#place-ships {
+  background-color: purple;
+  display: flex;
+}
+
+.ship-cell {
+  width: 30px;
+  height: 30px;
+
+  background-color: #82ff6b;
+  border: 1px solid gray;
+}
+
+#gameboard {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 0;
+  width: 500px;
+  height: 500px;
+}
+
+.gameboard-cell {
+  width: 50px;
+  height: 50px;
+  background-color: orange !important;
+  border: 1px solid green;
+}
