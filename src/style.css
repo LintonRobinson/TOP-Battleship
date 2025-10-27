@@ -264,13 +264,11 @@ label {
 
 #place-ships-screen-wrapper {
   height: 100%;
-  padding-top: 100px;
+  padding-top: 140px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 90px;
-
-  background-color: skyblue;
+  gap: 50px;
 }
 
 #ship-placement-instructions {
@@ -309,13 +307,22 @@ label {
 }
 
 #place-ships {
-  background-color: purple;
+  background: rgba(255, 255, 255, 0.13);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   display: flex;
+
+  gap: 20px;
+
+  padding: 30px;
 }
 
 .ship-cell {
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
 
   background-color: #82ff6b;
   border: 1px solid gray;
@@ -325,8 +332,6 @@ label {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   gap: 0;
-  width: 500px;
-  height: 500px;
 }
 
 .gameboard-cell {
