@@ -318,7 +318,7 @@ label {
   gap: 20px;
 
   padding: 30px;
-  width: 392px;
+  width: 410px;
 }
 
 .ship-cell {
@@ -326,26 +326,26 @@ label {
   height: 50px;
 
   background-color: #82ff6b;
-  border: 1px solid gray;
+  /* border: 1px solid rgba(181, 181, 181, 0.267); */
 }
 
 #gameboard {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-
+  grid-auto-flow: dense; /* key */
   box-shadow: 0px 0px 22px 3px rgba(255, 255, 255, 0.414);
   border: 2px solid #82ff6b;
-  background: rgba(255, 255, 255, 0.13);
+  background: #82ff6b;
   backdrop-filter: blur(5px);
   border-radius: 8px;
   overflow: hidden;
+  gap: 2px;
 }
 
 .gameboard-cell {
   width: 50px;
   height: 50px;
-
-  border: 1px solid #82ff6b;
+  background-color: rgb(51, 51, 51);
   transition: 0.2s;
 }
 
@@ -357,8 +357,83 @@ label {
 .placement-ship {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-shadow: 0px 0px 10px 0.2px rgba(255, 193, 193, 0.332);
+}
+
+.placement-ship:hover {
+  cursor: grab;
+}
+
+.placement-ship:active {
+  cursor: grabbing;
+}
+
+#aircraftCarrier {
+  grid-row: 1 / span 5;
+  grid-column: 2 / span 1;
 }
 
 #aircraftCarrier::after {
-  content: "aircraftCarrier";
+  content: "Aircraft Carrier";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
 }
+
+#battleship::after {
+  content: "Battleship";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#cruiser::after {
+  content: "Cruiser";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#submarine::after {
+  content: "Submarine";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#destroyer::after {
+  content: "Destroyer";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.1rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+/* No borders, just gaps? */
