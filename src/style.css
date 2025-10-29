@@ -460,41 +460,6 @@ label {
   margin-top: 25px;
 }
 
-#restart-game-wrapper {
-  position: absolute;
-  gap: 10px;
-  bottom: 10px;
-  left: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-}
-
-#restart-game-wrapper i {
-  color: white;
-  font-size: 2.5rem;
-}
-
-#restart-game-wrapper span {
-  display: block;
-  color: white;
-  font-size: 1.2rem;
-}
-
-#github-logo-white {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-}
-
-#github-logo-white img {
-  width: 50px;
-}
-
-/******************************************
-/* UTILITY STYLES
-/*******************************************/
 #gameplay-screen-wrapper {
   height: 100%;
   padding-top: 120px;
@@ -718,4 +683,44 @@ label {
   margin-top: 25px;
 }
 
-/* No borders, just gaps? */
+#restart-game-wrapper {
+  position: absolute;
+  gap: 10px;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+#restart-game-wrapper i {
+  color: white;
+  font-size: 2.5rem;
+}
+
+#restart-game-wrapper span {
+  display: block;
+  color: white;
+  font-size: 1.2rem;
+}
+
+#github-logo-white {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+#github-logo-white img {
+  width: 50px;
+}
+
+/******************************************
+/* UTILITY STYLES
+/*******************************************/
+
+#start-game-wrapper,
+#select-mode-wrapper,
+#enter-player-names-wrapper {
+  display: none;
+}
