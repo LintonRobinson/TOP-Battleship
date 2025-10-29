@@ -53,8 +53,15 @@ h1 {
 }
 
 h2 {
-  font-size: 3rem;
+  font-size: 4rem;
   color: white;
+}
+
+.battleship-title {
+  font-size: 4.5rem;
+  font-weight: 900;
+  letter-spacing: 0.5rem;
+  font-family: "Zen Dots";
 }
 
 /******************************************
@@ -70,6 +77,11 @@ button {
   padding: 10px 20px;
   border-radius: 15px;
   box-shadow: 0px 0px 22px 2px rgba(255, 255, 255, 0.365);
+  transition: 0.5s;
+}
+
+button:hover {
+  background-color: #d5f7cf;
   transition: 0.5s;
 }
 
@@ -97,7 +109,10 @@ main {
 }
 
 #start-game-wrapper,
-#select-mode-wrapper {
+#select-mode-wrapper,
+#enter-player-names-wrapper,
+#enter-player-name-wrapper,
+#select-computer-difficulty-wrapper {
   height: 100%;
   padding-top: 300px;
   display: flex;
@@ -112,12 +127,14 @@ main {
   color: rgb(91, 91, 91);
 }
 
-#select-mode-button-wrapper {
+#select-mode-button-wrapper,
+#select-computer-difficulty-button-wrapper {
   display: flex;
   gap: 50px;
 }
 
-.select-mode-button {
+.select-mode-button,
+.select-computer-difficulty-button {
   width: 200px;
   height: 200px;
   font-size: 1.4rem;
@@ -128,13 +145,319 @@ main {
   gap: 20px;
 }
 
-.select-mode-button i {
+.select-computer-difficulty-button:nth-child(2) {
+  background-color: #ff8080;
+}
+
+.select-mode-button i,
+.select-computer-difficulty-button i {
   color: rgb(0, 0, 0);
 }
 
-.select-mode-button:hover {
+.select-mode-button:hover,
+.select-computer-difficulty-button:hover {
   transition: 0.5s;
   background-color: #c2feb7;
+}
+
+.select-computer-difficulty-button:nth-child(2):hover {
+  transition: 0.5s;
+  background-color: #feb7b7;
+}
+
+.enter-player-name-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
+
+#form-group-wrapper {
+  display: flex;
+  gap: 50px;
+}
+
+.enter-player-name-form button {
+  width: 270px;
+  text-align: center;
+  background-color: white;
+  transition: 0.5s;
+}
+
+#enter-player-name-wrapper .enter-player-name-form button {
+  width: 100%;
+}
+
+.enter-player-name-form button:hover {
+  text-align: center;
+  background-color: #d5facf;
+  transition: 0.5s;
+}
+
+.player-name-form-group {
+  font-family: "Zain";
+  font-weight: 700;
+  font-size: 1.6rem;
+  background-color: #82ff6b;
+  color: rgb(0, 0, 0);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 22px 2px rgba(255, 255, 255, 0.365);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+label {
+  font-size: 2.5rem;
+  border-bottom: 2px solid;
+}
+
+.player-name-form-group input {
+  width: 80%;
+  height: 50px;
+  font-size: 1.1rem;
+  padding: 5px 10px;
+  border-radius: 15px;
+  border: rgb(0, 0, 0) 1.5px solid;
+}
+
+.player-name-form-group input:focus {
+  border: rgb(218, 218, 218) 1.5px solid;
+  outline: none;
+}
+
+.player-name-form-group input:user-invalid {
+  border: rgb(255, 0, 0) 1.5px solid;
+  outline: none;
+}
+
+.player-name-form-group input:user-valid {
+  border: rgb(30, 157, 81) 1.5px solid;
+  outline: none;
+}
+
+#place-ships-screen-wrapper {
+  height: 100%;
+  padding-top: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+#ship-placement-instructions {
+  width: 375px;
+  background: rgba(255, 255, 255, 0.165);
+  border-radius: 15px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  border-left: #82ff6b solid 6px;
+  padding: 10px;
+  padding-left: 25px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: white;
+}
+
+#ship-placement-instructions h3 {
+  font-size: 1.8rem;
+  text-decoration: underline;
+}
+
+#ship-placement-instructions p {
+  font-size: 1.1rem;
+  line-height: 1.4rem;
+}
+
+#place-ships-screen-wrapper span {
+  color: white;
+  font-size: 1.5rem;
+  position: relative;
+  top: 25px;
+}
+
+#ships-board-wrapper {
+  display: flex;
+  gap: 100px;
+}
+
+#place-ships {
+  background: rgba(255, 255, 255, 0.13);
+  border-radius: 16px;
+  box-shadow: 0px 0px 22px 2px rgba(255, 255, 255, 0.254);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: self-start;
+  gap: 20px;
+
+  padding: 30px;
+  width: 410px;
+  position: relative;
+}
+
+#place-ships #ship-placement-btns {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+}
+
+#place-ships button {
+  width: 50%;
+  font-size: 1rem;
+  text-align: center;
+}
+
+#place-ships button:last-child {
+  background-color: #ff8080;
+}
+
+#place-ships p:last-child {
+  width: 80%;
+  font-size: 1.2rem;
+  line-height: 1.4rem;
+  color: white;
+  text-align: center;
+  position: absolute;
+  bottom: 15px;
+}
+
+.ship-cell {
+  width: 40px;
+  height: 40px;
+
+  background-color: #82ff6b;
+  /* border: 1px solid rgba(181, 181, 181, 0.267); */
+}
+
+#gameboard {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-auto-flow: dense; /* key */
+  box-shadow: 0px 0px 22px 3px rgba(255, 255, 255, 0.414);
+  border: 2px solid #82ff6b;
+  background: #82ff6b;
+  backdrop-filter: blur(5px);
+  border-radius: 8px;
+  overflow: hidden;
+  gap: 2px;
+}
+
+.gameboard-cell {
+  width: 40px;
+  height: 40px;
+  background-color: rgb(51, 51, 51);
+  transition: 0.2s;
+}
+
+.gameboard-cell:hover {
+  background-color: #82ff6b;
+  transition: 0.2s;
+}
+
+.placement-ship {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-shadow: 0px 0px 10px 0.2px rgba(255, 193, 193, 0.332);
+}
+
+.placement-ship:hover {
+  cursor: grab;
+}
+
+.placement-ship:active {
+  cursor: grabbing;
+}
+
+#aircraftCarrier {
+  grid-column: 3 / span 1;
+  grid-row: 3 / span 5;
+}
+
+#aircraftCarrier.vertical-ship::after {
+  content: "Aircraft Carrier";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#aircraftCarrier.horizontal-ship::after {
+  content: "Aircraft Carrier";
+  position: absolute;
+
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#battleship::after {
+  content: "Battleship";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#cruiser::after {
+  content: "Cruiser";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#submarine::after {
+  content: "Submarine";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#destroyer::after {
+  content: "Destroyer";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.1rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#save-placement {
+  margin-top: 25px;
 }
 
 #restart-game-wrapper {
@@ -172,3 +495,227 @@ main {
 /******************************************
 /* UTILITY STYLES
 /*******************************************/
+#gameplay-screen-wrapper {
+  height: 100%;
+  padding-top: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
+
+#gameplay-titles-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+#gameplay-titles-wrapper #turnMessage {
+  color: white;
+  font-size: 1.8rem;
+}
+
+#ships-board-wrapper {
+  display: flex;
+  gap: 50px;
+}
+
+#fleet-wrapper {
+  background: rgba(255, 255, 255, 0.13);
+  border-radius: 16px;
+  box-shadow: 0px 0px 22px 2px rgba(255, 255, 255, 0.254);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+
+  padding: 20px;
+  width: 210px;
+  position: relative;
+}
+
+#fleet-wrapper h4 {
+  color: white;
+  font-size: 1.4rem;
+}
+
+.fleet-ship-wrapper {
+  width: 100%;
+  color: #b4f8a9;
+}
+
+.fleet-ship-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background-color: rgba(0, 0, 0, 0.195);
+  padding: 12px;
+  border-radius: 15px;
+}
+
+.fleet-ship-inner-wrapper:nth-child(1) {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.fleet-ship-inner-wrapper:nth-child(2) {
+  display: flex;
+  gap: 10px;
+}
+
+.fleet-ship-inner-wrapper:nth-child(2) div {
+  height: 20px;
+  width: 20px;
+  background-color: #b4f8a9;
+  border-radius: 5px;
+}
+
+#fleet-wrapper #fleet-wrapper #place-ships p:last-child {
+  width: 80%;
+  font-size: 1.2rem;
+  line-height: 1.4rem;
+  color: white;
+  text-align: center;
+  position: absolute;
+  bottom: 15px;
+}
+
+.ship-cell {
+  width: 40px;
+  height: 40px;
+
+  background-color: #82ff6b;
+  /* border: 1px solid rgba(181, 181, 181, 0.267); */
+}
+
+#gameboard {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-auto-flow: dense; /* key */
+  box-shadow: 0px 0px 22px 3px rgba(255, 255, 255, 0.414);
+  border: 2px solid #82ff6b;
+  background: #82ff6b;
+  backdrop-filter: blur(5px);
+  border-radius: 8px;
+  overflow: hidden;
+  gap: 2px;
+  width: 422px;
+  height: 422px;
+}
+
+.gameboard-cell {
+  width: 40px;
+  height: 40px;
+  background-color: rgb(51, 51, 51);
+  transition: 0.2s;
+}
+
+.gameboard-cell:hover {
+  background-color: #82ff6b;
+  transition: 0.2s;
+}
+
+.placement-ship {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-shadow: 0px 0px 10px 0.2px rgba(255, 193, 193, 0.332);
+}
+
+.placement-ship:hover {
+  cursor: grab;
+}
+
+.placement-ship:active {
+  cursor: grabbing;
+}
+
+#aircraftCarrier {
+  grid-column: 3 / span 1;
+  grid-row: 3 / span 5;
+}
+
+#aircraftCarrier.vertical-ship::after {
+  content: "Aircraft Carrier";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#aircraftCarrier.horizontal-ship::after {
+  content: "Aircraft Carrier";
+  position: absolute;
+
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#battleship::after {
+  content: "Battleship";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#cruiser::after {
+  content: "Cruiser";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#submarine::after {
+  content: "Submarine";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#destroyer::after {
+  content: "Destroyer";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.1rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+#save-placement {
+  margin-top: 25px;
+}
+
+/* No borders, just gaps? */
