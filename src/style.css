@@ -497,7 +497,7 @@ label {
 /*******************************************/
 #gameplay-screen-wrapper {
   height: 100%;
-  padding-top: 150px;
+  padding-top: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -518,42 +518,64 @@ label {
 
 #ships-board-wrapper {
   display: flex;
-  gap: 70px;
+  gap: 50px;
 }
 
-#place-ships {
+#fleet-wrapper {
   background: rgba(255, 255, 255, 0.13);
   border-radius: 16px;
   box-shadow: 0px 0px 22px 2px rgba(255, 255, 255, 0.254);
   backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
-  align-items: self-start;
+  align-items: center;
   gap: 20px;
 
-  padding: 30px;
+  padding: 20px;
   width: 210px;
   position: relative;
 }
 
-#place-ships #ship-placement-btns {
+#fleet-wrapper h4 {
+  color: white;
+  font-size: 1.4rem;
+}
+
+.fleet-ship-wrapper {
+  width: 100%;
+  color: #b4f8a9;
+}
+
+.fleet-ship-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background-color: rgba(0, 0, 0, 0.195);
+  padding: 12px;
+  border-radius: 15px;
+}
+
+.fleet-ship-inner-wrapper:nth-child(1) {
   width: 100%;
   display: flex;
-  gap: 20px;
+  justify-content: space-between;
 }
 
-#place-ships button {
-  width: 50%;
-  font-size: 1rem;
-  text-align: center;
+.fleet-ship-inner-wrapper:nth-child(2) {
+  display: flex;
+  gap: 10px;
 }
 
-#place-ships button:last-child {
-  background-color: #ff8080;
+.fleet-ship-inner-wrapper:nth-child(2) div {
+  height: 20px;
+  width: 20px;
+  background-color: #b4f8a9;
+  border-radius: 5px;
 }
 
-#place-ships p:last-child {
+#fleet-wrapper #fleet-wrapper #place-ships p:last-child {
   width: 80%;
   font-size: 1.2rem;
   line-height: 1.4rem;
