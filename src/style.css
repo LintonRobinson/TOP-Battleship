@@ -106,16 +106,24 @@ main {
   background-color: rgba(0, 0, 0, 0.684);
   display: flex;
   justify-content: center;
+  overflow: hidden;
 }
 
-#start-game-wrapper,
 #select-mode-wrapper,
 #enter-player-names-wrapper,
 #enter-player-name-wrapper,
 #select-computer-difficulty-wrapper {
   height: 100%;
   padding-top: 300px;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
+
+#start-game-wrapper {
   display: flex;
+  height: 100%;
+  padding-top: 300px;
   flex-direction: column;
   align-items: center;
   gap: 50px;
@@ -241,7 +249,7 @@ label {
 #place-ships-screen-wrapper {
   height: 100%;
   padding-top: 180px;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   gap: 20px;
@@ -463,7 +471,7 @@ label {
 #gameplay-screen-wrapper {
   height: 100%;
   padding-top: 120px;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   gap: 50px;
@@ -720,6 +728,7 @@ label {
 /*******************************************/
 
 main {
+  position: relative;
 }
 
 #select-mode-wrapper,
@@ -728,15 +737,23 @@ main {
 #select-computer-difficulty-wrapper,
 #place-ships-screen-wrapper,
 #gameplay-screen-wrapper {
-  display: none;
-  opacity: 1;
-  transition: 0.5s;
 }
 
 .fadeOut {
   opacity: 0;
   transition: 1s;
 }
+/* Add display none class and figure out ease in, argument for time delay */
 
-.fadeIn {
+.off-screen-start-position {
+  transition: 0.5s;
+  position: absolute;
+  top: 100vh;
+}
+
+main div.fadeIn {
+  display: flex;
+  opacity: 1;
+  transition: 1s;
+  top: 0;
 }
