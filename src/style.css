@@ -109,6 +109,15 @@ main {
   overflow: hidden;
 }
 
+#start-game-wrapper {
+  display: flex;
+  height: 100%;
+  padding-top: 250px;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
+
 #select-mode-wrapper,
 #enter-player-names-wrapper,
 #enter-player-name-wrapper,
@@ -120,10 +129,10 @@ main {
   gap: 50px;
 }
 
-#start-game-wrapper {
-  display: flex;
+#enter-player-names-wrapper,
+#enter-player-name-wrapper {
   height: 100%;
-  padding-top: 250px;
+  padding-top: 180px;
   flex-direction: column;
   align-items: center;
   gap: 50px;
@@ -190,6 +199,10 @@ main {
 }
 
 .enter-player-name-form button {
+  font-size: 1.2rem;
+}
+
+.enter-player-name-form button {
   width: 270px;
   text-align: center;
   background-color: white;
@@ -222,31 +235,31 @@ main {
 }
 
 label {
-  font-size: 2.5rem;
+  font-size: 2rem;
   border-bottom: 2px solid;
 }
 
 .player-name-form-group input {
   width: 80%;
-  height: 50px;
-  font-size: 1.1rem;
+  height: 40px;
+  font-size: 0.9rem;
   padding: 5px 10px;
   border-radius: 15px;
-  border: rgb(0, 0, 0) 1.5px solid;
+  border: rgb(0, 0, 0) 2.5px solid;
 }
 
 .player-name-form-group input:focus {
-  border: rgb(218, 218, 218) 1.5px solid;
+  border: rgb(218, 218, 218) 2.5px solid;
   outline: none;
 }
 
 .player-name-form-group input:user-invalid {
-  border: rgb(255, 0, 0) 1.5px solid;
+  border: rgb(255, 0, 0) 2.5px solid;
   outline: none;
 }
 
 .player-name-form-group input:user-valid {
-  border: rgb(30, 157, 81) 1.5px solid;
+  border: rgb(30, 157, 81) 2.5px solid;
   outline: none;
 }
 

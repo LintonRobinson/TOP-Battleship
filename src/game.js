@@ -12,22 +12,28 @@ function startGame() {
       // Show select game mode screen
       selectGameModeWrapper.classList.add("fadeIn");
       selectGameModeWrapper.classList.add("active-screen");
-      // remove fadeIn/off-screen-start-position class from selectGameModeWrapper (sekect game mode screen)
+      // remove fadeIn/off-screen-start-position class from selectGameModeWrapper (select game mode screen)
       addFadeAnimationDelay(() => {
         selectGameModeWrapper.classList.remove("fadeIn");
         selectGameModeWrapper.classList.remove("off-screen-start-position");
       });
     }
 
-    // Start game button click displays select game mode screen
+    // Player vs player button click  hides select game mode screen and displays enter player names screen
     if (event.target.id === "player-vs-player") {
+      // Hide select game mode screen
       selectGameModeWrapper.classList.add("fadeOut");
       addFadeAnimationDelay(() => (selectGameModeWrapper.style.display = "none"));
 
+      // Show enter player names screen
       enterPlayerNamesWrapper.classList.add("fadeIn");
       enterPlayerNamesWrapper.classList.add("active-screen");
-      //addFadeAnimationDelay(() => (startGameWrapper.style.display = "none"));
-      //playerVsPlayerBtn.classList.add("fadeIn");
+
+      // remove fadeIn/off-screen-start-position class from enterPlayerNamesWrapper (enter player names screen)
+      addFadeAnimationDelay(() => {
+        enterPlayerNamesWrapper.classList.remove("fadeIn");
+        enterPlayerNamesWrapper.classList.remove("off-screen-start-position");
+      });
     }
   });
 
