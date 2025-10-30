@@ -745,6 +745,11 @@ main {
 }
 /* Add display none class and figure out ease in, argument for time delay */
 
+.active-screen {
+  display: flex;
+  top: 0;
+}
+
 .off-screen-start-position {
   transition: 0.5s;
   position: absolute;
