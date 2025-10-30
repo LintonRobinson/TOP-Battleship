@@ -719,8 +719,24 @@ label {
 /* UTILITY STYLES
 /*******************************************/
 
-#start-game-wrapper,
+main {
+}
+
 #select-mode-wrapper,
-#enter-player-names-wrapper {
+#enter-player-names-wrapper,
+#enter-player-name-wrapper,
+#select-computer-difficulty-wrapper,
+#place-ships-screen-wrapper,
+#gameplay-screen-wrapper {
   display: none;
+  opacity: 1;
+  transition: 0.5s;
+}
+
+.fadeOut {
+  opacity: 0;
+  transition: 1s;
+}
+
+.fadeIn {
 }
