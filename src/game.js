@@ -2,6 +2,7 @@ function startGame() {
   const startGameWrapper = document.querySelector("#start-game-wrapper");
   const selectGameModeWrapper = document.querySelector("#select-mode-wrapper");
   const enterPlayerNamesWrapper = document.querySelector("#enter-player-names-wrapper");
+  const selectComputerDifficultyWrapper = document.querySelector("#select-computer-difficulty-wrapper");
   const placePlayerShipsWrapper = document.querySelector("#place-ships-screen-wrapper");
 
   document.addEventListener("click", (event) => {
@@ -32,6 +33,20 @@ function startGame() {
       addFadeAnimationDelay(() => {
         enterPlayerNamesWrapper.classList.remove("fadeIn");
         enterPlayerNamesWrapper.classList.remove("off-screen-start-position");
+      });
+    }
+    // Player vs computer button click hides select game mode screen and displays select computer difficulty screen
+    if (event.target.id === "player-vs-computer") {
+      // Hide select game mode screen
+      selectGameModeWrapper.classList.add("fadeOut");
+      addFadeAnimationDelay(() => (selectGameModeWrapper.style.display = "none"));
+      // Show place player ships screen
+      selectComputerDifficultyWrapper.classList.add("fadeIn");
+      selectComputerDifficultyWrapper.classList.add("active-screen");
+      // remove fadeIn/off-screen-start-position class from enterPlayerNamesWrapper (enter player names screen)
+      addFadeAnimationDelay(() => {
+        selectComputerDifficultyWrapper.classList.remove("fadeIn");
+        selectComputerDifficultyWrapper.classList.remove("off-screen-start-position");
       });
     }
   });

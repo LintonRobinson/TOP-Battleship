@@ -93,7 +93,7 @@ body {
   width: 100%;
   height: 100vh;
   background-color: black;
-  background-image: url(/src/assets/images/app-background.gif);
+  background-image: url(./assets/images/app-background.gif);
   background-repeat: no-repeat;
   background-size: auto calc(100% - 20px);
   background-position: center;
