@@ -52,7 +52,7 @@
                             required>
                     </div>
                 </div>
-                <button type="submit"> Next: Place Player Ships </button>
+                <button id="placePlayerShip" type="submit"> Next: Place Player Ships </button>
             </form>
         </div>
         <!-- Seperator -->
@@ -83,13 +83,7 @@
         <div id="place-ships-screen-wrapper" class="off-screen-start-position">
             <span id="hide-screen-test">*Hide this screen from the other player!*</span>
             <h2 id="placeYourShipsTitle">Player One, Place Your Ship</h2>
-            <div id="ship-placement-instructions">
-                <h3>Ship Placement Instructions</h3>
-                <p>Deployment: Drag ships onto the grid. Click a ship to rotate it before placement. Use Save to lock
-                    placements, Reset to
-                    clear the board, and Randomize to auto-place ships. Ships cannot overlap and must fit entirely on
-                    the grid.</p>
-            </div>
+
             <div id="ships-board-wrapper">
                 <div id="place-ships">
                     <div id="aircraftCarrier" class="placement-ship vertical-ship" draggable="true">
@@ -120,119 +114,134 @@
                         <div class="ship-cell"></div>
                         <div class="ship-cell"></div>
                     </div>
+                    <div id="ship-placement-instructions">
+                        <p>Deployment Instructions: Drag ships onto the grid. Click a ship to rotate it before
+                            placement. Use Save to
+                            lock
+                            placements, Reset to
+                            clear the board, and Randomize to auto-place ships. Ships cannot overlap and must fit
+                            entirely on
+                            the grid.</p>
+                    </div>
                     <div id="ship-placement-btns">
                         <button>Random Placements</button>
                         <button>Reset Placements</button>
                     </div>
-                    <p>*Click an individual ship above to change its placement orientation*</p>
+
                 </div>
-                <div id="gameboard">
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div class="gameboard-cell"></div>
-                    <div id="aircraftCarrier" class="placement-ship vertical-ship" draggable="true">
-                        <div class="ship-cell"></div>
-                        <div class="ship-cell"></div>
-                        <div class="ship-cell"></div>
-                        <div class="ship-cell"></div>
-                        <div class="ship-cell"></div>
+
+
+                <div class="gameboard-wrapper">
+                    <div id="gameboard">
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div class="gameboard-cell"></div>
+                        <div id="aircraftCarrier" class="placement-ship vertical-ship" draggable="true">
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                        </div>
+
                     </div>
+                    <button id="save-placement">Save Ship Placements</button>
                 </div>
 
             </div>
-            <button id="save-placement">Save Ship Placements</button>
+
         </div>
         <!-- Seperator -->
         <div id="gameplay-screen-wrapper" class="off-screen-start-position">

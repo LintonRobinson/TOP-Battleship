@@ -2,6 +2,7 @@ function startGame() {
   const startGameWrapper = document.querySelector("#start-game-wrapper");
   const selectGameModeWrapper = document.querySelector("#select-mode-wrapper");
   const enterPlayerNamesWrapper = document.querySelector("#enter-player-names-wrapper");
+  const placePlayerShipsWrapper = document.querySelector("#place-ships-screen-wrapper");
 
   document.addEventListener("click", (event) => {
     // Start game button click  hides start game screen and displays select game mode screen
@@ -24,15 +25,33 @@ function startGame() {
       // Hide select game mode screen
       selectGameModeWrapper.classList.add("fadeOut");
       addFadeAnimationDelay(() => (selectGameModeWrapper.style.display = "none"));
-
-      // Show enter player names screen
+      // Show place player ships screen
       enterPlayerNamesWrapper.classList.add("fadeIn");
       enterPlayerNamesWrapper.classList.add("active-screen");
-
       // remove fadeIn/off-screen-start-position class from enterPlayerNamesWrapper (enter player names screen)
       addFadeAnimationDelay(() => {
         enterPlayerNamesWrapper.classList.remove("fadeIn");
         enterPlayerNamesWrapper.classList.remove("off-screen-start-position");
+      });
+    }
+  });
+
+  document.addEventListener("submit", (event) => {
+    const enterPlayerNamesForm = document.querySelector("form");
+
+    // Place player ships button click hides enter player names screen and displays place player ships screen
+    if (enterPlayerNamesForm.classList.contains("enter-player-name-form")) {
+      event.preventDefault();
+      // Hide enter player names screen
+      enterPlayerNamesWrapper.classList.add("fadeOut");
+      addFadeAnimationDelay(() => (enterPlayerNamesWrapper.style.display = "none"));
+      // Show enter player names screen
+      placePlayerShipsWrapper.classList.add("fadeIn");
+      placePlayerShipsWrapper.classList.add("active-screen");
+      // remove fadeIn/off-screen-start-position class from enterPlayerNamesWrapper (enter player names screen)
+      addFadeAnimationDelay(() => {
+        placePlayerShipsWrapper.classList.remove("fadeIn");
+        placePlayerShipsWrapper.classList.remove("off-screen-start-position");
       });
     }
   });
