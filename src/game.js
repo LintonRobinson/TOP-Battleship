@@ -87,7 +87,7 @@ function startGame() {
     // Place player ships button click hides enter player name screen and displays place player ships screen
     if (event.target.id === "enter-player-name") {
       event.preventDefault();
-      // Hide enter player names screen
+      // Hide enter player name screen
       enterPlayerNameWrapper.classList.add("fadeOut");
       addFadeAnimationDelay(() => (enterPlayerNameWrapper.style.display = "none"));
       // Show enter player names screen
