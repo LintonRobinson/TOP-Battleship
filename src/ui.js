@@ -70,9 +70,15 @@ function startUI() {
 
   // Use submits player names
   document.addEventListener("submit", (event) => {
+    const placeYourShipsTitle = document.querySelector("#placeYourShipsTitle");
+    let playerOneName;
+    let playerTwoName;
+
     // Place player ships button click hides enter player names screen and displays place player ships screen
     if (event.target.id === "enter-player-names") {
       event.preventDefault();
+      playerOneName = document.querySelector("#playerOneName").value;
+      placeYourShipsTitle.textContent = `${playerOneName}, Place Your Ships`;
       // Hide enter player names screen
       enterPlayerNamesWrapper.classList.add("fadeOut");
       addFadeAnimationDelay(() => (enterPlayerNamesWrapper.style.display = "none"));
