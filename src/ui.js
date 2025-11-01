@@ -108,4 +108,6 @@ function startUI() {
   }
 }
 
+document.addEventListener("DOMContentLoaded", startUI);
+
 export default startUI;

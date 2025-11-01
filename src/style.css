@@ -352,9 +352,7 @@ label {
 .ship-cell {
   width: 40px;
   height: 40px;
-
   background-color: #82ff6b;
-  /* border: 1px solid rgba(181, 181, 181, 0.267); */
 }
 
 .gameboard-wrapper {
@@ -367,19 +365,6 @@ label {
   font-size: 1rem;
   text-align: center;
   width: 50%;
-}
-
-#gameboard {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-auto-flow: dense; /* key */
-  box-shadow: 0px 0px 22px 3px rgba(255, 255, 255, 0.414);
-  border: 2px solid #82ff6b;
-  background: #82ff6b;
-  backdrop-filter: blur(5px);
-  border-radius: 8px;
-  overflow: hidden;
-  gap: 2px;
 }
 
 .gameboard-cell {
@@ -420,7 +405,7 @@ label {
   content: "Aircraft Carrier";
   position: absolute;
   transform: rotate(-90deg);
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 900;
   letter-spacing: 0.3rem;
   background: #ffffff;
@@ -468,7 +453,7 @@ label {
   content: "Submarine";
   position: absolute;
   transform: rotate(-90deg);
-  font-size: 0.8rem;
+  font-size: 0.65rem;
   font-weight: 900;
   letter-spacing: 0.3rem;
   background: #ffffff;
@@ -480,16 +465,12 @@ label {
   content: "Destroyer";
   position: absolute;
   transform: rotate(-90deg);
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 900;
   letter-spacing: 0.1rem;
   background: #ffffff;
   white-space: nowrap;
   padding: 0 8px;
-}
-
-#save-placement {
-  margin-top: 25px;
 }
 
 #gameplay-screen-wrapper {
@@ -634,83 +615,6 @@ label {
   cursor: grabbing;
 }
 
-#aircraftCarrier {
-  grid-column: 3 / span 1;
-  grid-row: 3 / span 5;
-}
-
-#aircraftCarrier.vertical-ship::after {
-  content: "Aircraft Carrier";
-  position: absolute;
-  transform: rotate(-90deg);
-  font-size: 1rem;
-  font-weight: 900;
-  letter-spacing: 0.3rem;
-  background: #ffffff;
-  white-space: nowrap;
-  padding: 0 8px;
-}
-
-#aircraftCarrier.horizontal-ship::after {
-  content: "Aircraft Carrier";
-  position: absolute;
-
-  font-size: 1rem;
-  font-weight: 900;
-  letter-spacing: 0.3rem;
-  background: #ffffff;
-  white-space: nowrap;
-  padding: 0 8px;
-}
-
-#battleship::after {
-  content: "Battleship";
-  position: absolute;
-  transform: rotate(-90deg);
-  font-size: 1rem;
-  font-weight: 900;
-  letter-spacing: 0.3rem;
-  background: #ffffff;
-  white-space: nowrap;
-  padding: 0 8px;
-}
-
-#cruiser::after {
-  content: "Cruiser";
-  position: absolute;
-  transform: rotate(-90deg);
-  font-size: 1rem;
-  font-weight: 900;
-  letter-spacing: 0.3rem;
-  background: #ffffff;
-  white-space: nowrap;
-  padding: 0 8px;
-}
-
-#submarine::after {
-  content: "Submarine";
-  position: absolute;
-  transform: rotate(-90deg);
-  font-size: 0.8rem;
-  font-weight: 900;
-  letter-spacing: 0.3rem;
-  background: #ffffff;
-  white-space: nowrap;
-  padding: 0 8px;
-}
-
-#destroyer::after {
-  content: "Destroyer";
-  position: absolute;
-  transform: rotate(-90deg);
-  font-size: 0.7rem;
-  font-weight: 900;
-  letter-spacing: 0.1rem;
-  background: #ffffff;
-  white-space: nowrap;
-  padding: 0 8px;
-}
-
 #save-placement {
   margin-top: 25px;
 }
@@ -753,14 +657,6 @@ label {
 
 main {
   position: relative;
-}
-
-#select-mode-wrapper,
-#enter-player-names-wrapper,
-#enter-player-name-wrapper,
-#select-computer-difficulty-wrapper,
-#place-ships-screen-wrapper,
-#gameplay-screen-wrapper {
 }
 
 .fadeOut {
