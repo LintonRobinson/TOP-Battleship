@@ -166,6 +166,9 @@ main {
   pointer-events: none;
 }
 
+.select-computer-difficulty-button * {
+  pointer-events: none;
+}
 .select-computer-difficulty-button:nth-child(2) {
   background-color: #ff8080;
 }
@@ -265,7 +268,7 @@ label {
 
 #place-ships-screen-wrapper {
   height: 100%;
-
+  padding-top: 50px;
   flex-direction: column;
   align-items: center;
   gap: 20px;
