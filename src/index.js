@@ -1,4 +1,4 @@
 import "./style.css";
-import startGame from "./game";
+import startUI from "./ui";
 
-document.addEventListener("DOMContentLoaded", startGame);
+document.addEventListener("DOMContentLoaded", startUI);
