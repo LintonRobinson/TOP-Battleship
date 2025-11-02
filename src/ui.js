@@ -5,6 +5,7 @@ function startUI() {
   const enterPlayerNameWrapper = document.querySelector("#enter-player-name-wrapper");
   const selectComputerDifficultyWrapper = document.querySelector("#select-computer-difficulty-wrapper");
   const placePlayerShipsWrapper = document.querySelector("#place-ships-screen-wrapper");
+  const placeShipsWrapper = document.querySelector("#place-ships");
 
   // Screen navigation
   document.addEventListener("click", (event) => {
@@ -68,6 +69,19 @@ function startUI() {
     }
   });
 
+  placeShipsWrapper.addEventListener("click", (event) => {
+    let activeShipToPlace;
+    if (event.target.id === "aircraftCarrier") {
+      document.querySelector("#aircraftCarrier").classList;
+      activeShipToPlace = "aircraftCarrier";
+    }
+
+    if (event.target.id === "aircraftCarrier") {
+      document.querySelector("#aircraftCarrier").classList;
+      activeShipToPlace = "aircraftCarrier";
+    }
+  });
+
   // Use submits player names
   document.addEventListener("submit", (event) => {
     const placeYourShipsTitle = document.querySelector("#placeYourShipsTitle");
@@ -108,6 +122,8 @@ function startUI() {
       });
     }
   });
+
+  document.querySelector();
 
   function addFadeAnimationDelay(callback) {
     setTimeout(callback, 1000);

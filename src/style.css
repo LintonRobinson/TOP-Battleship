@@ -388,6 +388,10 @@ label {
   box-shadow: 0px 0px 10px 0.2px rgba(255, 193, 193, 0.332);
 }
 
+.placement-ship.activeShipToPlace {
+  box-shadow: 0px 0px 10px 0.2px rgba(252, 252, 252, 0.546);
+}
+
 .placement-ship:hover {
   cursor: grab;
 }
@@ -399,6 +403,10 @@ label {
 #aircraftCarrier {
   grid-column: 3 / span 1;
   grid-row: 3 / span 5;
+}
+
+#aircraftCarrier * {
+  pointer-events: none;
 }
 
 #aircraftCarrier.vertical-ship::after {
