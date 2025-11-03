@@ -24,7 +24,7 @@ describe("Ship Class", () => {
     });
   });
 
-  it("initializes initialShipPlacementCell property with the passed shipPlacementCell value", () => {
+  it("initializes initialShipPlacementCell property with the passed initialShipPlacementCell value", () => {
     const ship = new Ship("aircraftCarrier", "A1");
     expect(ship.initialShipPlacementCell).toBe("A1");
   });
