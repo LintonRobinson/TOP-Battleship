@@ -129,7 +129,8 @@ function startUI() {
     setTimeout(callback, 1000);
   }
 
-  function renderGameboardCells() {
+  // If the cell to add is in the hash map at the end off looping, remove that many cells and add ship to span grid
+  function renderGameboardCells(playerGameboard) {
     alert("Ya Mami");
     const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
@@ -141,6 +142,9 @@ function startUI() {
         gameboardCell.dataset.cellId = `${gameboardColumns[j]}${i}`;
         gameboard.appendChild(gameboardCell);
       }
+    }
+
+    if (playerGameboard.activeShipCells.size) {
     }
   }
 }
