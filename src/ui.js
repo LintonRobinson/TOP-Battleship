@@ -96,9 +96,11 @@ function startUI() {
       // Hide enter player names screen
       enterPlayerNamesWrapper.classList.add("fadeOut");
       addFadeAnimationDelay(() => (enterPlayerNamesWrapper.style.display = "none"));
+
       // Show enter player names screen
       placePlayerShipsWrapper.classList.add("fadeIn");
       placePlayerShipsWrapper.classList.add("active-screen");
+      renderGameboardCells();
       // remove fadeIn/off-screen-start-position class from enterPlayerNamesWrapper (enter player names screen)
       addFadeAnimationDelay(() => {
         placePlayerShipsWrapper.classList.remove("fadeIn");
@@ -123,10 +125,23 @@ function startUI() {
     }
   });
 
-  document.querySelector();
-
   function addFadeAnimationDelay(callback) {
     setTimeout(callback, 1000);
+  }
+
+  function renderGameboardCells() {
+    alert("Ya Mami");
+    const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+
+    const gameboard = document.querySelector("#gameboard");
+    for (let i = 1; i < 11; i++) {
+      for (let j = 0; j < 10; j++) {
+        const gameboardCell = document.createElement("div");
+        gameboardCell.classList.add("gameboard-cell");
+        gameboardCell.dataset.cellId = `${gameboardColumns[j]}${i}`;
+        gameboard.appendChild(gameboardCell);
+      }
+    }
   }
 }
 
