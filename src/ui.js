@@ -100,7 +100,9 @@ function startUI() {
       // Show enter player names screen
       placePlayerShipsWrapper.classList.add("fadeIn");
       placePlayerShipsWrapper.classList.add("active-screen");
-      renderGameboardCells();
+      //
+      //-- >renderGameboardCells();
+      // -->
       // remove fadeIn/off-screen-start-position class from enterPlayerNamesWrapper (enter player names screen)
       addFadeAnimationDelay(() => {
         placePlayerShipsWrapper.classList.remove("fadeIn");
@@ -131,9 +133,7 @@ function startUI() {
 
   // If the cell to add is in the hash map at the end off looping, remove that many cells and add ship to span grid
   function renderGameboardCells(playerGameboard) {
-    alert("Ya Mami");
     const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-
     const gameboard = document.querySelector("#gameboard");
     for (let i = 1; i < 11; i++) {
       for (let j = 0; j < 10; j++) {
@@ -145,6 +145,41 @@ function startUI() {
     }
 
     if (playerGameboard.activeShipCells.size) {
+      const placedShips = playerGameboard.placedShips;
+      placedShips.forEach((ship) => {
+        const initialShipPlacementCellColumn = ship.initialShipPlacementCell.split("")[0];
+        const initialShipPlacementCellRow = ship.initialShipPlacementCell.split("")[1];
+
+        // Remove ship.shipLength cells from gameboard
+        for (let i = 0; i < ship.shipLength; i++) {
+          gameboard.removeChild(gameboard.lastElementChild);
+        }
+
+        const placedShipElement = document.createElement("div");
+        placedShipElement.classList.add("placement-ship");
+        placedShipElement.classList.add(`${ship.shipOrientation}-ship`);
+        placedShipElement.id = ship.shipName;
+
+        for (let i = 0; i < ship.shipLength; i++) {
+          const shipCell = document.createElement("div");
+          shipCell.classList.add("ship-cell");
+          placedShipElement.appendChild(shipCell);
+        }
+
+        // Grid placement
+        if ((ship.shipOrientation = "horizontal")) {
+          placedShipElement.style.gridColumn = `${shipGridColumnStart} / span ${ship.shipLength}`;
+          placedShipElement.style.gridRow = `${shipGridRowStart} / span 1`;
+        } else {
+          const shipGridColumnStart =
+            gameboardColumns.findIndex((column) => column === initialShipPlacementCellColumn) + 1;
+
+          const shipGridRowStart = initialShipPlacementCellRow;
+          placedShipElement.style.gridColumn = `${shipGridColumnStart} / span ${ship.shipLength}`;
+          placedShipElement.style.gridRow = `${shipGridRowStart} / span 1`;
+        }
+        gameboard.appendChild(placedShipElement);
+      });
     }
   }
 }
@@ -152,3 +187,7 @@ function startUI() {
 document.addEventListener("DOMContentLoaded", startUI);
 
 export default startUI;
+
+// MAKE SHIP ORIENTATION PROP ON SHIP, AND SHIP INSTANCES MAP ON GAMEBOARD CLASS
+
+// Changes: shipOrientation

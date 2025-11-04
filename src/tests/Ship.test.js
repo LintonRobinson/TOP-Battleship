@@ -29,6 +29,11 @@ describe("Ship Class", () => {
     expect(ship.initialShipPlacementCell).toBe("A1");
   });
 
+  it("initializes shipOrientation property with the passed shipOrientation value", () => {
+    const ship = new Ship("aircraftCarrier", "A1", "horizontal");
+    expect(ship.shipOrientation).toBe("horizontal");
+  });
+
   describe("hitShip method", () => {
     it("increments timesHit property by one when hitShip() is called ", () => {
       const ship = new Ship();
