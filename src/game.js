@@ -41,7 +41,7 @@ function addGameboardEventListeners() {
   placingShipsGameboardWrapper.addEventListener("click", (event) => {
     //if (gameMode === "human") {
     //}
-    // Placing ship
+    // Places ship when game gameboard-cell is clicked and activeGame.shipToPlace is not null
     if (event.target.classList.contains("gameboard-cell") && activeGame.shipToPlace) {
       if (activeGame.playerOne.playerGameboard.unplacedShips.size) {
         console.log("Cell", event.target.dataset.cellId);
