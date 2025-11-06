@@ -1,3 +1,5 @@
+import { addGameboardEventListeners } from "./game.js";
+
 function startUI() {
   const startGameWrapper = document.querySelector("#start-game-wrapper");
   const selectGameModeWrapper = document.querySelector("#select-mode-wrapper");
@@ -102,6 +104,7 @@ function startUI() {
       placePlayerShipsWrapper.classList.add("active-screen");
       //
       renderGameboardCells();
+      addGameboardEventListeners();
       // -->
       // remove fadeIn/off-screen-start-position class from enterPlayerNamesWrapper (enter player names screen)
       addFadeAnimationDelay(() => {

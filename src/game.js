@@ -4,6 +4,7 @@ import Gameboard from "./Gameboard.js";
 let activeGame = {
   shipToPlace: null,
   gameMode: null,
+  placementOrientation: "vertical",
 };
 
 function startGame() {
@@ -38,12 +39,14 @@ function startGame() {
 function addGameboardEventListeners() {
   const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
   placingShipsGameboardWrapper.addEventListener("click", (event) => {
-    if (gameMode === "human") {
-    }
-    if (event.target.classList.contains("gameboard-cell")) {
+    //if (gameMode === "human") {
+    //}
+    // Placing ship
+    if (event.target.classList.contains("gameboard-cell") && activeGame.shipToPlace) {
       if (activeGame.playerOne.playerGameboard.unplacedShips.size) {
-        activeGame.playerOne.playerGameboard.placeShip(activeGame.shipToPlace);
-        activeGame.playerPlacingShips;
+        console.log("Cell", event.target.dataset.cellId);
+        activeGame.playerOne.playerGameboard.placeShip(activeGame.shipToPlace, event.target.dataset.cellId, activeGame.placementOrientation);
+        console.log("Player PLaced Ships", activeGame.playerOne.playerGameboard.placedShips);
       } else {
       }
     }
@@ -52,4 +55,4 @@ function addGameboardEventListeners() {
 
 document.addEventListener("DOMContentLoaded", startGame);
 
-export default startGame;
+export { startGame, addGameboardEventListeners };
