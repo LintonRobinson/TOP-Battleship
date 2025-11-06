@@ -101,7 +101,7 @@ function startUI() {
       placePlayerShipsWrapper.classList.add("fadeIn");
       placePlayerShipsWrapper.classList.add("active-screen");
       //
-      //-- >renderGameboardCells();
+      renderGameboardCells();
       // -->
       // remove fadeIn/off-screen-start-position class from enterPlayerNamesWrapper (enter player names screen)
       addFadeAnimationDelay(() => {
@@ -143,12 +143,17 @@ function startUI() {
         gameboard.appendChild(gameboardCell);
       }
     }
-
+    /*
     if (playerGameboard.activeShipCells.size) {
       const placedShips = playerGameboard.placedShips;
       placedShips.forEach((ship) => {
         const initialShipPlacementCellColumn = ship.initialShipPlacementCell.split("")[0];
         const initialShipPlacementCellRow = ship.initialShipPlacementCell.split("")[1];
+
+        const shipGridColumnStart =
+          gameboardColumns.findIndex((column) => column === initialShipPlacementCellColumn) + 1;
+
+        const shipGridRowStart = initialShipPlacementCellRow;
 
         // Remove ship.shipLength cells from gameboard
         for (let i = 0; i < ship.shipLength; i++) {
@@ -171,16 +176,15 @@ function startUI() {
           placedShipElement.style.gridColumn = `${shipGridColumnStart} / span ${ship.shipLength}`;
           placedShipElement.style.gridRow = `${shipGridRowStart} / span 1`;
         } else {
-          const shipGridColumnStart =
-            gameboardColumns.findIndex((column) => column === initialShipPlacementCellColumn) + 1;
-
-          const shipGridRowStart = initialShipPlacementCellRow;
-          placedShipElement.style.gridColumn = `${shipGridColumnStart} / span ${ship.shipLength}`;
-          placedShipElement.style.gridRow = `${shipGridRowStart} / span 1`;
+          placedShipElement.style.gridColumn = `${shipGridColumnStart} / span 1`;
+          placedShipElement.style.gridRow = `${shipGridRowStart} / span ${ship.shipLength}`;
         }
         gameboard.appendChild(placedShipElement);
       });
+
+      
     }
+     */
   }
 }
 

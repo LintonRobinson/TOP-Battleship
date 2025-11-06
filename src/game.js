@@ -1,6 +1,10 @@
 import Player from "./Player.js";
+import Gameboard from "./Gameboard.js";
 
-let activeGame = {};
+let activeGame = {
+  shipToPlace: null,
+  gameMode: null,
+};
 
 function startGame() {
   // Submitting on enter player names screen creates two player instances with form values as names
@@ -11,8 +15,37 @@ function startGame() {
       event.preventDefault();
       activeGame.playerOne = new Player("human", playerOneName);
       activeGame.playerTwo = new Player("human", playerTwoName);
-      console.log("Player Uno", activeGame.playerOne);
-      console.log("Player Dos", activeGame.playerTwo);
+    }
+
+    // Add event listener to placeShipsWrapper that sets state of activeGame.shipToPlace to clicked ship child element
+    const placeShipsWrapper = document.querySelector("#place-ships");
+
+    placeShipsWrapper.addEventListener("click", (event) => {
+      if (activeGame.shipToPlace != event.target.id && event.target.classList.contains("placement-ship")) {
+        document.querySelectorAll(".placement-ship").forEach((placementShip) => {
+          placementShip.classList.remove("activeShipToPlace");
+        });
+        activeGame.shipToPlace = event.target.id;
+        event.target.classList.add("activeShipToPlace");
+      } else {
+        activeGame.shipToPlace = null;
+        event.target.classList.remove("activeShipToPlace");
+      }
+    });
+  });
+}
+
+function addGameboardEventListeners() {
+  const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
+  placingShipsGameboardWrapper.addEventListener("click", (event) => {
+    if (gameMode === "human") {
+    }
+    if (event.target.classList.contains("gameboard-cell")) {
+      if (activeGame.playerOne.playerGameboard.unplacedShips.size) {
+        activeGame.playerOne.playerGameboard.placeShip(activeGame.shipToPlace);
+        activeGame.playerPlacingShips;
+      } else {
+      }
     }
   });
 }
