@@ -1,4 +1,4 @@
-import { addGameboardEventListeners, activeGame } from "./game.js";
+import { addGameboardClickEventListeners, activeGame } from "./game.js";
 
 function startUI() {
   const startGameWrapper = document.querySelector("#start-game-wrapper");
@@ -204,7 +204,7 @@ function addGameboardHoverEventListeners() {
   });
 }
 
-function addGameboardClickEventListeners() {
+function addPlaceShipsWrapperEventListeners() {
   // Add event listener to placeShipsWrapper that sets state of activeGame.shipToPlace to clicked ship child element
   const placeShipsWrapper = document.querySelector("#place-ships");
   const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
