@@ -21,3 +21,5 @@ class PubSub {
 }
 
 export default PubSub;
+
+// Pub sub for error message

@@ -376,7 +376,7 @@ label {
   transition: 0.2s;
 }
 
-.gameboard-cell:hover {
+.placing-ships-gameboard.placingShips .gameboard-cell:hover {
   background-color: #82ff6b;
   transition: 0.2s;
 }
@@ -603,11 +603,6 @@ label {
   transition: 0.2s;
 }
 
-.gameboard-cell:hover {
-  background-color: #82ff6b;
-  transition: 0.2s;
-}
-
 .placement-ship {
   display: flex;
   flex-direction: column;
@@ -615,10 +610,6 @@ label {
   align-items: center;
   position: relative;
   box-shadow: 0px 0px 10px 0.2px rgba(255, 193, 193, 0.332);
-}
-
-.placement-ship:hover {
-  cursor: grab;
 }
 
 .placement-ship:active {

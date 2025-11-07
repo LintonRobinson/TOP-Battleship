@@ -1,4 +1,4 @@
-import { addGameboardEventListeners } from "./game.js";
+import { addGameboardEventListeners, activeGame } from "./game.js";
 
 function startUI() {
   const startGameWrapper = document.querySelector("#start-game-wrapper");
@@ -104,7 +104,7 @@ function startUI() {
       placePlayerShipsWrapper.classList.add("active-screen");
       //
       renderGameboardCells();
-      addGameboardEventListeners();
+
       // -->
       // remove fadeIn/off-screen-start-position class from enterPlayerNamesWrapper (enter player names screen)
       addFadeAnimationDelay(() => {
@@ -190,6 +190,9 @@ function renderGameboardCells(playerGameboard) {
       
     }
      */
+  addGameboardEventListeners();
+  addGameboardClickEventListeners();
+  addGameboardHoverEventListeners();
 }
 
 function addGameboardHoverEventListeners() {
@@ -197,16 +200,26 @@ function addGameboardHoverEventListeners() {
   placingShipsGameboardWrapper.addEventListener("mouseover", (event) => {
     //if (gameMode === "human") {
     //}
-
     // Places ship when game gameboard-cell is clicked and activeGame.shipToPlace is not null
+  });
+}
 
-    if (event.target.classList.contains("gameboard-cell") && activeGame.shipToPlace) {
-      if (activeGame.playerOne.playerGameboard.unplacedShips.size) {
-        console.log("Cell", event.target.dataset.cellId);
-        activeGame.playerOne.playerGameboard.placeShip(activeGame.shipToPlace, event.target.dataset.cellId, activeGame.placementOrientation);
-        console.log("Player Placed Ships", activeGame.playerOne.playerGameboard.placedShips);
-      } else {
-      }
+function addGameboardClickEventListeners() {
+  // Add event listener to placeShipsWrapper that sets state of activeGame.shipToPlace to clicked ship child element
+  const placeShipsWrapper = document.querySelector("#place-ships");
+  const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
+  placeShipsWrapper.addEventListener("click", (event) => {
+    if (activeGame.shipToPlace != event.target.id && event.target.classList.contains("placement-ship")) {
+      document.querySelectorAll(".placement-ship").forEach((placementShip) => {
+        placementShip.classList.remove("activeShipToPlace");
+      });
+      activeGame.shipToPlace = event.target.id;
+      event.target.classList.add("activeShipToPlace");
+      placingShipsGameboardWrapper.classList.add("placingShips");
+    } else {
+      activeGame.shipToPlace = null;
+      event.target.classList.remove("activeShipToPlace");
+      placingShipsGameboardWrapper.classList.remove("placingShips");
     }
   });
 }
