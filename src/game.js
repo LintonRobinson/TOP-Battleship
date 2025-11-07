@@ -24,7 +24,7 @@ function startGame() {
 }
 
 // Adds event listeners to ".placing-ships-gameboard" that places ships when game gameboard-cell is clicked and activeGame.shipToPlace is not null
-function addGameboardClickEventListeners() {
+function addPlaceShipGameboardClickEventListeners() {
   const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
   placingShipsGameboardWrapper.addEventListener("click", (event) => {
     // Places ship when game gameboard-cell is clicked and activeGame.shipToPlace is not null
@@ -39,4 +39,4 @@ function addGameboardClickEventListeners() {
 
 document.addEventListener("DOMContentLoaded", startGame);
 
-export { startGame, addGameboardClickEventListeners, activeGame };
+export { startGame, addPlaceShipGameboardClickEventListeners, activeGame };
