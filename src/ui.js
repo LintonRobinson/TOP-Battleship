@@ -135,18 +135,20 @@ function startUI() {
   }
 
   // If the cell to add is in the hash map at the end off looping, remove that many cells and add ship to span grid
-  function renderGameboardCells(playerGameboard) {
-    const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-    const gameboard = document.querySelector("#gameboard");
-    for (let i = 1; i < 11; i++) {
-      for (let j = 0; j < 10; j++) {
-        const gameboardCell = document.createElement("div");
-        gameboardCell.classList.add("gameboard-cell");
-        gameboardCell.dataset.cellId = `${gameboardColumns[j]}${i}`;
-        gameboard.appendChild(gameboardCell);
-      }
+}
+
+function renderGameboardCells(playerGameboard) {
+  const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+  const gameboard = document.querySelector("#gameboard");
+  for (let i = 1; i < 11; i++) {
+    for (let j = 0; j < 10; j++) {
+      const gameboardCell = document.createElement("div");
+      gameboardCell.classList.add("gameboard-cell");
+      gameboardCell.dataset.cellId = `${gameboardColumns[j]}${i}`;
+      gameboard.appendChild(gameboardCell);
     }
-    /*
+  }
+  /*
     if (playerGameboard.activeShipCells.size) {
       const placedShips = playerGameboard.placedShips;
       placedShips.forEach((ship) => {
@@ -188,12 +190,30 @@ function startUI() {
       
     }
      */
-  }
+}
+
+function addGameboardHoverEventListeners() {
+  const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
+  placingShipsGameboardWrapper.addEventListener("mouseover", (event) => {
+    //if (gameMode === "human") {
+    //}
+
+    // Places ship when game gameboard-cell is clicked and activeGame.shipToPlace is not null
+
+    if (event.target.classList.contains("gameboard-cell") && activeGame.shipToPlace) {
+      if (activeGame.playerOne.playerGameboard.unplacedShips.size) {
+        console.log("Cell", event.target.dataset.cellId);
+        activeGame.playerOne.playerGameboard.placeShip(activeGame.shipToPlace, event.target.dataset.cellId, activeGame.placementOrientation);
+        console.log("Player Placed Ships", activeGame.playerOne.playerGameboard.placedShips);
+      } else {
+      }
+    }
+  });
 }
 
 document.addEventListener("DOMContentLoaded", startUI);
 
-export default startUI;
+export { startUI, renderGameboardCells };
 
 // MAKE SHIP ORIENTATION PROP ON SHIP, AND SHIP INSTANCES MAP ON GAMEBOARD CLASS
 

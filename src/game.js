@@ -1,5 +1,6 @@
 import Player from "./Player.js";
 import Gameboard from "./Gameboard.js";
+import renderGameboardCells from "./ui.js";
 
 let activeGame = {
   shipToPlace: null,
@@ -41,12 +42,15 @@ function addGameboardEventListeners() {
   placingShipsGameboardWrapper.addEventListener("click", (event) => {
     //if (gameMode === "human") {
     //}
+
     // Places ship when game gameboard-cell is clicked and activeGame.shipToPlace is not null
+
     if (event.target.classList.contains("gameboard-cell") && activeGame.shipToPlace) {
       if (activeGame.playerOne.playerGameboard.unplacedShips.size) {
         console.log("Cell", event.target.dataset.cellId);
         activeGame.playerOne.playerGameboard.placeShip(activeGame.shipToPlace, event.target.dataset.cellId, activeGame.placementOrientation);
-        console.log("Player PLaced Ships", activeGame.playerOne.playerGameboard.placedShips);
+        //renderGameboardCells();
+        console.log("Player Placed Ships", activeGame.playerOne.playerGameboard.placedShips);
       } else {
       }
     }
