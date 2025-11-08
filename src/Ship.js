@@ -24,13 +24,8 @@ class Ship {
     }
 
     this.timesHit = 0;
-    if (initialShipPlacementCell) {
-      this.initialShipPlacementCell = initialShipPlacementCell;
-    }
-
-    if (shipOrientation) {
-      this.shipOrientation = shipOrientation;
-    }
+    this.initialShipPlacementCell = initialShipPlacementCell;
+    this.shipOrientation = shipOrientation;
   }
 
   hitShip() {

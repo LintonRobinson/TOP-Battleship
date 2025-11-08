@@ -1,4 +1,4 @@
-import { addGameboardClickEventListeners, activeGame } from "./game.js";
+import { addPlaceShipGameboardClickEventListeners, activeGame } from "./game.js";
 
 function startUI() {
   const startGameWrapper = document.querySelector("#start-game-wrapper");
@@ -138,8 +138,19 @@ function startUI() {
 }
 
 function renderGameboardCells(playerGameboard) {
+  const gameboard = document.querySelector(".gameboard");
+  // Clear gameboard cells
+
+  if (playerGameboard) {
+    const gameboardCells = gameboard.querySelectorAll("*");
+
+    gameboardCells.forEach((gameboardCell) => {
+      gameboard.removeChild(gameboardCell);
+    });
+  }
+
   const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-  const gameboard = document.querySelector("#gameboard");
+
   for (let i = 1; i < 11; i++) {
     for (let j = 0; j < 10; j++) {
       const gameboardCell = document.createElement("div");
@@ -148,51 +159,55 @@ function renderGameboardCells(playerGameboard) {
       gameboard.appendChild(gameboardCell);
     }
   }
-  /*
-    if (playerGameboard.activeShipCells.size) {
-      const placedShips = playerGameboard.placedShips;
-      placedShips.forEach((ship) => {
-        const initialShipPlacementCellColumn = ship.initialShipPlacementCell.split("")[0];
-        const initialShipPlacementCellRow = ship.initialShipPlacementCell.split("")[1];
 
-        const shipGridColumnStart =
-          gameboardColumns.findIndex((column) => column === initialShipPlacementCellColumn) + 1;
+  if (playerGameboard) {
+    const placedShips = playerGameboard.placedShips;
+    placedShips.forEach((ship) => {
+      const initialShipPlacementCellColumn = ship.initialShipPlacementCell.split("")[0];
+      const initialShipPlacementCellRow =
+        ship.initialShipPlacementCell.split("").length < 3
+          ? ship.initialShipPlacementCell.split("")[1]
+          : ship.initialShipPlacementCell.split("")[1] + ship.initialShipPlacementCell.split("")[2];
 
-        const shipGridRowStart = initialShipPlacementCellRow;
+      const shipGridColumnStartIndex = gameboardColumns.findIndex((column) => column === initialShipPlacementCellColumn) + 1;
 
-        // Remove ship.shipLength cells from gameboard
-        for (let i = 0; i < ship.shipLength; i++) {
-          gameboard.removeChild(gameboard.lastElementChild);
-        }
+      const shipGridRowStart = initialShipPlacementCellRow;
 
-        const placedShipElement = document.createElement("div");
-        placedShipElement.classList.add("placement-ship");
-        placedShipElement.classList.add(`${ship.shipOrientation}-ship`);
-        placedShipElement.id = ship.shipName;
-
-        for (let i = 0; i < ship.shipLength; i++) {
-          const shipCell = document.createElement("div");
-          shipCell.classList.add("ship-cell");
-          placedShipElement.appendChild(shipCell);
-        }
-
-        // Grid placement
-        if ((ship.shipOrientation = "horizontal")) {
-          placedShipElement.style.gridColumn = `${shipGridColumnStart} / span ${ship.shipLength}`;
-          placedShipElement.style.gridRow = `${shipGridRowStart} / span 1`;
-        } else {
-          placedShipElement.style.gridColumn = `${shipGridColumnStart} / span 1`;
-          placedShipElement.style.gridRow = `${shipGridRowStart} / span ${ship.shipLength}`;
-        }
-        gameboard.appendChild(placedShipElement);
+      const gameboardCells = gameboard.querySelectorAll(".gameboard-cell");
+      // Remove ship.shipLength cells from gameboard
+      gameboardCells.forEach((gameboardCell) => {
+        if (playerGameboard.activeShipCells.has(gameboardCell.dataset.cellId)) gameboardCell.remove();
       });
 
-      
-    }
-     */
-  addGameboardEventListeners();
-  addGameboardClickEventListeners();
-  addGameboardHoverEventListeners();
+      const placedShipElement = document.createElement("div");
+      placedShipElement.classList.add("placement-ship");
+      placedShipElement.classList.add(`${ship.shipOrientation}-ship`);
+      placedShipElement.id = ship.shipName;
+
+      for (let i = 0; i < ship.shipLength; i++) {
+        const shipCell = document.createElement("div");
+        shipCell.classList.add("ship-cell");
+        placedShipElement.appendChild(shipCell);
+      }
+
+      // Grid placement
+      if ((ship.shipOrientation = "horizontal")) {
+        alert("Ya Mama");
+
+        placedShipElement.style.gridColumnStart = `${shipGridColumnStartIndex}`;
+        placedShipElement.style.gridColumnEnd = `${shipGridColumnStartIndex + ship.shipLength}`;
+        placedShipElement.style.gridRowStart = `${shipGridRowStart}`;
+        placedShipElement.style.gridRowEnd = `${Number(shipGridRowStart) + 1}`;
+      } else {
+        placedShipElement.style.gridColumn = `${shipGridColumnStart} / span 1`;
+        placedShipElement.style.gridRow = `${shipGridRowStart} / span ${ship.shipLength}`;
+      }
+      gameboard.appendChild(placedShipElement);
+    });
+  }
+
+  addPlaceShipsWrapperEventListeners();
+  addPlaceShipGameboardClickEventListeners();
 }
 
 function addGameboardHoverEventListeners() {

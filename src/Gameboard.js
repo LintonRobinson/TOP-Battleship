@@ -35,17 +35,18 @@ class Gameboard {
       isShipPlacedOverlapping(shipLength, shipPlacementCell, shipOrientation)
     ) {
       return false;
+    } else {
+      this.unplacedShips.delete(shipName);
     }
 
-    const shipToPlace = new Ship(shipName);
+    const shipToPlace = new Ship(shipName, shipPlacementCell, shipOrientation);
     for (let i = 0; i < shipLength; i++) {
       this.activeShipCells.set(currentCell, shipToPlace);
       this.placedShips.add(shipToPlace);
       currentCell = getNextCell(currentCell, shipOrientation);
     }
 
-    this.unplacedShips.delete(shipName);
-
+    console.log("placed a ship");
     return true;
 
     function isShipPlacedOnGameboard(shipName, shipPlacementCell, shipOrientation) {
@@ -59,9 +60,10 @@ class Gameboard {
         // Get index of gameboardColumns item that matches cellColumn
         const letterIndex = gameboardColumns.indexOf(cellColumn);
         // Add the ship length to the index. If greater than 9, out of bounds
-        if (letterIndex + shipLengths[shipName] < 9) {
+        if (letterIndex + shipLengths[shipName] - 1 < 10) {
           return true;
         } else {
+          console.log("Right here just", letterIndex + shipLengths[shipName]);
           return false;
         }
       } else {
@@ -70,7 +72,7 @@ class Gameboard {
         const cellRow = shipPlacementCell.split("")[1];
         // Get index of gameboardRows item that matches cellRow
         const numberIndex = gameboardRows.indexOf(cellRow);
-        if (numberIndex + shipLengths[shipName] < 9) {
+        if (numberIndex + shipLengths[shipName] < 10) {
           return true;
         } else {
           return false;
@@ -123,7 +125,9 @@ class Gameboard {
 
 //const testGameboard = new Gameboard();
 
-//testGameboard.placeShip("aircraftCarrier", "H1", "horizontal");
+//testGameboard.placeShip("aircraftCarrier", "F1", "horizontal");
+
+//console.log("Placing ship", testGameboard.placeShip("aircraftCarrier", "F10", "horizontal"));
 //console.log("This is the activeShipCells", testGameboard.activeShipCells);
 
 export default Gameboard;
