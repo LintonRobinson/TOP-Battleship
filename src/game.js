@@ -1,6 +1,6 @@
 import Player from "./Player.js";
 import Gameboard from "./Gameboard.js";
-import { renderGameboardCells } from "./ui.js";
+import { renderGameboardCells, removeShipElementFromPlaceShipsWrapper } from "./ui.js";
 
 let activeGame = {
   gamePhase: "shipPlacement",
@@ -35,6 +35,14 @@ function addPlaceShipGameboardClickEventListeners() {
         const clickedCellId = event.target.dataset.cellId;
         console.log("DataSet", event.target.dataset.cellId);
         activeGame.playerOne.playerGameboard.placeShip(activeGame.shipToPlace, clickedCellId, activeGame.placementOrientation);
+        document.querySelector(`#${activeGame.shipToPlace}`).remove();
+        removeShipElementFromPlaceShipsWrapper(activeGame.shipToPlace);
+
+        activeGame.shipToPlace = null;
+
+        const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
+        placingShipsGameboardWrapper.classList.remove("placingShips");
+
         renderGameboardCells(activeGame.playerOne.playerGameboard);
       } else {
       }

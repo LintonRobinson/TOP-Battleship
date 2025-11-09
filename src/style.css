@@ -407,7 +407,7 @@ label {
   pointer-events: none;
 } */
 
-#aircraftCarrier.vertical-ship::after {
+.aircraftCarrier.vertical-ship::after {
   content: "Aircraft Carrier";
   position: absolute;
   transform: rotate(-90deg);
@@ -419,7 +419,7 @@ label {
   padding: 0 8px;
 }
 
-#aircraftCarrier.horizontal-ship::after {
+.aircraftCarrier.horizontal-ship::after {
   content: "Aircraft Carrier";
   position: absolute;
 
