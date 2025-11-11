@@ -1,6 +1,6 @@
 import { addPlaceShipGameboardClickEventListeners, activeGame } from "./game.js";
 
-function startUI() {
+function startGameSetupUI() {
   const startGameWrapper = document.querySelector("#start-game-wrapper");
   const selectGameModeWrapper = document.querySelector("#select-mode-wrapper");
   const enterPlayerNamesWrapper = document.querySelector("#enter-player-names-wrapper");
@@ -130,7 +130,7 @@ function renderGameboardCells(playerGameboard) {
   const gameboard = document.querySelector(".gameboard");
   // Clear gameboard cells
 
-  if (playerGameboard) {
+  if (document.querySelector(".placingShips") && document.querySelector(".gameboard-cell")) {
     const gameboardCells = gameboard.querySelectorAll("*");
 
     gameboardCells.forEach((gameboardCell) => {
@@ -163,10 +163,12 @@ function renderGameboardCells(playerGameboard) {
       const shipGridRowStart = initialShipPlacementCellRow;
 
       // Remove ship.shipLength cells from gameboard
-      const gameboardCells = gameboard.querySelectorAll(".gameboard-cell");
-      gameboardCells.forEach((gameboardCell) => {
-        if (playerGameboard.activeShipCells.has(gameboardCell.dataset.cellId)) gameboardCell.remove();
-      });
+      if (document.querySelector(".gameboard-cell")) {
+        const gameboardCells = gameboard.querySelectorAll(".gameboard-cell");
+        gameboardCells.forEach((gameboardCell) => {
+          if (playerGameboard.activeShipCells.has(gameboardCell.dataset.cellId)) gameboardCell.remove();
+        });
+      }
 
       const placedShipElement = document.createElement("div");
       placedShipElement.classList.add("placement-ship");
@@ -199,35 +201,43 @@ function addPlaceShipsWrapperEventListeners() {
   const placeShipsWrapper = document.querySelector("#place-ships");
 
   placeShipsWrapper.addEventListener("click", (event) => {
+    console.log("This is the event target parent", event.target.parentElement);
     const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
     const clickedShip = event.target;
-    if (activeGame.shipToPlace != clickedShip.id && clickedShip.classList.contains("placement-ship")) {
+
+    if (activeGame.shipToPlace != event.target.id && event.target.classList.contains("placement-ship")) {
       document.querySelectorAll(".placement-ship").forEach((placementShip) => {
         if (placementShip.id != activeGame.shipToPlace) placementShip.classList.remove("activeShipToPlace");
       });
 
       activeGame.shipToPlace = event.target.id;
-      console.log("Active ship to place is", activeGame.shipToPlace);
-      console.log("Event targ,", event.target.id);
       clickedShip.classList.add("activeShipToPlace");
-      console.log("Should have added activeShipToPlace to", event.target);
       placingShipsGameboardWrapper.classList.add("placingShips");
-    } else {
+    } else if (event.target.classList.contains("placement-ship")) {
       activeGame.shipToPlace = null;
       event.target.classList.remove("activeShipToPlace");
       placingShipsGameboardWrapper.classList.remove("placingShips");
+    }
+
+    // Place ships rotation button
+    if (event.target.id === "toggleShipOrientation" && event.target.parentElement.id === "ship-placement-btns") {
+      console.log("placementOrientation", activeGame.placementOrientation);
+      activeGame.placementOrientation === "horizontal" ? (activeGame.placementOrientation = "vertical") : (activeGame.placementOrientation = "horizontal");
     }
   });
 }
 
 function removeShipElementFromPlaceShipsWrapper(passedShipToRemove) {
+  document.querySelectorAll(".placement-ship").forEach((placementShip) => {
+    if (placementShip.id != activeGame.shipToPlace) placementShip.classList.remove("activeShipToPlace");
+  });
   const shipToRemove = document.querySelector(`#${passedShipToRemove}`);
   shipToRemove.remove();
 }
 
-document.addEventListener("DOMContentLoaded", startUI);
+document.addEventListener("DOMContentLoaded", startGameSetupUI);
 
-export { startUI, renderGameboardCells, removeShipElementFromPlaceShipsWrapper };
+export { startGameSetupUI, renderGameboardCells, removeShipElementFromPlaceShipsWrapper };
 
 // MAKE SHIP ORIENTATION PROP ON SHIP, AND SHIP INSTANCES MAP ON GAMEBOARD CLASS
 

@@ -423,7 +423,7 @@ label {
   content: "Aircraft Carrier";
   position: absolute;
 
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 900;
   letter-spacing: 0.3rem;
   background: #ffffff;
@@ -431,7 +431,7 @@ label {
   padding: 0 8px;
 }
 
-#battleship::after {
+.battleship.vertical-ship::after {
   content: "Battleship";
   position: absolute;
   transform: rotate(-90deg);
@@ -443,7 +443,18 @@ label {
   padding: 0 8px;
 }
 
-#cruiser::after {
+.battleship.horizontal-ship::after {
+  content: "Battleship";
+  position: absolute;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+.cruiser.vertical-ship::after {
   content: "Cruiser";
   position: absolute;
   transform: rotate(-90deg);
@@ -455,11 +466,10 @@ label {
   padding: 0 8px;
 }
 
-#submarine::after {
-  content: "Submarine";
+.cruiser.horizontal-ship::after {
+  content: "Cruiser";
   position: absolute;
-  transform: rotate(-90deg);
-  font-size: 0.65rem;
+  font-size: 1rem;
   font-weight: 900;
   letter-spacing: 0.3rem;
   background: #ffffff;
@@ -467,16 +477,50 @@ label {
   padding: 0 8px;
 }
 
-#destroyer::after {
+.submarine.vertical-ship::after {
+  content: "Submarine";
+  position: absolute;
+  transform: rotate(-90deg);
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.2rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 5px;
+}
+
+.submarine.horizontal-ship::after {
+  content: "Submarine";
+  position: absolute;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.2rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 5px;
+}
+
+.destroyer.vertical-ship::after {
   content: "Destroyer";
   position: absolute;
   transform: rotate(-90deg);
-  font-size: 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1rem;
+  background: #ffffff;
+  white-space: nowrap;
+  padding: 0 4px;
+}
+
+.destroyer.horizontal-ship::after {
+  content: "Destroyer";
+  position: absolute;
+  font-size: 0.7rem;
   font-weight: 900;
   letter-spacing: 0.1rem;
   background: #ffffff;
   white-space: nowrap;
-  padding: 0 8px;
+  padding: 0 4px;
 }
 
 #gameplay-screen-wrapper {
