@@ -7,7 +7,7 @@ let activeGame = {
   playerPlacingShips: "playerOne",
   shipToPlace: null,
   gameMode: null,
-  placementOrientation: "horizontal",
+  placementOrientation: "vertical",
 };
 
 function startGame() {
@@ -49,6 +49,14 @@ function addPlaceShipGameboardClickEventListeners() {
   });
 }
 
+// state of mouse down function
+
+// on mouse down of ship to drag in its conainer within that event listener add a hover event listener to gameboard
+
+function togglePlaceShipOrientation() {
+  activeGame.placementOrientation === "horizontal" ? (activeGame.placementOrientation = "vertical") : (activeGame.placementOrientation = "horizontal");
+}
+
 document.addEventListener("DOMContentLoaded", startGame);
 
-export { startGame, addPlaceShipGameboardClickEventListeners, activeGame };
+export { startGame, addPlaceShipGameboardClickEventListeners, activeGame, togglePlaceShipOrientation };

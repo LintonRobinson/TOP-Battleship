@@ -1,4 +1,4 @@
-import { addPlaceShipGameboardClickEventListeners, activeGame } from "./game.js";
+import { addPlaceShipGameboardClickEventListeners, activeGame, togglePlaceShipOrientation } from "./game.js";
 
 function startGameSetupUI() {
   const startGameWrapper = document.querySelector("#start-game-wrapper");
@@ -122,6 +122,7 @@ function startGameSetupUI() {
   }
 
   addPlaceShipsWrapperEventListeners();
+  addPlaceShipGameboarDragEventListeners();
 
   // If the cell to add is in the hash map at the end off looping, remove that many cells and add ship to span grid
 }
@@ -172,7 +173,7 @@ function renderGameboardCells(playerGameboard) {
 
       const placedShipElement = document.createElement("div");
       placedShipElement.classList.add("placement-ship");
-      placedShipElement.classList.add(`${ship.shipOrientation}-ship`);
+      placedShipElement.classList.add(`${ship.shipOrientation}-eplacement-ship`);
       placedShipElement.classList.add(ship.shipName);
       // Remove
       for (let i = 0; i < ship.shipLength; i++) {
@@ -221,10 +222,71 @@ function addPlaceShipsWrapperEventListeners() {
 
     // Place ships rotation button
     if (event.target.id === "toggleShipOrientation" && event.target.parentElement.id === "ship-placement-btns") {
-      console.log("placementOrientation", activeGame.placementOrientation);
-      activeGame.placementOrientation === "horizontal" ? (activeGame.placementOrientation = "vertical") : (activeGame.placementOrientation = "horizontal");
+      const placementShips = document.querySelectorAll(".placement-ship");
+
+      placementShips.forEach((placementShip) => {
+        if (activeGame.placementOrientation === "horizontal") {
+          placementShip.classList.remove("horizontal-placement-ship");
+          placementShip.classList.add("vertical-placement-ship");
+        } else {
+          console.log("Ya Mama Runnin!!");
+          placementShip.classList.remove("vertical-placement-ship");
+          placementShip.classList.add("horizontal-placement-ship");
+        }
+      });
+
+      togglePlaceShipOrientation();
     }
   });
+}
+
+function addPlaceShipGameboarDragEventListeners() {
+  const placementShips = document.querySelectorAll(".placement-ship");
+  const gameboard = document.querySelector(".gameboard");
+
+  placementShips.forEach((placementShip) => {
+    placementShip.addEventListener("dragstart", (event) => {
+      event.dataTransfer.setData("text", event.target.id);
+    });
+
+    placementShip.addEventListener("drop", (event) => {
+      // Prevent ship dragging snapback
+      event.preventDefault();
+    });
+  });
+
+  // Prevent ship dragging snapback
+  gameboard.addEventListener("dragover", (event) => {
+    event.preventDefault();
+  });
+
+  // WHen the first ship cell child of dragged ship is dragged over a cell, change the background color
+}
+
+function addRemoveGameboardCellDragEventListeners(addOrRemoveEventListener) {
+  function addGameboardCellDragEventListeners(event) {
+    const gameboardCells = document.querySelectorAll(".gameboard-cell");
+    gameboardCells.forEach((gameboardCell) => {
+      gameboardCell.addEventListener("dragenter", (event) => {
+        console.log("entering ya ");
+        const draggedShipPosition = document.querySelector(`#${event.dataTransfer.getData("text")}`).getBoundingClientRect();
+        const currentCellPosition = document.querySelector(`#${event.target.id}`).getBoundingClientRect();
+        if (
+          !(
+            draggedShipPosition.right < currentCellPosition.left ||
+            draggedShipPosition.left > currentCellPosition.right ||
+            draggedShipPosition.bottom < currentCellPosition.top ||
+            draggedShipPosition.top > currentCellPosition.bottom
+          )
+        ) {
+          gameboardCell.style.backgroundColor = "#82ff6b";
+        }
+      });
+    });
+  }
+
+  if (addOrRemoveEventListener === "add") {
+  }
 }
 
 function removeShipElementFromPlaceShipsWrapper(passedShipToRemove) {

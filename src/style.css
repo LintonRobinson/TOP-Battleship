@@ -381,7 +381,16 @@ label {
   transition: 0.2s;
 }
 
-.placement-ship {
+.placement-ship.horizontal-placement-ship {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-shadow: 0px 0px 10px 0.2px rgba(255, 193, 193, 0.332);
+}
+
+.placement-ship.vertical-placement-ship {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -407,7 +416,7 @@ label {
   pointer-events: none;
 } */
 
-.aircraftCarrier.vertical-ship::after {
+.aircraftCarrier.vertical-placement-ship::after {
   content: "Aircraft Carrier";
   position: absolute;
   transform: rotate(-90deg);
@@ -419,7 +428,7 @@ label {
   padding: 0 8px;
 }
 
-.aircraftCarrier.horizontal-ship::after {
+.aircraftCarrier.horizontal-placement-ship::after {
   content: "Aircraft Carrier";
   position: absolute;
 
@@ -431,7 +440,7 @@ label {
   padding: 0 8px;
 }
 
-.battleship.vertical-ship::after {
+.battleship.vertical-placement-ship::after {
   content: "Battleship";
   position: absolute;
   transform: rotate(-90deg);
@@ -443,7 +452,7 @@ label {
   padding: 0 8px;
 }
 
-.battleship.horizontal-ship::after {
+.battleship.horizontal-placement-ship::after {
   content: "Battleship";
   position: absolute;
   font-size: 1rem;
@@ -454,7 +463,7 @@ label {
   padding: 0 8px;
 }
 
-.cruiser.vertical-ship::after {
+.cruiser.vertical-placement-ship::after {
   content: "Cruiser";
   position: absolute;
   transform: rotate(-90deg);
@@ -466,7 +475,7 @@ label {
   padding: 0 8px;
 }
 
-.cruiser.horizontal-ship::after {
+.cruiser.horizontal-placement-ship::after {
   content: "Cruiser";
   position: absolute;
   font-size: 1rem;
@@ -477,7 +486,7 @@ label {
   padding: 0 8px;
 }
 
-.submarine.vertical-ship::after {
+.submarine.vertical-placement-ship::after {
   content: "Submarine";
   position: absolute;
   transform: rotate(-90deg);
@@ -489,7 +498,7 @@ label {
   padding: 0 5px;
 }
 
-.submarine.horizontal-ship::after {
+.submarine.horizontal-placement-ship::after {
   content: "Submarine";
   position: absolute;
   font-size: 0.9rem;
@@ -500,7 +509,7 @@ label {
   padding: 0 5px;
 }
 
-.destroyer.vertical-ship::after {
+.destroyer.vertical-placement-ship::after {
   content: "Destroyer";
   position: absolute;
   transform: rotate(-90deg);
@@ -512,7 +521,7 @@ label {
   padding: 0 4px;
 }
 
-.destroyer.horizontal-ship::after {
+.destroyer.horizontal-placement-ship::after {
   content: "Destroyer";
   position: absolute;
   font-size: 0.7rem;
