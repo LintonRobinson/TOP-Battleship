@@ -376,7 +376,8 @@ label {
   transition: 0.2s;
 }
 
-.placing-ships-gameboard.placingShips .gameboard-cell:hover {
+.placing-ships-gameboard.placingShips .gameboard-cell:hover,
+.gameboard-cell.activeCell {
   background-color: #82ff6b;
   transition: 0.2s;
 }

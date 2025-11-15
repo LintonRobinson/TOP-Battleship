@@ -195,6 +195,7 @@ function renderGameboardCells(playerGameboard) {
   }
 
   addPlaceShipGameboardClickEventListeners();
+  // addRemoveGameboardDragEventListeners("add");
 }
 
 function addPlaceShipsWrapperEventListeners() {
@@ -240,13 +241,28 @@ function addPlaceShipsWrapperEventListeners() {
   });
 }
 
+let draggedShip;
+let draggedShipFirstShipCellRect;
 function addPlaceShipGameboarDragEventListeners() {
   const placementShips = document.querySelectorAll(".placement-ship");
   const gameboard = document.querySelector(".gameboard");
 
   placementShips.forEach((placementShip) => {
     placementShip.addEventListener("dragstart", (event) => {
-      event.dataTransfer.setData("text", event.target.id);
+      // Remove activeShipToPlace class from all placement ships
+      document.querySelectorAll(".placement-ship").forEach((placementShip) => {
+        if (placementShip.id != activeGame.shipToPlace) placementShip.classList.remove("activeShipToPlace");
+      });
+      // Reassign activeGame.shipToPlace
+      activeGame.shipToPlace = event.target.id;
+      draggedShip = event.target;
+    });
+
+    placementShip.addEventListener("drag", (event) => {
+      const draggedShipFirstShipCell = event.target.querySelector(".first-cell");
+      draggedShipFirstShipCellRect = draggedShipFirstShipCell.getBoundingClientRect();
+      // Prevent ship dragging snapback
+      event.preventDefault();
     });
 
     placementShip.addEventListener("drop", (event) => {
@@ -255,37 +271,77 @@ function addPlaceShipGameboarDragEventListeners() {
     });
   });
 
-  // Prevent ship dragging snapback
+  let onlyRunOnce = true;
   gameboard.addEventListener("dragover", (event) => {
+    // Prevent ship dragging snapback
     event.preventDefault();
+
+    const placementShipCells = draggedShip.querySelectorAll(".ship-cell");
+    placementShipCells.forEach((shipCell) => {
+      const gameboardCells = document.querySelectorAll(".gameboard-cell");
+      const shipCellRectangle = shipCell.getBoundingClientRect();
+
+      gameboardCells.forEach((gameboardCell) => {
+        const gameboardCellRectangle = gameboardCell.getBoundingClientRect();
+        if (onlyRunOnce) {
+          console.log("shipCellRectangle", shipCellRectangle);
+          console.log("gameboardCellRectangle", gameboardCellRectangle);
+          console.log("gameboardCellId", gameboardCell.dataset.cellId);
+          showRect(shipCell);
+
+          if (
+            !(
+              shipCellRectangle.right < gameboardCellRectangle.left ||
+              shipCellRectangle.left > gameboardCellRectangle.right ||
+              shipCellRectangle.bottom < gameboardCellRectangle.top ||
+              shipCellRectangle.top > gameboardCellRectangle.bottom
+            )
+          ) {
+            // should be event target
+            console.log();
+            gameboardCell.classList.add("activeCell");
+          } else {
+            gameboardCell.classList.remove("activeCell");
+          }
+          onlyRunOnce = false;
+        }
+      });
+    });
   });
 
   // WHen the first ship cell child of dragged ship is dragged over a cell, change the background color
 }
 
-function addRemoveGameboardCellDragEventListeners(addOrRemoveEventListener) {
+function addRemoveGameboardDragEventListeners(addOrRemoveEventListener) {
+  const gameboardCells = document.querySelectorAll(".gameboard-cell");
+  //ALL SHIP CELLS IN PLACEMENT SHIP TO SEE IF IT IS ENTERING  GAMEBOARD CELLS
   function addGameboardCellDragEventListeners(event) {
-    const gameboardCells = document.querySelectorAll(".gameboard-cell");
-    gameboardCells.forEach((gameboardCell) => {
-      gameboardCell.addEventListener("dragenter", (event) => {
-        console.log("entering ya ");
-        const draggedShipPosition = document.querySelector(`#${event.dataTransfer.getData("text")}`).getBoundingClientRect();
-        const currentCellPosition = document.querySelector(`#${event.target.id}`).getBoundingClientRect();
-        if (
-          !(
-            draggedShipPosition.right < currentCellPosition.left ||
-            draggedShipPosition.left > currentCellPosition.right ||
-            draggedShipPosition.bottom < currentCellPosition.top ||
-            draggedShipPosition.top > currentCellPosition.bottom
-          )
-        ) {
-          gameboardCell.style.backgroundColor = "#82ff6b";
-        }
-      });
+    event.preventDefault();
+    const placementShipCells = draggedShip.querySelectorAll(".ship-cell");
+    console.log("entering ya", event.target);
+    const currentCellId = event.target.dataset.cellId;
+    const currentCellPosition = event.target.getBoundingClientRect();
+
+    placementShipCells.forEach((shipCell) => {
+      if (
+        !(
+          shipCell.right < currentCellPosition.left ||
+          shipCell.left > currentCellPosition.right ||
+          shipCell.bottom < currentCellPosition.top ||
+          shipCell.top > currentCellPosition.bottom
+        )
+      ) {
+        // should be event target
+        shipCell.style.backgroundColor = "#82ff6b";
+      }
     });
   }
 
+  // If add was passed to this function addRemoveGameboardCellDragEventListeners
   if (addOrRemoveEventListener === "add") {
+    gameboardCells.forEach((gameboardCell) => {
+      gameboardCell.addEventListener("drag", addGameboardCellDragEventListeners);
+    });
   }
 }
 
@@ -304,3 +360,22 @@ export { startGameSetupUI, renderGameboardCells, removeShipElementFromPlaceShips
 // MAKE SHIP ORIENTATION PROP ON SHIP, AND SHIP INSTANCES MAP ON GAMEBOARD CLASS
 
 // Changes: shipOrientation
+
+function showRect(el) {
+  const rect = el.getBoundingClientRect();
+
+  const overlay = document.createElement("div");
+  overlay.style.position = "absolute";
+  overlay.style.top = rect.top + "px";
+  overlay.style.left = rect.left + "px";
+  overlay.style.width = rect.width + "px";
+  overlay.style.height = rect.height + "px";
+  overlay.style.border = "2px solid red";
+  overlay.style.pointerEvents = "none"; // so it doesn’t block mouse
+  overlay.style.zIndex = 99999;
+
+  document.body.appendChild(overlay);
+
+  // optional: remove after 1 second
+  // setTimeout(() => overlay.remove(), 1000);
+}
