@@ -320,7 +320,7 @@ label {
   border: 1px solid rgba(255, 255, 255, 0.3);
   display: flex;
   flex-wrap: wrap;
-  align-items: self-start;
+  align-items: end;
   justify-content: center;
   gap: 30px;
 
@@ -382,22 +382,22 @@ label {
   transition: 0.2s;
 }
 
-.placement-ship.horizontal-placement-ship {
+.horizontal-placement-ship {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   position: relative;
-  box-shadow: 0px 0px 10px 0.2px rgba(255, 193, 193, 0.332);
+  box-shadow: 0px 0px 10px 0.1px rgba(255, 193, 193, 0.128);
 }
 
-.placement-ship.vertical-placement-ship {
+.vertical-placement-ship {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
-  box-shadow: 0px 0px 10px 0.2px rgba(255, 193, 193, 0.332);
+  box-shadow: 0px 0px 10px 0.1px rgba(255, 193, 193, 0.13);
 }
 
 .placement-ship.activeShipToPlace {
@@ -656,7 +656,6 @@ label {
 
 .placement-ship {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;

@@ -122,7 +122,8 @@ function startGameSetupUI() {
   }
 
   addPlaceShipsWrapperEventListeners();
-  addPlaceShipGameboarDragEventListeners();
+  addPlaceShipDragEventListeners();
+  //addPlaceShipGameboarDragEventListeners();
 
   // If the cell to add is in the hash map at the end off looping, remove that many cells and add ship to span grid
 }
@@ -172,8 +173,8 @@ function renderGameboardCells(playerGameboard) {
       }
 
       const placedShipElement = document.createElement("div");
-      placedShipElement.classList.add("placement-ship");
-      placedShipElement.classList.add(`${ship.shipOrientation}-eplacement-ship`);
+
+      placedShipElement.classList.add(`${ship.shipOrientation}-placement-ship`);
       placedShipElement.classList.add(ship.shipName);
       // Remove
       for (let i = 0; i < ship.shipLength; i++) {
@@ -183,19 +184,26 @@ function renderGameboardCells(playerGameboard) {
       }
 
       // Grid placement
-      if ((ship.shipOrientation = "horizontal")) {
+      console.log("This is the ship instance", ship);
+      if (ship.shipOrientation === "horizontal") {
         placedShipElement.style.gridColumnStart = `${shipGridColumnStartIndex}`;
         placedShipElement.style.gridColumnEnd = `${shipGridColumnStartIndex + ship.shipLength}`;
         placedShipElement.style.gridRowStart = `${shipGridRowStart}`;
         placedShipElement.style.gridRowEnd = `${Number(shipGridRowStart) + 1}`;
       } else {
+        alert("OOO");
+        placedShipElement.style.gridColumnStart = `${shipGridColumnStartIndex}`;
+        placedShipElement.style.gridColumnEnd = `${shipGridColumnStartIndex + 1}`;
+        placedShipElement.style.gridRowStart = `${shipGridRowStart}`;
+        placedShipElement.style.gridRowEnd = `${Number(shipGridRowStart) + ship.shipLength}`;
       }
       gameboard.appendChild(placedShipElement);
     });
+    console.log("placedShips Set", playerGameboard.placedShips);
   }
 
+  addGameboardCellDragEventListeners();
   addPlaceShipGameboardClickEventListeners();
-  // addRemoveGameboardDragEventListeners("add");
 }
 
 function addPlaceShipsWrapperEventListeners() {
@@ -230,7 +238,6 @@ function addPlaceShipsWrapperEventListeners() {
           placementShip.classList.remove("horizontal-placement-ship");
           placementShip.classList.add("vertical-placement-ship");
         } else {
-          console.log("Ya Mama Runnin!!");
           placementShip.classList.remove("vertical-placement-ship");
           placementShip.classList.add("horizontal-placement-ship");
         }
@@ -242,69 +249,41 @@ function addPlaceShipsWrapperEventListeners() {
 }
 
 let draggedShip;
-let draggedShipFirstShipCellRect;
-function addPlaceShipGameboarDragEventListeners() {
+function addPlaceShipDragEventListeners() {
   const placementShips = document.querySelectorAll(".placement-ship");
-  const gameboard = document.querySelector(".gameboard");
 
   placementShips.forEach((placementShip) => {
     placementShip.addEventListener("dragstart", (event) => {
+      console.log("Triggering!!");
       // Remove activeShipToPlace class from all placement ships
       document.querySelectorAll(".placement-ship").forEach((placementShip) => {
-        if (placementShip.id != activeGame.shipToPlace) placementShip.classList.remove("activeShipToPlace");
+        placementShip.classList.remove("activeShipToPlace");
       });
       // Reassign activeGame.shipToPlace
       activeGame.shipToPlace = event.target.id;
       draggedShip = event.target;
+      // Set hover image to have mouse start in top left corner
+      const draggedShipClone = event.target.cloneNode(true);
+      draggedShipClone.style.position = "absolute";
+      draggedShipClone.style.top = "-9999px";
+      draggedShipClone.style.left = "-9999px";
+      document.body.appendChild(draggedShipClone);
+
+      event.dataTransfer.setDragImage(draggedShipClone, 0, 0);
     });
 
+    //
     placementShip.addEventListener("drag", (event) => {
-      const draggedShipFirstShipCell = event.target.querySelector(".first-cell");
-      draggedShipFirstShipCellRect = draggedShipFirstShipCell.getBoundingClientRect();
       // Prevent ship dragging snapback
       event.preventDefault();
     });
 
     placementShip.addEventListener("drop", (event) => {
       // Prevent ship dragging snapback
-      event.preventDefault();
-    });
-  });
 
-  let onlyRunOnce = true;
-  gameboard.addEventListener("dragover", (event) => {
-    // Prevent ship dragging snapback
-    event.preventDefault();
-
-    const placementShipCells = draggedShip.querySelectorAll(".ship-cell");
-    placementShipCells.forEach((shipCell) => {
       const gameboardCells = document.querySelectorAll(".gameboard-cell");
-      const shipCellRectangle = shipCell.getBoundingClientRect();
-
       gameboardCells.forEach((gameboardCell) => {
-        const gameboardCellRectangle = gameboardCell.getBoundingClientRect();
-        if (onlyRunOnce) {
-          console.log("shipCellRectangle", shipCellRectangle);
-          console.log("gameboardCellRectangle", gameboardCellRectangle);
-          console.log("gameboardCellId", gameboardCell.dataset.cellId);
-          showRect(shipCell);
-
-          if (
-            !(
-              shipCellRectangle.right < gameboardCellRectangle.left ||
-              shipCellRectangle.left > gameboardCellRectangle.right ||
-              shipCellRectangle.bottom < gameboardCellRectangle.top ||
-              shipCellRectangle.top > gameboardCellRectangle.bottom
-            )
-          ) {
-            // should be event target
-            console.log();
-            gameboardCell.classList.add("activeCell");
-          } else {
-            gameboardCell.classList.remove("activeCell");
-          }
-          onlyRunOnce = false;
-        }
+        gameboardCell.classList.remove("activeCell");
       });
     });
   });
@@ -312,36 +291,39 @@ function addPlaceShipGameboarDragEventListeners() {
   // WHen the first ship cell child of dragged ship is dragged over a cell, change the background color
 }
 
-function addRemoveGameboardDragEventListeners(addOrRemoveEventListener) {
-  const gameboardCells = document.querySelectorAll(".gameboard-cell");
+function addGameboardCellDragEventListeners() {
   //ALL SHIP CELLS IN PLACEMENT SHIP TO SEE IF IT IS ENTERING  GAMEBOARD CELLS
-  function addGameboardCellDragEventListeners(event) {
-    event.preventDefault();
-    const placementShipCells = draggedShip.querySelectorAll(".ship-cell");
-    console.log("entering ya", event.target);
-    const currentCellId = event.target.dataset.cellId;
-    const currentCellPosition = event.target.getBoundingClientRect();
+  const gameboardCells = document.querySelectorAll(".gameboard-cell");
+  gameboardCells.forEach((gameboardCell) => {
+    gameboardCell.addEventListener("dragover", (event) => {
+      // Prevent ship dragging snapback
+      event.preventDefault();
+      gameboardCell.classList.add("activeCell");
+    });
 
-    placementShipCells.forEach((shipCell) => {
-      if (
-        !(
-          shipCell.right < currentCellPosition.left ||
-          shipCell.left > currentCellPosition.right ||
-          shipCell.bottom < currentCellPosition.top ||
-          shipCell.top > currentCellPosition.bottom
-        )
-      ) {
-        // should be event target
-        shipCell.style.backgroundColor = "#82ff6b";
+    gameboardCell.addEventListener("dragleave", (event) => {
+      // Prevent ship dragging snapback
+      event.preventDefault();
+      gameboardCell.classList.remove("activeCell");
+    });
+  });
+
+  function highlightAdjacentShipCells(currentCellId) {
+    const shipLengths = {
+      aircraftCarrier: 5,
+      battleship: 4,
+      cruiser: 3,
+      submarine: 3,
+      destroyer: 2,
+    };
+    const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+    const currentCellColumn = currentCellId.split("")[0];
+    let incrementingCellColumnIndex = gameboardColumns.findIndex((cellId) => cellId === currentCellColumn);
+    for (let i = 0; i < shipLengths[activeGame.shipToPlace]; i++) {
+      if ((activeGame.placementOrientation = "horizontal")) {
+        //document.querySelector(`[data-cell-id=${}]`).classList.add("activeCell")
       }
-    });
-  }
-
-  // If add was passed to this function addRemoveGameboardCellDragEventListeners
-  if (addOrRemoveEventListener === "add") {
-    gameboardCells.forEach((gameboardCell) => {
-      gameboardCell.addEventListener("drag", addGameboardCellDragEventListeners);
-    });
+    }
   }
 }
 
@@ -360,22 +342,3 @@ export { startGameSetupUI, renderGameboardCells, removeShipElementFromPlaceShips
 // MAKE SHIP ORIENTATION PROP ON SHIP, AND SHIP INSTANCES MAP ON GAMEBOARD CLASS
 
 // Changes: shipOrientation
-
-function showRect(el) {
-  const rect = el.getBoundingClientRect();
-
-  const overlay = document.createElement("div");
-  overlay.style.position = "absolute";
-  overlay.style.top = rect.top + "px";
-  overlay.style.left = rect.left + "px";
-  overlay.style.width = rect.width + "px";
-  overlay.style.height = rect.height + "px";
-  overlay.style.border = "2px solid red";
-  overlay.style.pointerEvents = "none"; // so it doesn’t block mouse
-  overlay.style.zIndex = 99999;
-
-  document.body.appendChild(overlay);
-
-  // optional: remove after 1 second
-  // setTimeout(() => overlay.remove(), 1000);
-}

@@ -34,6 +34,7 @@ class Gameboard {
       !isShipPlacedOnGameboard(shipName, shipPlacementCell, shipOrientation) ||
       isShipPlacedOverlapping(shipLength, shipPlacementCell, shipOrientation)
     ) {
+      alert("Ya Mamiiii");
       return false;
     } else {
       this.unplacedShips.delete(shipName);
@@ -72,7 +73,7 @@ class Gameboard {
         const cellRow = shipPlacementCell.split("")[1];
         // Get index of gameboardRows item that matches cellRow
         const numberIndex = gameboardRows.indexOf(cellRow);
-        if (numberIndex + shipLengths[shipName] < 10) {
+        if (numberIndex + shipLengths[shipName] - 1 < 10) {
           return true;
         } else {
           return false;

@@ -33,6 +33,7 @@ function addPlaceShipGameboardClickEventListeners() {
     if (event.target.classList.contains("gameboard-cell") && activeGame.shipToPlace) {
       if (activeGame.playerOne.playerGameboard.unplacedShips.size) {
         const clickedCellId = event.target.dataset.cellId;
+        alert(clickedCellId);
         console.log("DataSet", event.target.dataset.cellId);
         activeGame.playerOne.playerGameboard.placeShip(activeGame.shipToPlace, clickedCellId, activeGame.placementOrientation);
         removeShipElementFromPlaceShipsWrapper(activeGame.shipToPlace);
