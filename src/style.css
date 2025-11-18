@@ -378,7 +378,7 @@ label {
 
 .placing-ships-gameboard.placingShips .gameboard-cell:hover,
 .gameboard-cell.activeCell {
-  background-color: #82ff6b;
+  background-color: #a1ff91;
   transition: 0.2s;
 }
 
@@ -725,6 +725,7 @@ main {
   transition: 0.5s;
   position: absolute;
   top: 100vh;
+  opacity: 0;
 }
 
 main div.fadeIn {

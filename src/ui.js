@@ -184,14 +184,12 @@ function renderGameboardCells(playerGameboard) {
       }
 
       // Grid placement
-      console.log("This is the ship instance", ship);
       if (ship.shipOrientation === "horizontal") {
         placedShipElement.style.gridColumnStart = `${shipGridColumnStartIndex}`;
         placedShipElement.style.gridColumnEnd = `${shipGridColumnStartIndex + ship.shipLength}`;
         placedShipElement.style.gridRowStart = `${shipGridRowStart}`;
         placedShipElement.style.gridRowEnd = `${Number(shipGridRowStart) + 1}`;
       } else {
-        alert("OOO");
         placedShipElement.style.gridColumnStart = `${shipGridColumnStartIndex}`;
         placedShipElement.style.gridColumnEnd = `${shipGridColumnStartIndex + 1}`;
         placedShipElement.style.gridRowStart = `${shipGridRowStart}`;
@@ -199,7 +197,6 @@ function renderGameboardCells(playerGameboard) {
       }
       gameboard.appendChild(placedShipElement);
     });
-    console.log("placedShips Set", playerGameboard.placedShips);
   }
 
   addGameboardCellDragEventListeners();
@@ -211,7 +208,6 @@ function addPlaceShipsWrapperEventListeners() {
   const placeShipsWrapper = document.querySelector("#place-ships");
 
   placeShipsWrapper.addEventListener("click", (event) => {
-    console.log("This is the event target parent", event.target.parentElement);
     const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
     const clickedShip = event.target;
 
@@ -254,7 +250,6 @@ function addPlaceShipDragEventListeners() {
 
   placementShips.forEach((placementShip) => {
     placementShip.addEventListener("dragstart", (event) => {
-      console.log("Triggering!!");
       // Remove activeShipToPlace class from all placement ships
       document.querySelectorAll(".placement-ship").forEach((placementShip) => {
         placementShip.classList.remove("activeShipToPlace");
@@ -299,16 +294,19 @@ function addGameboardCellDragEventListeners() {
       // Prevent ship dragging snapback
       event.preventDefault();
       gameboardCell.classList.add("activeCell");
+      toggleHighlightAdjacentShipCells(event.target.dataset.cellId, "add");
     });
 
     gameboardCell.addEventListener("dragleave", (event) => {
       // Prevent ship dragging snapback
       event.preventDefault();
       gameboardCell.classList.remove("activeCell");
+      toggleHighlightAdjacentShipCells(event.target.dataset.cellId, "remove");
     });
   });
 
-  function highlightAdjacentShipCells(currentCellId) {
+  function toggleHighlightAdjacentShipCells(currentCellId, addOrRemoveHighlight) {
+    // Store ship lengths
     const shipLengths = {
       aircraftCarrier: 5,
       battleship: 4,
@@ -318,10 +316,26 @@ function addGameboardCellDragEventListeners() {
     };
     const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
     const currentCellColumn = currentCellId.split("")[0];
+    const currentCellRow = currentCellId.split("")[1];
     let incrementingCellColumnIndex = gameboardColumns.findIndex((cellId) => cellId === currentCellColumn);
+    let incrementingCellRow = Number(currentCellRow);
+    let nextCellId;
+    // Loop activeGame.shipToPlace shipLengths amount to calculate nextCellId and add or remove activeCell
     for (let i = 0; i < shipLengths[activeGame.shipToPlace]; i++) {
-      if ((activeGame.placementOrientation = "horizontal")) {
-        //document.querySelector(`[data-cell-id=${}]`).classList.add("activeCell")
+      if (activeGame.placementOrientation === "horizontal") {
+        console.log("Next Cell Id", nextCellId);
+        nextCellId = `${gameboardColumns[incrementingCellColumnIndex]}${currentCellRow}`;
+        addOrRemoveHighlight === "add"
+          ? document.querySelector(`[data-cell-id=${nextCellId}`).classList.add("activeCell")
+          : document.querySelector(`[data-cell-id=${nextCellId}`).classList.remove("activeCell");
+        incrementingCellColumnIndex++;
+      } else {
+        console.log("Next Cell Id", nextCellId);
+        nextCellId = `${currentCellColumn}${incrementingCellRow}`;
+        addOrRemoveHighlight === "add"
+          ? document.querySelector(`[data-cell-id=${nextCellId}`).classList.add("activeCell")
+          : document.querySelector(`[data-cell-id=${nextCellId}`).classList.remove("activeCell");
+        incrementingCellRow++;
       }
     }
   }

@@ -21,7 +21,7 @@ function startGame() {
       activeGame.playerTwo = new Player("human", playerTwoName);
     }
 
-    // MOVE TO UI MODULE
+    console.log("activeGame.placementOrientation", activeGame.placementOrientation);
   });
 }
 
