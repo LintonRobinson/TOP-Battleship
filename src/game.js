@@ -37,6 +37,25 @@ function addPlaceShipGameboardClickEventListeners() {
         console.log("DataSet", event.target.dataset.cellId);
         activeGame.playerOne.playerGameboard.placeShip(activeGame.shipToPlace, clickedCellId, activeGame.placementOrientation);
         removeShipElementFromPlaceShipsWrapper(activeGame.shipToPlace);
+        activeGame.shipToPlace = null;
+        const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
+        placingShipsGameboardWrapper.classList.remove("placingShips");
+
+        renderGameboardCells(activeGame.playerOne.playerGameboard);
+      } else {
+      }
+    }
+  });
+
+  placingShipsGameboardWrapper.addEventListener("drop", (event) => {
+    // Places ship when game gameboard-cell is clicked and activeGame.shipToPlace is not null
+    if (event.target.classList.contains("gameboard-cell") && activeGame.shipToPlace) {
+      if (activeGame.playerOne.playerGameboard.unplacedShips.size) {
+        const clickedCellId = event.target.dataset.cellId;
+        alert(clickedCellId);
+        console.log("DataSet", event.target.dataset.cellId);
+        activeGame.playerOne.playerGameboard.placeShip(activeGame.shipToPlace, clickedCellId, activeGame.placementOrientation);
+        removeShipElementFromPlaceShipsWrapper(activeGame.shipToPlace);
 
         activeGame.shipToPlace = null;
 
