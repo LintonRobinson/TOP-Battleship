@@ -1,4 +1,5 @@
 import { addPlaceShipGameboardClickEventListeners, activeGame, togglePlaceShipOrientation } from "./game.js";
+import { isMoveValid } from "./helpers.js";
 
 function startGameSetupUI() {
   const startGameWrapper = document.querySelector("#start-game-wrapper");
@@ -272,15 +273,6 @@ function addPlaceShipDragEventListeners() {
       // Prevent ship dragging snapback
       event.preventDefault();
     });
-
-    placementShip.addEventListener("drop", (event) => {
-      // Prevent ship dragging snapback
-
-      const gameboardCells = document.querySelectorAll(".gameboard-cell");
-      gameboardCells.forEach((gameboardCell) => {
-        gameboardCell.classList.remove("activeCell");
-      });
-    });
   });
 
   // WHen the first ship cell child of dragged ship is dragged over a cell, change the background color
@@ -303,9 +295,20 @@ function addGameboardCellDragEventListeners() {
       gameboardCell.classList.remove("activeCell");
       toggleHighlightAdjacentShipCells(event.target.dataset.cellId, "remove");
     });
+
+    gameboardCell.addEventListener("drop", (event) => {
+      // Prevent ship dragging snapback
+      alert("Ya Mama");
+      const gameboardCells = document.querySelectorAll(".gameboard-cell");
+      gameboardCells.forEach((gameboardCell) => {
+        gameboardCell.classList.remove("activeCell");
+        gameboardCell.classList.remove("badCellPlacement");
+      });
+    });
   });
 
   function toggleHighlightAdjacentShipCells(currentCellId, addOrRemoveHighlight) {
+    let shipPlacementResult = isMoveValid(activeGame.shipToPlace, currentCellId, activeGame.placementOrientation, activeGame.playerPlacingShips.playerGameboard);
     // Store ship lengths
     const shipLengths = {
       aircraftCarrier: 5,
@@ -314,6 +317,7 @@ function addGameboardCellDragEventListeners() {
       submarine: 3,
       destroyer: 2,
     };
+
     const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
     const currentCellColumn = currentCellId.split("")[0];
     const currentCellRow = currentCellId.split("")[1];
@@ -323,18 +327,31 @@ function addGameboardCellDragEventListeners() {
     // Loop activeGame.shipToPlace shipLengths amount to calculate nextCellId and add or remove activeCell
     for (let i = 0; i < shipLengths[activeGame.shipToPlace]; i++) {
       if (activeGame.placementOrientation === "horizontal") {
-        console.log("Next Cell Id", nextCellId);
         nextCellId = `${gameboardColumns[incrementingCellColumnIndex]}${currentCellRow}`;
-        addOrRemoveHighlight === "add"
-          ? document.querySelector(`[data-cell-id=${nextCellId}`).classList.add("activeCell")
-          : document.querySelector(`[data-cell-id=${nextCellId}`).classList.remove("activeCell");
+        if (shipPlacementResult === "valid") {
+          addOrRemoveHighlight === "add"
+            ? document.querySelector(`[data-cell-id=${nextCellId}`)?.classList.add("activeCell")
+            : document.querySelector(`[data-cell-id=${nextCellId}`)?.classList.remove("activeCell");
+        } else {
+          addOrRemoveHighlight === "add"
+            ? document.querySelector(`[data-cell-id=${nextCellId}`)?.classList.add("badCellPlacement")
+            : document.querySelector(`[data-cell-id=${nextCellId}`)?.classList.remove("badCellPlacement");
+          renderPlacemenErrorMessage(shipPlacementResult);
+        }
+
         incrementingCellColumnIndex++;
       } else {
-        console.log("Next Cell Id", nextCellId);
         nextCellId = `${currentCellColumn}${incrementingCellRow}`;
-        addOrRemoveHighlight === "add"
-          ? document.querySelector(`[data-cell-id=${nextCellId}`).classList.add("activeCell")
-          : document.querySelector(`[data-cell-id=${nextCellId}`).classList.remove("activeCell");
+        if (shipPlacementResult === "valid") {
+          addOrRemoveHighlight === "add"
+            ? document.querySelector(`[data-cell-id=${nextCellId}`)?.classList.add("activeCell")
+            : document.querySelector(`[data-cell-id=${nextCellId}`)?.classList.remove("activeCell");
+        } else {
+          addOrRemoveHighlight === "add"
+            ? document.querySelector(`[data-cell-id=${nextCellId}`)?.classList.add("badCellPlacement")
+            : document.querySelector(`[data-cell-id=${nextCellId}`)?.classList.remove("badCellPlacement");
+          renderPlacemenErrorMessage(shipPlacementResult);
+        }
         incrementingCellRow++;
       }
     }
@@ -347,6 +364,14 @@ function removeShipElementFromPlaceShipsWrapper(passedShipToRemove) {
   });
   const shipToRemove = document.querySelector(`#${passedShipToRemove}`);
   shipToRemove.remove();
+}
+
+function renderPlacemenErrorMessage(errorMessage) {
+  document.querySelector("#placement-error-message").textContent = `Invalid Placement: ${errorMessage}`;
+
+  setTimeout(() => {
+    document.querySelector("#placement-error-message").textContent = "";
+  }, 3000);
 }
 
 document.addEventListener("DOMContentLoaded", startGameSetupUI);

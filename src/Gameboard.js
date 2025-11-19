@@ -46,8 +46,6 @@ class Gameboard {
       this.placedShips.add(shipToPlace);
       currentCell = getNextCell(currentCell, shipOrientation);
     }
-
-    console.log("placed a ship");
     return true;
 
     function isShipPlacedOnGameboard(shipName, shipPlacementCell, shipOrientation) {

@@ -378,7 +378,12 @@ label {
 
 .placing-ships-gameboard.placingShips .gameboard-cell:hover,
 .gameboard-cell.activeCell {
-  background-color: #a1ff91;
+  background-color: #f4fff2;
+  transition: 0.2s;
+}
+
+.gameboard-cell.badCellPlacement {
+  background-color: #ff9191;
   transition: 0.2s;
 }
 
@@ -410,6 +415,12 @@ label {
 
 .placement-ship:active {
   cursor: grabbing;
+}
+
+#placement-error-message {
+  font-size: 1rem !important;
+  color: rgb(255, 149, 149) !important;
+  margin-bottom: 15px;
 }
 
 /* 
