@@ -1,5 +1,5 @@
 import { addPlaceShipGameboardClickEventListeners, activeGame, togglePlaceShipOrientation } from "./game.js";
-import { isMoveValid } from "./helpers.js";
+import { isMoveValid, randomlyPlacePlayerShips } from "./helpers.js";
 
 function startGameSetupUI() {
   const startGameWrapper = document.querySelector("#start-game-wrapper");
@@ -133,11 +133,11 @@ function renderGameboardCells(playerGameboard) {
   const gameboard = document.querySelector(".gameboard");
   // Clear gameboard cells
 
-  if (document.querySelector(".placingShips") && document.querySelector(".gameboard-cell")) {
+  if ((document.querySelector(".placingShips") && document.querySelector(".gameboard-cell")) || activeGame.playerPlacingShips.playerGameboard.activeShipCells.size) {
     const gameboardCells = gameboard.querySelectorAll("*");
 
     gameboardCells.forEach((gameboardCell) => {
-      gameboard.removeChild(gameboardCell);
+      gameboardCell.remove();
     });
   }
 
@@ -212,18 +212,21 @@ function addPlaceShipsWrapperEventListeners() {
     const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
     const clickedShip = event.target;
 
-    if (activeGame.shipToPlace != event.target.id && event.target.classList.contains("placement-ship")) {
-      document.querySelectorAll(".placement-ship").forEach((placementShip) => {
-        if (placementShip.id != activeGame.shipToPlace) placementShip.classList.remove("activeShipToPlace");
-      });
+    if (event.target.classList.contains("placement-ship")) {
+      if (event.target.id === activeGame.shipToPlace) {
+        activeGame.shipToPlace = null;
+        event.target.classList.remove("activeShipToPlace");
+        placingShipsGameboardWrapper.classList.remove("placingShips");
+      } else {
+        console.log("currrr Ships", document.querySelectorAll(".placement-ship"));
+        document.querySelectorAll(".placement-ship").forEach((placementShip) => {
+          placementShip.classList.remove("activeShipToPlace");
+        });
 
-      activeGame.shipToPlace = event.target.id;
-      clickedShip.classList.add("activeShipToPlace");
-      placingShipsGameboardWrapper.classList.add("placingShips");
-    } else if (event.target.classList.contains("placement-ship")) {
-      activeGame.shipToPlace = null;
-      event.target.classList.remove("activeShipToPlace");
-      placingShipsGameboardWrapper.classList.remove("placingShips");
+        activeGame.shipToPlace = event.target.id;
+        clickedShip.classList.add("activeShipToPlace");
+        placingShipsGameboardWrapper.classList.add("placingShips");
+      }
     }
 
     // Place ships rotation button
@@ -241,6 +244,11 @@ function addPlaceShipsWrapperEventListeners() {
       });
 
       togglePlaceShipOrientation();
+    }
+
+    if (event.target.id === "randomShipPlacements" && event.target.parentElement.id === "ship-placement-btns") {
+      //randomlyPlacePlayerShips(activeGame.playerPlacingShips.playerGameboard);
+      //renderGameboardCells(activeGame.playerPlacingShips.playerGameboard);
     }
   });
 }
@@ -298,7 +306,6 @@ function addGameboardCellDragEventListeners() {
 
     gameboardCell.addEventListener("drop", (event) => {
       // Prevent ship dragging snapback
-      alert("Ya Mama");
       const gameboardCells = document.querySelectorAll(".gameboard-cell");
       gameboardCells.forEach((gameboardCell) => {
         gameboardCell.classList.remove("activeCell");
@@ -309,6 +316,7 @@ function addGameboardCellDragEventListeners() {
 
   function toggleHighlightAdjacentShipCells(currentCellId, addOrRemoveHighlight) {
     let shipPlacementResult = isMoveValid(activeGame.shipToPlace, currentCellId, activeGame.placementOrientation, activeGame.playerPlacingShips.playerGameboard);
+    console.log("oooopppppp", currentCellId);
     // Store ship lengths
     const shipLengths = {
       aircraftCarrier: 5,
@@ -320,7 +328,7 @@ function addGameboardCellDragEventListeners() {
 
     const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
     const currentCellColumn = currentCellId.split("")[0];
-    const currentCellRow = currentCellId.split("")[1];
+    const currentCellRow = currentCellId.split("").length === 2 ? currentCellId.split("")[1] : `${currentCellId.split("")[1]}${currentCellId.split("")[2]}`;
     let incrementingCellColumnIndex = gameboardColumns.findIndex((cellId) => cellId === currentCellColumn);
     let incrementingCellRow = Number(currentCellRow);
     let nextCellId;
@@ -367,11 +375,13 @@ function removeShipElementFromPlaceShipsWrapper(passedShipToRemove) {
 }
 
 function renderPlacemenErrorMessage(errorMessage) {
-  document.querySelector("#placement-error-message").textContent = `Invalid Placement: ${errorMessage}`;
+  if (document.querySelector("#placement-error-message").textContent.length === 0) {
+    document.querySelector("#placement-error-message").textContent = `Invalid Placement: ${errorMessage}`;
 
-  setTimeout(() => {
-    document.querySelector("#placement-error-message").textContent = "";
-  }, 3000);
+    setTimeout(() => {
+      document.querySelector("#placement-error-message").textContent = "";
+    }, 3000);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", startGameSetupUI);

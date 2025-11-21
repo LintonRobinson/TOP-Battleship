@@ -1,3 +1,6 @@
+import { activeGame } from "./game.js";
+import { renderGameboardCells } from "./ui.js";
+
 function isShipPlacedOnGameboard(shipName, shipPlacementCell, shipOrientation) {
   const shipLengths = { aircraftCarrier: 5, battleship: 4, cruiser: 3, submarine: 3, destroyer: 2 };
   const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
@@ -12,13 +15,12 @@ function isShipPlacedOnGameboard(shipName, shipPlacementCell, shipOrientation) {
     if (letterIndex + shipLengths[shipName] - 1 < 10) {
       return true;
     } else {
-      console.log("Right here just", letterIndex + shipLengths[shipName]);
       return false;
     }
   } else {
     // Get index of starting cell
     // Get current row as string
-    const cellRow = shipPlacementCell.split("")[1];
+    const cellRow = shipPlacementCell.split("").length === 2 ? shipPlacementCell.split("")[1] : `${shipPlacementCell.split("")[1]}${shipPlacementCell.split("")[2]}`;
     // Get index of gameboardRows item that matches cellRow
     const numberIndex = gameboardRows.indexOf(cellRow);
     if (numberIndex + shipLengths[shipName] - 1 < 10) {
@@ -37,6 +39,9 @@ function isShipPlacedOverlapping(shipLength, shipPlacementCell, shipOrientation,
     currentCell = getNextCell(currentCell, shipOrientation);
   }
 
+  console.log("potential ship cells", shipCells);
+  console.log("at the time active cellss", playerGameboard.activeShipCells);
+
   for (const shipCell of shipCells) {
     if (playerGameboard.activeShipCells.has(shipCell)) {
       return true;
@@ -51,13 +56,14 @@ function isShipPlacedOverlapping(shipLength, shipPlacementCell, shipOrientation,
       const currentCellColumn = currentCell.split("")[0].toUpperCase();
       // Get index of gameboardColumns item that matches currentCellColumn
       const letterIndex = gameboardColumns.indexOf(currentCellColumn);
+      const cellRow = currentCell.split("").length === 2 ? currentCell.split("")[1] : `${currentCell.split("")[1]}${currentCell.split("")[2]}`;
       // Return a string (joined array) that its former array consisted of the incremented column, and same row
-      let nextCoordinate = [gameboardColumns[letterIndex + 1], currentCell.split("")[1]];
+      let nextCoordinate = [gameboardColumns[letterIndex + 1], cellRow];
       nextCoordinate = nextCoordinate.join("");
       return nextCoordinate;
     } else {
       // Get current row as string
-      const currentCellRow = currentCell.split("")[1];
+      const currentCellRow = currentCell.split("").length === 2 ? currentCell.split("")[1] : `${currentCell.split("")[1]}${currentCell.split("")[2]}`;
       // Get index of gameboardRows item that matches currentCellRow
       const numberIndex = gameboardRows.indexOf(currentCellRow);
       // Return a string (joined array) that its former array consisted of the same column and incremented row
@@ -78,3 +84,35 @@ export function isMoveValid(shipName, shipPlacementCell, shipOrientation, player
     return "valid";
   }
 }
+
+export function randomlyPlacePlayerShips(playerPlacingShipsGameboard) {
+  const shipNames = ["aircraftCarrier", "battleship", "cruiser", "submarine", "destroyer"];
+  const shipOrientations = ["horizontal", "vertical"];
+  const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+  const gameboardRows = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+  let randomColumn;
+  let randomRow;
+  let randomCellCoordinate;
+  let randomShipName;
+  let randomShipOrientation;
+  function generateRandomShipPlacement() {
+    randomColumn = gameboardColumns[Math.floor(Math.random() * 10)];
+    randomRow = gameboardRows[Math.floor(Math.random() * 10)];
+    randomCellCoordinate = `${randomColumn}${randomRow}`;
+    randomShipName = shipNames[Math.floor(Math.random() * 5)];
+    randomShipOrientation = shipOrientations[Math.floor(Math.random() * 2)];
+  }
+
+  activeGame.playerPlacingShips.playerGameboard.resetGameboard();
+  console.log("Player gb after reset", activeGame.playerPlacingShips.playerGameboard);
+
+  while (playerPlacingShipsGameboard.unplacedShips.size) {
+    generateRandomShipPlacement();
+
+    playerPlacingShipsGameboard.placeShip(randomShipName, randomCellCoordinate, randomShipOrientation);
+  }
+  console.log("Player gb after", activeGame.playerPlacingShips.playerGameboard);
+  renderGameboardCells(activeGame.playerPlacingShips.playerGameboard);
+}
+
+// placeShip(shipName, shipPlacementCell, shipOrientation)

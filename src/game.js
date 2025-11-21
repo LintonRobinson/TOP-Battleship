@@ -1,7 +1,7 @@
 import Player from "./Player.js";
 import Gameboard from "./Gameboard.js";
 import { renderGameboardCells, removeShipElementFromPlaceShipsWrapper } from "./ui.js";
-import { isMoveValid } from "./helpers.js";
+import { isMoveValid, randomlyPlacePlayerShips } from "./helpers.js";
 
 let activeGame = {
   gamePhase: "shipPlacement",
@@ -23,6 +23,11 @@ function startGame() {
       activeGame.playerPlacingShips = activeGame.playerOne;
     }
   });
+
+  const randomShipPlacementsBtn = document.querySelector("#randomShipPlacements");
+  randomShipPlacementsBtn.addEventListener("click", () => {
+    randomlyPlacePlayerShips(activeGame.playerPlacingShips.playerGameboard);
+  });
 }
 
 // Adds event listeners to ".placing-ships-gameboard" that places ships when game gameboard-cell is clicked and activeGame.shipToPlace is not null
@@ -30,17 +35,19 @@ function addPlaceShipGameboardClickEventListeners() {
   const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
   placingShipsGameboardWrapper.addEventListener("click", (event) => {
     // Places ship when game gameboard-cell is clicked and activeGame.shipToPlace is not null
+    console.log(
+      "isMoveValid",
+      isMoveValid(activeGame.shipToPlace, event.target.dataset.cellId, activeGame.placementOrientation, activeGame.playerPlacingShips.playerGameboard),
+    );
     if (
       event.target.classList.contains("gameboard-cell") &&
       activeGame.shipToPlace &&
-      isMoveValid(activeGame.shipToPlace, event.target.dataset.cellId, activeGame.placementOrientation, activeGame.playerPlacingShips.playerGameboard)
+      isMoveValid(activeGame.shipToPlace, event.target.dataset.cellId, activeGame.placementOrientation, activeGame.playerPlacingShips.playerGameboard) === "valid"
     ) {
       if (activeGame.playerPlacingShips.playerGameboard.unplacedShips.size) {
         const clickedCellId = event.target.dataset.cellId;
-        alert(clickedCellId);
-        console.log("DataSet", event.target.dataset.cellId);
         activeGame.playerOne.playerGameboard.placeShip(activeGame.shipToPlace, clickedCellId, activeGame.placementOrientation);
-        removeShipElementFromPlaceShipsWrapper(activeGame.shipToPlace);
+
         activeGame.shipToPlace = null;
         const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
         placingShipsGameboardWrapper.classList.remove("placingShips");
@@ -56,12 +63,11 @@ function addPlaceShipGameboardClickEventListeners() {
     if (
       event.target.classList.contains("gameboard-cell") &&
       activeGame.shipToPlace &&
-      isMoveValid(activeGame.shipToPlace, event.target.dataset.cellId, activeGame.placementOrientation, activeGame.playerPlacingShips.playerGameboard)
+      isMoveValid(activeGame.shipToPlace, event.target.dataset.cellId, activeGame.placementOrientation, activeGame.playerPlacingShips.playerGameboard) === "valid"
     ) {
       if (activeGame.playerPlacingShips.playerGameboard.unplacedShips.size) {
         const clickedCellId = event.target.dataset.cellId;
         activeGame.playerOne.playerGameboard.placeShip(activeGame.shipToPlace, clickedCellId, activeGame.placementOrientation);
-        removeShipElementFromPlaceShipsWrapper(activeGame.shipToPlace);
 
         activeGame.shipToPlace = null;
 

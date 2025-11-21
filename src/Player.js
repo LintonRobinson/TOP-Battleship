@@ -5,6 +5,10 @@ class Player {
     this.playerName = playerType === "human" ? playerName : "AI Opponent";
     this.playerGameboard = new Gameboard();
   }
+
+  createNewGameboard() {
+    this.playerGameboard = new Gameboard();
+  }
 }
 
 export default Player;
