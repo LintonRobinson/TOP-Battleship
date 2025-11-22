@@ -111,7 +111,6 @@ export function randomlyPlacePlayerShips(playerPlacingShipsGameboard) {
 
     playerPlacingShipsGameboard.placeShip(randomShipName, randomCellCoordinate, randomShipOrientation);
   }
-  console.log("Player gb after", activeGame.playerPlacingShips.playerGameboard);
   renderGameboardCells(activeGame.playerPlacingShips.playerGameboard);
 }
 

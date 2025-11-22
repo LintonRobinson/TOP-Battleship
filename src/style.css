@@ -420,7 +420,12 @@ label {
 #placement-error-message {
   font-size: 1rem !important;
   color: rgb(255, 149, 149) !important;
-  margin-bottom: 15px;
+  position: relative !important;
+  top: -25px !important;
+}
+
+.placing-ships-gameboard {
+  margin-bottom: 50px;
 }
 
 /* 

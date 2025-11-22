@@ -74,15 +74,10 @@ function startGameSetupUI() {
 
   // Use submits player names
   document.addEventListener("submit", (event) => {
-    const placeYourShipsTitle = document.querySelector("#placeYourShipsTitle");
-    let playerOneName;
-    let playerTwoName;
-
     // Place player ships button click hides enter player names screen and displays place player ships screen
     if (event.target.id === "enter-player-names") {
       event.preventDefault();
-      playerOneName = document.querySelector("#playerOneName").value;
-      placeYourShipsTitle.textContent = `${playerOneName}, Place Your Ships`;
+      updatePlaceYourShipsTitle(activeGame.playerOne);
       // Hide enter player names screen
       enterPlayerNamesWrapper.classList.add("fadeOut");
       addFadeAnimationDelay(() => (enterPlayerNamesWrapper.style.display = "none"));
@@ -441,9 +436,23 @@ function renderPlacemenErrorMessage(errorMessage) {
   }
 }
 
+function updatePlaceYourShipsTitle(player) {
+  const placeYourShipsTitle = document.querySelector("#placeYourShipsTitle");
+  const playerName = player.playerName;
+  placeYourShipsTitle.textContent = `${playerName}, Place Your Ships`;
+}
+
 document.addEventListener("DOMContentLoaded", startGameSetupUI);
 
-export { startGameSetupUI, renderGameboardCells, removeShipElementFromPlaceShipsWrapper, addShipElementsToPlaceShipsWrapper, addPlaceShipDragEventListeners };
+export {
+  startGameSetupUI,
+  renderGameboardCells,
+  removeShipElementFromPlaceShipsWrapper,
+  addShipElementsToPlaceShipsWrapper,
+  addPlaceShipDragEventListeners,
+  renderPlacemenErrorMessage,
+  updatePlaceYourShipsTitle,
+};
 
 // MAKE SHIP ORIENTATION PROP ON SHIP, AND SHIP INSTANCES MAP ON GAMEBOARD CLASS
 
