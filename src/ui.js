@@ -132,14 +132,12 @@ function startGameSetupUI() {
 function renderGameboardCells(playerGameboard) {
   const gameboard = document.querySelector(".gameboard");
   // Clear gameboard cells
+  console.log("playerGameboard.activeShipCells.size", playerGameboard);
+  const gameboardCells = gameboard.querySelectorAll("*");
 
-  if ((document.querySelector(".placingShips") && document.querySelector(".gameboard-cell")) || activeGame.playerPlacingShips.playerGameboard.activeShipCells.size) {
-    const gameboardCells = gameboard.querySelectorAll("*");
-
-    gameboardCells.forEach((gameboardCell) => {
-      gameboardCell.remove();
-    });
-  }
+  gameboardCells.forEach((gameboardCell) => {
+    gameboardCell.remove();
+  });
 
   const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
@@ -371,7 +369,66 @@ function removeShipElementFromPlaceShipsWrapper(passedShipToRemove) {
     if (placementShip.id != activeGame.shipToPlace) placementShip.classList.remove("activeShipToPlace");
   });
   const shipToRemove = document.querySelector(`#${passedShipToRemove}`);
-  shipToRemove.remove();
+  shipToRemove?.remove();
+}
+
+function addShipElementsToPlaceShipsWrapper() {
+  const placeShipsWrapper = document.querySelector("#place-ships");
+  const shipPacementInstructionsElement = document.querySelector("#ship-placement-instructions");
+  const aircraftCarrierShipElement = document.createElement("div");
+  const battleshipShipElement = document.createElement("div");
+  const cruiserShipElement = document.createElement("div");
+  const submarineShipElement = document.createElement("div");
+  const destroyerShipElement = document.createElement("div");
+
+  aircraftCarrierShipElement.id = "aircraftCarrier";
+  aircraftCarrierShipElement.classList.add("aircraftCarrier");
+  aircraftCarrierShipElement.classList.add("placement-ship");
+  aircraftCarrierShipElement.classList.add("vertical-placement-ship");
+  aircraftCarrierShipElement.setAttribute("draggable", "true");
+
+  battleshipShipElement.id = "battleship";
+  battleshipShipElement.classList.add("battleship");
+  battleshipShipElement.classList.add("placement-ship");
+  battleshipShipElement.classList.add("vertical-placement-ship");
+  battleshipShipElement.setAttribute("draggable", "true");
+
+  cruiserShipElement.id = "cruiser";
+  cruiserShipElement.classList.add("cruiser");
+  cruiserShipElement.classList.add("placement-ship");
+  cruiserShipElement.classList.add("vertical-placement-ship");
+  cruiserShipElement.setAttribute("draggable", "true");
+
+  submarineShipElement.id = "submarine";
+  submarineShipElement.classList.add("submarine");
+  submarineShipElement.classList.add("placement-ship");
+  submarineShipElement.classList.add("vertical-placement-ship");
+  submarineShipElement.setAttribute("draggable", "true");
+
+  destroyerShipElement.id = "destroyer";
+  destroyerShipElement.classList.add("destroyer");
+  destroyerShipElement.classList.add("placement-ship");
+  destroyerShipElement.classList.add("vertical-placement-ship");
+  destroyerShipElement.setAttribute("draggable", "true");
+
+  addShipCellElementsToShipElement(aircraftCarrierShipElement, 5);
+  addShipCellElementsToShipElement(battleshipShipElement, 4);
+  addShipCellElementsToShipElement(cruiserShipElement, 3);
+  addShipCellElementsToShipElement(submarineShipElement, 3);
+  addShipCellElementsToShipElement(destroyerShipElement, 2);
+  placeShipsWrapper.insertBefore(aircraftCarrierShipElement, shipPacementInstructionsElement);
+  placeShipsWrapper.insertBefore(battleshipShipElement, shipPacementInstructionsElement);
+  placeShipsWrapper.insertBefore(cruiserShipElement, shipPacementInstructionsElement);
+  placeShipsWrapper.insertBefore(submarineShipElement, shipPacementInstructionsElement);
+  placeShipsWrapper.insertBefore(destroyerShipElement, shipPacementInstructionsElement);
+
+  function addShipCellElementsToShipElement(shipParent, numOfShipCells) {
+    for (let i = 0; i < numOfShipCells; i++) {
+      const shipCellElement = document.createElement("div");
+      shipCellElement.classList.add("ship-cell");
+      shipParent.appendChild(shipCellElement);
+    }
+  }
 }
 
 function renderPlacemenErrorMessage(errorMessage) {
@@ -386,7 +443,7 @@ function renderPlacemenErrorMessage(errorMessage) {
 
 document.addEventListener("DOMContentLoaded", startGameSetupUI);
 
-export { startGameSetupUI, renderGameboardCells, removeShipElementFromPlaceShipsWrapper };
+export { startGameSetupUI, renderGameboardCells, removeShipElementFromPlaceShipsWrapper, addShipElementsToPlaceShipsWrapper, addPlaceShipDragEventListeners };
 
 // MAKE SHIP ORIENTATION PROP ON SHIP, AND SHIP INSTANCES MAP ON GAMEBOARD CLASS
 

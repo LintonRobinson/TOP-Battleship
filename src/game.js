@@ -1,6 +1,6 @@
 import Player from "./Player.js";
 import Gameboard from "./Gameboard.js";
-import { renderGameboardCells, removeShipElementFromPlaceShipsWrapper } from "./ui.js";
+import { renderGameboardCells, removeShipElementFromPlaceShipsWrapper, addShipElementsToPlaceShipsWrapper, addPlaceShipDragEventListeners } from "./ui.js";
 import { isMoveValid, randomlyPlacePlayerShips } from "./helpers.js";
 
 let activeGame = {
@@ -28,6 +28,20 @@ function startGame() {
   randomShipPlacementsBtn.addEventListener("click", () => {
     randomlyPlacePlayerShips(activeGame.playerPlacingShips.playerGameboard);
   });
+
+  const resetShipPlacementsBtn = document.querySelector("#resetShipPlacements");
+  resetShipPlacementsBtn.addEventListener("click", () => {
+    activeGame.playerPlacingShips.createNewGameboard();
+    console.log("yjfjfjf", activeGame.playerPlacingShips.playerGameboard);
+    removeShipElementFromPlaceShipsWrapper("aircraftCarrier");
+    removeShipElementFromPlaceShipsWrapper("battleship");
+    removeShipElementFromPlaceShipsWrapper("cruiser");
+    removeShipElementFromPlaceShipsWrapper("submarine");
+    removeShipElementFromPlaceShipsWrapper("destroyer");
+    addShipElementsToPlaceShipsWrapper();
+    addPlaceShipDragEventListeners();
+    renderGameboardCells(activeGame.playerPlacingShips.playerGameboard);
+  });
 }
 
 // Adds event listeners to ".placing-ships-gameboard" that places ships when game gameboard-cell is clicked and activeGame.shipToPlace is not null
@@ -35,10 +49,7 @@ function addPlaceShipGameboardClickEventListeners() {
   const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
   placingShipsGameboardWrapper.addEventListener("click", (event) => {
     // Places ship when game gameboard-cell is clicked and activeGame.shipToPlace is not null
-    console.log(
-      "isMoveValid",
-      isMoveValid(activeGame.shipToPlace, event.target.dataset.cellId, activeGame.placementOrientation, activeGame.playerPlacingShips.playerGameboard),
-    );
+
     if (
       event.target.classList.contains("gameboard-cell") &&
       activeGame.shipToPlace &&
