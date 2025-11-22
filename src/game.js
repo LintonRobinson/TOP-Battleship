@@ -56,15 +56,16 @@ function startGame() {
       startPlayerTwoShipPlacements();
       updatePlaceYourShipsTitle(activeGame.playerPlacingShips);
       activeGame.placementOrientation = "vertical";
-    }
-
-    // MOVE THIS TO UI EVENT LISTENER FOR SAVE SHIP PLACEMENTS
-    if (activeGame.playerPlacingShips === activeGame.playerTwo) {
+    } else {
       if (!activeGame.playerPlacingShips.playerGameboard.unplacedShips.size) {
         // renderGameplayScreen()
       } else {
         renderPlacemenErrorMessage("you must place all five ships");
       }
+    }
+
+    // MOVE THIS TO UI EVENT LISTENER FOR SAVE SHIP PLACEMENTS
+    if (activeGame.playerPlacingShips === activeGame.playerTwo) {
     }
   });
 }

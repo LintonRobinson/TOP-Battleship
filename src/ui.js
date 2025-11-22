@@ -9,6 +9,7 @@ function startGameSetupUI() {
   const selectComputerDifficultyWrapper = document.querySelector("#select-computer-difficulty-wrapper");
   const placePlayerShipsWrapper = document.querySelector("#place-ships-screen-wrapper");
   const placeShipsWrapper = document.querySelector("#place-ships");
+  const gameplayWrapper = document.querySelector("#gameplay-screen-wrapper");
 
   // Screen navigation
   document.addEventListener("click", (event) => {
@@ -16,7 +17,7 @@ function startGameSetupUI() {
     if (event.target.id === "startGame") {
       // Hide start game screen
       startGameWrapper.classList.add("fadeOut");
-      addFadeAnimationDelay(() => (startGameWrapper.style.display = "none"));
+      addFadeAnimationDelay(() => startGameWrapper.remove());
       // Show select game mode screen
       selectGameModeWrapper.classList.add("fadeIn");
       selectGameModeWrapper.classList.add("active-screen");
@@ -31,7 +32,7 @@ function startGameSetupUI() {
     if (event.target.id === "player-vs-player") {
       // Hide select game mode screen
       selectGameModeWrapper.classList.add("fadeOut");
-      addFadeAnimationDelay(() => (selectGameModeWrapper.style.display = "none"));
+      addFadeAnimationDelay(() => selectGameModeWrapper.remove());
       // Show place player ships screen
       enterPlayerNamesWrapper.classList.add("fadeIn");
       enterPlayerNamesWrapper.classList.add("active-screen");
@@ -45,7 +46,7 @@ function startGameSetupUI() {
     if (event.target.id === "player-vs-computer") {
       // Hide select game mode screen
       selectGameModeWrapper.classList.add("fadeOut");
-      addFadeAnimationDelay(() => (selectGameModeWrapper.style.display = "none"));
+      addFadeAnimationDelay(() => selectGameModeWrapper.remove());
       // Show place player ships screen
       selectComputerDifficultyWrapper.classList.add("fadeIn");
       selectComputerDifficultyWrapper.classList.add("active-screen");
@@ -69,6 +70,23 @@ function startGameSetupUI() {
         enterPlayerNameWrapper.classList.remove("fadeIn");
         enterPlayerNameWrapper.classList.remove("off-screen-start-position");
       });
+    }
+
+    if (event.target.id === "saveShipPlacements") {
+      if (!activeGame.playerTwo.playerGameboard.unplacedShips.size) {
+        // Hide place ships screen
+        placePlayerShipsWrapper.classList.add("fadeOut");
+        addFadeAnimationDelay(() => placePlayerShipsWrapper.remove());
+        // Show gameplay ships screen
+        gameplayWrapper.classList.add("fadeIn");
+        gameplayWrapper.classList.add("active-screen");
+
+        // remove fadeIn/off-screen-start-position class from gameplayWrapper
+        addFadeAnimationDelay(() => {
+          gameplayWrapper.classList.remove("fadeIn");
+          gameplayWrapper.classList.remove("off-screen-start-position");
+        });
+      }
     }
   });
 
