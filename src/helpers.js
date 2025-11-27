@@ -1,5 +1,5 @@
 import { activeGame } from "./game.js";
-import { renderGameboardCells } from "./ui.js";
+import { renderPlaceShipGameboardCells } from "./ui.js";
 
 function isShipPlacedOnGameboard(shipName, shipPlacementCell, shipOrientation) {
   const shipLengths = { aircraftCarrier: 5, battleship: 4, cruiser: 3, submarine: 3, destroyer: 2 };
@@ -38,9 +38,6 @@ function isShipPlacedOverlapping(shipLength, shipPlacementCell, shipOrientation,
     shipCells.push(currentCell);
     currentCell = getNextCell(currentCell, shipOrientation);
   }
-
-  console.log("potential ship cells", shipCells);
-  console.log("at the time active cellss", playerGameboard.activeShipCells);
 
   for (const shipCell of shipCells) {
     if (playerGameboard.activeShipCells.has(shipCell)) {
@@ -85,16 +82,19 @@ export function isMoveValid(shipName, shipPlacementCell, shipOrientation, player
   }
 }
 
+// Reset player gameboard, generate new placeShip parameter values and update playerGameboard UI
 export function randomlyPlacePlayerShips(playerPlacingShipsGameboard) {
   const shipNames = ["aircraftCarrier", "battleship", "cruiser", "submarine", "destroyer"];
   const shipOrientations = ["horizontal", "vertical"];
   const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
   const gameboardRows = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+  // Initializing random placeShip variables
   let randomColumn;
   let randomRow;
   let randomCellCoordinate;
   let randomShipName;
   let randomShipOrientation;
+
   function generateRandomShipPlacement() {
     randomColumn = gameboardColumns[Math.floor(Math.random() * 10)];
     randomRow = gameboardRows[Math.floor(Math.random() * 10)];
@@ -104,14 +104,12 @@ export function randomlyPlacePlayerShips(playerPlacingShipsGameboard) {
   }
 
   activeGame.playerPlacingShips.playerGameboard.resetGameboard();
-  console.log("Player gb after reset", activeGame.playerPlacingShips.playerGameboard);
-
+  // Loop until there are no ships to place
   while (playerPlacingShipsGameboard.unplacedShips.size) {
     generateRandomShipPlacement();
-
     playerPlacingShipsGameboard.placeShip(randomShipName, randomCellCoordinate, randomShipOrientation);
   }
-  renderGameboardCells(activeGame.playerPlacingShips.playerGameboard);
+  renderPlaceShipGameboardCells(activeGame.playerPlacingShips.playerGameboard);
 }
 
 // placeShip(shipName, shipPlacementCell, shipOrientation)

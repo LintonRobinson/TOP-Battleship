@@ -26,7 +26,6 @@ class Gameboard {
 
     //
 
-    console.log("Is the move valid?", isMoveValid(shipName, shipPlacementCell, shipOrientation, activeGame.playerPlacingShips.playerGameboard));
     if (!this.unplacedShips.has(shipName) || isMoveValid(shipName, shipPlacementCell, shipOrientation, activeGame.playerPlacingShips.playerGameboard) != "valid") {
       return false;
     } else {

@@ -377,7 +377,8 @@ label {
 }
 
 .placing-ships-gameboard.placingShips .gameboard-cell:hover,
-.gameboard-cell.activeCell {
+.gameboard-cell.activeCell,
+.gameplay-gameboard.receivingAttack .gameboard-cell:hover {
   background-color: #f4fff2;
   transition: 0.2s;
 }
@@ -663,6 +664,22 @@ label {
   height: 422px;
 }
 
+.gameplay-gameboard {
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  grid-template-rows: repeat(10, 40px);
+  grid-auto-flow: dense; /* key */
+  box-shadow: 0px 0px 22px 3px rgba(255, 255, 255, 0.414);
+  border: 2px solid #82ff6b;
+  background: #82ff6b;
+  backdrop-filter: blur(5px);
+  border-radius: 8px;
+  overflow: hidden;
+  gap: 2px;
+  width: 422px;
+  height: 422px;
+}
+
 .gameboard-cell {
   width: 40px;
   height: 40px;
@@ -684,6 +701,18 @@ label {
 
 #save-placement {
   margin-top: 25px;
+}
+
+.gameplay-gameboard-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.gameplay-gameboard-wrapper span {
+  color: white;
+  font-size: 1.3rem;
 }
 
 #restart-game-wrapper {

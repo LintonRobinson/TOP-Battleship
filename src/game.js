@@ -1,7 +1,7 @@
 import Player from "./Player.js";
 import Gameboard from "./Gameboard.js";
 import {
-  renderGameboardCells,
+  renderPlaceShipGameboardCells,
   removeShipElementFromPlaceShipsWrapper,
   addShipElementsToPlaceShipsWrapper,
   addPlaceShipDragEventListeners,
@@ -10,46 +10,87 @@ import {
 } from "./ui.js";
 import { isMoveValid, randomlyPlacePlayerShips } from "./helpers.js";
 
-let activeGame = {
-  gamePhase: "shipPlacement",
-  playerPlacingShips: "playerOne",
-  shipToPlace: null,
-  gameMode: null,
-  placementOrientation: "vertical",
-};
+const game = (() => {
+  const activeGame = {
+    players: {},
+    playerPlacingShips: null,
+    playerReceivingAttack: null,
+    shipToPlace: null,
+    gameMode: null,
+    placementOrientation: "vertical",
+  };
+
+  function setGameMode(gameMode) {
+    activeGame.gameMode = gameMode;
+  }
+
+  function initializePlayers(playerOneName, playerTwoName) {
+    let playerOne;
+    let playerTwo;
+    switch (activeGame.gameMode) {
+      case "onePlayer":
+        playerOne = new Player("human", playerOneName);
+        playerTwo = new Player("human", playerTwoName);
+        break;
+      case "twoPlayer":
+        playerOne = new Player("human", playerOneName);
+        playerTwo = new Player("human", playerTwoName);
+        break;
+    }
+
+    activeGame.players.playerOne = playerOne;
+    activeGame.players.playerOne = playerTwo;
+  }
+
+  function initializeGame() {
+    // Setting playerPlacingShips and playerReceivingAttack
+    activeGame.playerPlacingShips = activeGame.players[0];
+    activeGame.playerReceivingAttack = activeGame.players[1];
+  }
+
+  function setPlayerPlacingShips(player) {
+    activeGame.playerPlacingShips = player;
+    renderPlaceShipGameboardCells();
+  }
+
+  function setPlacementOrientation(shipOrientation) {
+    activeGame.placementOrientation = shipOrientation;
+  }
+
+  function setPlayerReceivingAttack(player) {
+    activeGame.playerReceivingAttack = player;
+  }
+
+  function allPlayerShipsPlaced(player) {
+    if (!player.playerGameboard.unplacedShips.size) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function getPlayer(playerToReturn) {
+    return activeGame.players[playerToReturn];
+  }
+
+  function getPlayerPlacingShips() {
+    return activeGame.playerPlacingShips;
+  }
+
+  return {
+    activeGame: activeGame,
+    setGameMode: setGameMode,
+    initializePlayers: initializePlayers,
+    initializeGame: initializeGame,
+    setPlacementOrientation: setPlacementOrientation,
+    setPlayerPlacingShips: setPlayerPlacingShips,
+    allPlayerShipsPlaced: allPlayerShipsPlaced,
+    getPlayer: getPlayer,
+    getPlayerPlacingShips: getPlayerPlacingShips,
+  };
+})();
 
 function startGame() {
-  // Submitting on enter player names screen creates two player instances with form values as names
-  document.addEventListener("submit", (event) => {
-    if (event.target.id === "enter-player-names") {
-      const playerOneName = document.querySelector("#playerOneName").value;
-      const playerTwoName = document.querySelector("#playerTwoName").value;
-      event.preventDefault();
-      activeGame.playerOne = new Player("human", playerOneName);
-      activeGame.playerTwo = new Player("human", playerTwoName);
-      activeGame.playerPlacingShips = activeGame.playerOne;
-    }
-  });
-
-  const randomShipPlacementsBtn = document.querySelector("#randomShipPlacements");
-  randomShipPlacementsBtn.addEventListener("click", () => {
-    randomlyPlacePlayerShips(activeGame.playerPlacingShips.playerGameboard);
-  });
-
-  const resetShipPlacementsBtn = document.querySelector("#resetShipPlacements");
-  resetShipPlacementsBtn.addEventListener("click", () => {
-    activeGame.playerPlacingShips.createNewGameboard();
-    removeShipElementFromPlaceShipsWrapper("aircraftCarrier");
-    removeShipElementFromPlaceShipsWrapper("battleship");
-    removeShipElementFromPlaceShipsWrapper("cruiser");
-    removeShipElementFromPlaceShipsWrapper("submarine");
-    removeShipElementFromPlaceShipsWrapper("destroyer");
-    addShipElementsToPlaceShipsWrapper();
-    addPlaceShipDragEventListeners();
-    renderGameboardCells(activeGame.playerPlacingShips.playerGameboard);
-    activeGame.placementOrientation = "vertical";
-  });
-
   const saveShipPlacementsBtn = document.querySelector("#saveShipPlacements");
   saveShipPlacementsBtn.addEventListener("click", () => {
     if (activeGame.playerPlacingShips === activeGame.playerOne) {
@@ -57,15 +98,9 @@ function startGame() {
       updatePlaceYourShipsTitle(activeGame.playerPlacingShips);
       activeGame.placementOrientation = "vertical";
     } else {
-      if (!activeGame.playerPlacingShips.playerGameboard.unplacedShips.size) {
-        // renderGameplayScreen()
-      } else {
+      if (activeGame.playerPlacingShips.playerGameboard.unplacedShips.size) {
         renderPlacemenErrorMessage("you must place all five ships");
       }
-    }
-
-    // MOVE THIS TO UI EVENT LISTENER FOR SAVE SHIP PLACEMENTS
-    if (activeGame.playerPlacingShips === activeGame.playerTwo) {
     }
   });
 }
@@ -89,7 +124,7 @@ function addPlaceShipGameboardClickEventListeners() {
         const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
         placingShipsGameboardWrapper.classList.remove("placingShips");
 
-        renderGameboardCells(activeGame.playerPlacingShips.playerGameboard);
+        renderPlaceShipGameboardCells(activeGame.playerPlacingShips.playerGameboard);
       } else {
       }
     }
@@ -111,7 +146,7 @@ function addPlaceShipGameboardClickEventListeners() {
         const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
         placingShipsGameboardWrapper.classList.remove("placingShips");
 
-        renderGameboardCells(activeGame.playerPlacingShips.playerGameboard);
+        renderPlaceShipGameboardCells(activeGame.playerPlacingShips.playerGameboard);
       } else {
       }
     }
@@ -126,17 +161,47 @@ function togglePlaceShipOrientation() {
   activeGame.placementOrientation === "horizontal" ? (activeGame.placementOrientation = "vertical") : (activeGame.placementOrientation = "horizontal");
 }
 
-function startPlayerTwoShipPlacements() {
+export function startPlayerTwoShipPlacements() {
   if (!activeGame.playerPlacingShips.playerGameboard.unplacedShips.size) {
     addShipElementsToPlaceShipsWrapper();
     addPlaceShipDragEventListeners();
     activeGame.playerPlacingShips = activeGame.playerTwo;
-    renderGameboardCells();
+    renderPlaceShipGameboardCells();
   } else {
     renderPlacemenErrorMessage("you must place all five ships");
   }
 }
 
+// Adds event listeners to ".placing-ships-gameboard" that places ships when game gameboard-cell is clicked and activeGame.shipToPlace is not null
+function addGameplayGameboardClickEventListeners() {
+  const gameplayGameboardWrapper = document.querySelector(".gameplay-gameboard");
+  gameplayGameboardWrapper.forEach((gameboard) => {
+    gameboard.addEventListener("click", () => {});
+  });
+
+  placingShipsGameboardWrapper.addEventListener("click", (event) => {
+    // Places ship when game gameboard-cell is clicked and activeGame.shipToPlace is not null
+
+    if (
+      event.target.classList.contains("gameboard-cell") &&
+      activeGame.shipToPlace &&
+      isMoveValid(activeGame.shipToPlace, event.target.dataset.cellId, activeGame.placementOrientation, activeGame.playerPlacingShips.playerGameboard) === "valid"
+    ) {
+      if (activeGame.playerPlacingShips.playerGameboard.unplacedShips.size) {
+        const clickedCellId = event.target.dataset.cellId;
+        activeGame.playerPlacingShips.playerGameboard.placeShip(activeGame.shipToPlace, clickedCellId, activeGame.placementOrientation);
+
+        activeGame.shipToPlace = null;
+        const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
+        placingShipsGameboardWrapper.classList.remove("placingShips");
+
+        renderPlaceShipGameboardCells(activeGame.playerPlacingShips.playerGameboard);
+      } else {
+      }
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", startGame);
 
-export { startGame, addPlaceShipGameboardClickEventListeners, activeGame, togglePlaceShipOrientation };
+export { game };
