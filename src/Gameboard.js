@@ -1,6 +1,6 @@
 import Ship from "./Ship.js";
-import { activeGame } from "./game.js";
-import { isMoveValid } from "./helpers.js";
+import { game } from "./game.js";
+import { isPlacementValid } from "./helpers.js";
 import { removeShipElementFromPlaceShipsWrapper } from "./ui.js";
 
 class Gameboard {
@@ -25,8 +25,12 @@ class Gameboard {
     let currentCell = shipPlacementCell;
 
     //
+    console.log("playa placin shizz", game.getPlayerPlacingShips());
 
-    if (!this.unplacedShips.has(shipName) || isMoveValid(shipName, shipPlacementCell, shipOrientation, activeGame.playerPlacingShips.playerGameboard) != "valid") {
+    if (
+      !this.unplacedShips.has(shipName) ||
+      isPlacementValid(shipName, shipPlacementCell, shipOrientation, game.getPlayerGameboard(game.getPlayerPlacingShips())) != "valid"
+    ) {
       return false;
     } else {
       this.unplacedShips.delete(shipName);

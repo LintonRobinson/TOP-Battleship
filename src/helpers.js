@@ -1,4 +1,4 @@
-import { activeGame } from "./game.js";
+import {} from "./game.js";
 import { renderPlaceShipGameboardCells } from "./ui.js";
 
 function isShipPlacedOnGameboard(shipName, shipPlacementCell, shipOrientation) {
@@ -71,7 +71,7 @@ function isShipPlacedOverlapping(shipLength, shipPlacementCell, shipOrientation,
   }
 }
 
-export function isMoveValid(shipName, shipPlacementCell, shipOrientation, playerGameboard) {
+export function isPlacementValid(shipName, shipPlacementCell, shipOrientation, playerGameboard) {
   const shipLengths = { aircraftCarrier: 5, battleship: 4, cruiser: 3, submarine: 3, destroyer: 2 };
   if (!isShipPlacedOnGameboard(shipName, shipPlacementCell, shipOrientation)) {
     return "ship extends off of gameboard";
