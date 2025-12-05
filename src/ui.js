@@ -353,12 +353,14 @@ function startGameplayUI() {
 
   game.setPlayerGivingAttack(game.getPlayer("playerOne"));
   game.setPlayerReceivingAttack(game.getPlayer("playerTwo"));
-  turnMessasageElement.textContent = `${game.getPlayerGivingAttackName()} - Attack! (click your opponent's gameboard)`;
+  document.querySelector(`#${game.getPlayerReceivingAttackId()}Gameboard`).classList.add("receivingAttack");
+  turnMessasageElement.textContent = `${game.getPlayerGivingAttackName()} - Attack! (click ${game.getPlayerReceivingAttackName()}'s gameboard)`;
   renderGameplayGameboardCells("playerOneGameboard");
   renderGameplayGameboardCells("playerTwoGameboard");
   const gameplayScreenWrapper = document.querySelector("#gameplay-screen-wrapper");
+
   gameplayScreenWrapper.addEventListener("click", (event) => {
-    if (event.target.classList.contains("gameboard-cell")) {
+    if (event.target.classList.contains("gameboard-cell") & event.target.parentElement.classList.contains("receivingAttack")) {
       handleGameplayGameboardTurnClick();
     }
   });
@@ -367,10 +369,21 @@ function startGameplayUI() {
     game.togglePlayerReceivingGivingAttack();
     alert("Should be workin");
     toggleGameTurnMessage();
+    toggleClickablePlayerGameboard();
 
     function toggleGameTurnMessage() {
       console.log("this is giving now", game.getPlayerGivingAttackName());
-      turnMessasageElement.textContent = `${game.getPlayerGivingAttackName()} - Attack! (click/attack your opponent's gameboard)`;
+      turnMessasageElement.textContent = `${game.getPlayerGivingAttackName()} - Attack! (click/attack ${game.getPlayerReceivingAttackName()}'s gameboard)`;
+    }
+
+    function updatePlacerSunkShipSidebarUi() {}
+
+    function toggleClickablePlayerGameboard() {
+      const gameplayGameboards = document.querySelectorAll(".gameplay-gameboard");
+      gameplayGameboards.forEach((gameboard) => {
+        gameboard.classList.remove("receivingAttack");
+      });
+      document.querySelector(`#${game.getPlayerReceivingAttackId()}Gameboard`).classList.add("receivingAttack");
     }
   }
 }

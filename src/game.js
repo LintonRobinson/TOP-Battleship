@@ -82,6 +82,10 @@ const game = (() => {
     return activeGame.playerReceivingAttack.playerName;
   }
 
+  function getPlayerReceivingAttackId() {
+    return activeGame.playerReceivingAttack.playerId;
+  }
+
   function getPlayerGivingAttackName() {
     return activeGame.playerGivingAttack.playerName;
   }
@@ -189,6 +193,7 @@ const game = (() => {
     togglePlayerReceivingGivingAttack: togglePlayerReceivingGivingAttack,
     getPlayerReceivingAttack: getPlayerReceivingAttack,
     getPlayerReceivingAttackName: getPlayerReceivingAttackName,
+    getPlayerReceivingAttackId: getPlayerReceivingAttackId,
     getPlayerGivingAttackName: getPlayerGivingAttackName,
     allPlayerShipsPlaced: allPlayerShipsPlaced,
     getPlayer: getPlayer,
