@@ -29,13 +29,10 @@ function startGameSetupUI() {
       // If player one is player placing ships,
 
       if (game.playerHasShipsToPlace(game.getPlayerPlacingShips())) {
-        alert("Ya mami has not been true");
         renderPlacemenErrorMessage("you must place all five ships");
       }
 
       if (game.getPlayerPlacingShips() === game.getPlayer("playerOne") && !game.playerHasShipsToPlace(game.getPlayer("playerOne"))) {
-        alert("And so I wake up in the morning and I step outside");
-        console.log("game.getPlayerPlacingShips()", game.getPlayerPlacingShips());
         game.startPlayerTwoShipPlacements();
         updatePlaceYourShipsTitle(game.getPlayerPlacingShips());
         game.setPlacementOrientation("vertical");
@@ -48,7 +45,6 @@ function startGameSetupUI() {
 
       // Advance to gameplay screen and Update Gameboard text
       if (!game.playerHasShipsToPlace(game.getPlayer("playerTwo"))) {
-        alert("im sorry to say that i cant keep my hands off your body");
         advanceScreen("#place-ships-screen-wrapper", "#gameplay-screen-wrapper");
 
         //addGameplayGameboardClickEventListeners(); playerTwoFleetTitle Ya Mama's Fleet
@@ -62,6 +58,7 @@ function startGameSetupUI() {
         const playerTwoFleetTitle = document.querySelector("#playerTwoFleetTitle");
         playerOneFleetTitle.textContent = `${game.getPlayerName(game.getPlayer("playerOne"))}'s Feet`;
         playerTwoFleetTitle.textContent = `${game.getPlayerName(game.getPlayer("playerTwo"))}'s Fleet`;
+        startGameplayUI();
       }
     }
   });
@@ -119,85 +116,82 @@ function startGameSetupUI() {
 }
 
 function startPlaceShipsUI() {
-  // Add event listener to placeShipsWrapper that sets state of activeGame.shipToPlace to clicked ship child element
-  const placeShipsWrapper = document.querySelector("#place-ships");
-
-  placeShipsWrapper.addEventListener("click", (event) => {
-    const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
-    const clickedShip = event.target;
-    // Clicking a ship - Removing activeShipToPlace highlight from all clicked ships, adds activeShipToPlace and highlights clicked ship
-    if (event.target.classList.contains("placement-ship")) {
-      if (event.target.id === game.getShipToPlace()) {
-        game.setShipToPlace("null");
-        // Unhighlight ship and remove ability to interact with board
-        event.target.classList.remove("activeShipToPlace");
-        placingShipsGameboardWrapper.classList.remove("placingShips");
-      } else {
-        game.setShipToPlace(event.target.id);
-        // Unhighlight all ships, highlight clicked ship, and allow gameboard  to be clicked
-        document.querySelectorAll(".placement-ship").forEach((placementShip) => {
-          placementShip.classList.remove("activeShipToPlace");
-        });
-        clickedShip.classList.add("activeShipToPlace");
-        placingShipsGameboardWrapper.classList.add("placingShips");
-      }
-    }
-
-    // Rotate Ship Orientations click
-    if (event.target.id === "toggleShipOrientation") {
-      const placementShips = document.querySelectorAll(".placement-ship");
-      // Remove horizontal-placement-ship / vertical-placement-ship for ships element to reflect orientation toggle
-      placementShips.forEach((placementShip) => {
-        if (game.getPlacementOrientation() === "horizontal") {
-          placementShip.classList.remove("horizontal-placement-ship");
-          placementShip.classList.add("vertical-placement-ship");
+  addShipActivationEventListener();
+  function addShipActivationEventListener() {
+    // Add event listener to placeShipsWrapper that sets state of activeGame.shipToPlace to clicked ship child element
+    const placeShipsWrapper = document.querySelector("#place-ships");
+    placeShipsWrapper.addEventListener("click", (event) => {
+      const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
+      const clickedShip = event.target;
+      // Clicking a ship - Removing activeShipToPlace highlight from all clicked ships, adds activeShipToPlace and highlights clicked ship
+      if (event.target.classList.contains("placement-ship")) {
+        if (event.target.id === game.getShipToPlace()) {
+          game.setShipToPlace("null");
+          // Unhighlight ship and remove ability to interact with board
+          event.target.classList.remove("activeShipToPlace");
+          placingShipsGameboardWrapper.classList.remove("placingShips");
         } else {
-          placementShip.classList.remove("vertical-placement-ship");
-          placementShip.classList.add("horizontal-placement-ship");
-        }
-      });
-      // Changing orientation in activeGame object
-      game.togglePlaceShipOrientation();
-    }
-
-    if (event.target.id === "randomShipPlacements") {
-      game.randomlyPlacePlayerShips(game.getPlayerGameboard(game.getPlayerPlacingShips()));
-      renderPlaceShipGameboardCells(game.getPlayerGameboard(game.getPlayerPlacingShips()));
-      // Not allow gameboard to be clicked
-      placingShipsGameboardWrapper.classList.remove("placingShips");
-    }
-
-    if (event.target.id === "resetShipPlacements") {
-      game.getPlayerPlacingShips().createNewGameboard();
-      resetPlaceShipWrapper();
-      // addPlaceShipDragEventListeners();
-      renderPlaceShipGameboardCells(game.getPlayerGameboard(game.getPlayerPlacingShips()));
-      game.setPlacementOrientation("vertical");
-      console.log("rst pps", game.getPlayerPlacingShips());
-    }
-
-    if (event.target.id === "saveShipPlacements") {
-      // If player one is player placing ships,
-      if (game.allPlayerShipsPlaced(game.getPlayer("playerOne"))) {
-        game.setPlayerPlacingShips(game.getPlayer("playerTwo"));
-        updatePlaceYourShipsTitle(activeGame.playerPlacingShips);
-        game.setPlacementOrientation("vertical");
-      } else {
-        if (activeGame.playerPlacingShips.playerGameboard.unplacedShips.size) {
-          renderPlacemenErrorMessage("you must place all five ships");
+          game.setShipToPlace(event.target.id);
+          // Unhighlight all ships, highlight clicked ship, and allow gameboard  to be clicked
+          document.querySelectorAll(".placement-ship").forEach((placementShip) => {
+            placementShip.classList.remove("activeShipToPlace");
+          });
+          clickedShip.classList.add("activeShipToPlace");
+          placingShipsGameboardWrapper.classList.add("placingShips");
         }
       }
-      // PLayer placing ships not all ships placed
 
-      // if (!) {
-      //         renderPlacemenErrorMessage("you must place all five ships")
-      //       }
-    }
-  });
+      // Rotate Ship Orientations click
+      if (event.target.id === "toggleShipOrientation") {
+        const placementShips = document.querySelectorAll(".placement-ship");
+        // Remove horizontal-placement-ship / vertical-placement-ship for ships element to reflect orientation toggle
+        placementShips.forEach((placementShip) => {
+          if (game.getPlacementOrientation() === "horizontal") {
+            placementShip.classList.remove("horizontal-placement-ship");
+            placementShip.classList.add("vertical-placement-ship");
+          } else {
+            placementShip.classList.remove("vertical-placement-ship");
+            placementShip.classList.add("horizontal-placement-ship");
+          }
+        });
+        // Changing orientation in activeGame object
+        game.togglePlaceShipOrientation();
+      }
+
+      if (event.target.id === "randomShipPlacements") {
+        game.randomlyPlacePlayerShips(game.getPlayerGameboard(game.getPlayerPlacingShips()));
+        renderPlaceShipGameboardCells(game.getPlayerGameboard(game.getPlayerPlacingShips()));
+        // Not allow gameboard to be clicked
+        placingShipsGameboardWrapper.classList.remove("placingShips");
+      }
+
+      if (event.target.id === "resetShipPlacements") {
+        game.getPlayerPlacingShips().createNewGameboard();
+        resetPlaceShipWrapper();
+        // addPlaceShipDragEventListeners();
+        renderPlaceShipGameboardCells(game.getPlayerGameboard(game.getPlayerPlacingShips()));
+        game.setPlacementOrientation("vertical");
+      }
+
+      if (event.target.id === "saveShipPlacements") {
+        // If player one is player placing ships,
+        if (game.allPlayerShipsPlaced(game.getPlayer("playerOne"))) {
+          game.setPlayerPlacingShips(game.getPlayer("playerTwo"));
+          updatePlaceYourShipsTitle(activeGame.playerPlacingShips);
+          game.setPlacementOrientation("vertical");
+        } else {
+          if (activeGame.playerPlacingShips.playerGameboard.unplacedShips.size) {
+            renderPlacemenErrorMessage("you must place all five ships");
+          }
+        }
+      }
+    });
+  }
 
   addPlaceShipDragEventListeners();
   function addPlaceShipDragEventListeners() {
     let draggedShip;
+    const placeShipsWrapper = document.querySelector("#place-ships");
     placeShipsWrapper.addEventListener("dragstart", (event) => {
       if (event.target.classList.contains("placement-ship")) {
         // Remove activeShipToPlace class from all placement ships
@@ -237,33 +231,34 @@ function startPlaceShipsUI() {
     // WHen the first ship cell child of dragged ship is dragged over a cell, change the background color
   }
 
-  // Cell clicks
-  const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
-  placingShipsGameboardWrapper.addEventListener("click", handleUserGameboardEvents);
-
-  placingShipsGameboardWrapper.addEventListener("drop", handleUserGameboardEvents);
-
-  function handleUserGameboardEvents(event) {
-    // Places ship when game gameboard-cell is clicked and activeGame.shipToPlace is not null
-    if (event.target.classList.contains("gameboard-cell")) {
-      // If there is a ship to place, the move is valid, and the player has unplaces ships
-      if (
-        game.getShipToPlace() &&
-        isPlacementValid(game.getShipToPlace(), event.target.dataset.cellId, game.getPlacementOrientation(), game.getPlayerGameboard(game.getPlayerPlacingShips())) ===
-          "valid" &&
-        game.playerHasShipsToPlace(game.getPlayerPlacingShips())
-      ) {
-        const clickedCellId = event.target.dataset.cellId;
-        game.placePlayerShip(clickedCellId);
-        renderPlaceShipGameboardCells(game.getPlayerGameboard(game.getPlayerPlacingShips()));
-        game.setShipToPlace(null);
-        placingShipsGameboardWrapper.classList.remove("placingShips");
+  addPlaceShipGameboardShipPlacementEventListeners();
+  function addPlaceShipGameboardShipPlacementEventListeners() {
+    const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
+    placingShipsGameboardWrapper.addEventListener("click", handleUserGameboardEvents);
+    placingShipsGameboardWrapper.addEventListener("drop", handleUserGameboardEvents);
+    function handleUserGameboardEvents(event) {
+      // Places ship when game gameboard-cell is clicked and activeGame.shipToPlace is not null
+      if (event.target.classList.contains("gameboard-cell")) {
+        // If there is a ship to place, the move is valid, and the player has unplaces ships
+        if (
+          game.getShipToPlace() &&
+          isPlacementValid(game.getShipToPlace(), event.target.dataset.cellId, game.getPlacementOrientation(), game.getPlayerGameboard(game.getPlayerPlacingShips())) ===
+            "valid" &&
+          game.playerHasShipsToPlace(game.getPlayerPlacingShips())
+        ) {
+          const clickedCellId = event.target.dataset.cellId;
+          game.placePlayerShip(clickedCellId);
+          renderPlaceShipGameboardCells(game.getPlayerGameboard(game.getPlayerPlacingShips()));
+          game.setShipToPlace(null);
+          placingShipsGameboardWrapper.classList.remove("placingShips");
+        }
       }
     }
   }
 
   addGameboardCellDragHighlightEventListeners();
   function addGameboardCellDragHighlightEventListeners() {
+    const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
     placingShipsGameboardWrapper.addEventListener("dragover", (event) => {
       if (event.target.classList.contains("gameboard-cell")) {
         // Prevent ship dragging snapback
@@ -351,6 +346,33 @@ function startPlaceShipsUI() {
   }
 
   renderPlaceShipGameboardCells();
+}
+
+function startGameplayUI() {
+  const turnMessasageElement = document.querySelector("#turnMessage");
+
+  game.setPlayerGivingAttack(game.getPlayer("playerOne"));
+  game.setPlayerReceivingAttack(game.getPlayer("playerTwo"));
+  turnMessasageElement.textContent = `${game.getPlayerGivingAttackName()} - Attack! (click your opponent's gameboard)`;
+  renderGameplayGameboardCells("playerOneGameboard");
+  renderGameplayGameboardCells("playerTwoGameboard");
+  const gameplayScreenWrapper = document.querySelector("#gameplay-screen-wrapper");
+  gameplayScreenWrapper.addEventListener("click", (event) => {
+    if (event.target.classList.contains("gameboard-cell")) {
+      handleGameplayGameboardTurnClick();
+    }
+  });
+
+  function handleGameplayGameboardTurnClick(event) {
+    game.togglePlayerReceivingGivingAttack();
+    alert("Should be workin");
+    toggleGameTurnMessage();
+
+    function toggleGameTurnMessage() {
+      console.log("this is giving now", game.getPlayerGivingAttackName());
+      turnMessasageElement.textContent = `${game.getPlayerGivingAttackName()} - Attack! (click/attack your opponent's gameboard)`;
+    }
+  }
 }
 
 function renderPlaceShipGameboardCells(playerGameboard) {

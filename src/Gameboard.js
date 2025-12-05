@@ -24,9 +24,6 @@ class Gameboard {
     const shipLength = shipshipLengths[shipName];
     let currentCell = shipPlacementCell;
 
-    //
-    console.log("playa placin shizz", game.getPlayerPlacingShips());
-
     if (
       !this.unplacedShips.has(shipName) ||
       isPlacementValid(shipName, shipPlacementCell, shipOrientation, game.getPlayerGameboard(game.getPlayerPlacingShips())) != "valid"

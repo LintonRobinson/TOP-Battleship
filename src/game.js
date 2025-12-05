@@ -8,6 +8,7 @@ const game = (() => {
     players: {},
     playerPlacingShips: null,
     playerReceivingAttack: null,
+    playerGivingAttack: null,
     shipToPlace: null,
     gameMode: null,
     placementOrientation: "vertical",
@@ -23,12 +24,12 @@ const game = (() => {
 
     switch (activeGame.gameMode) {
       case "onePlayer":
-        playerOne = new Player("human", playerOneName);
-        playerTwo = new Player("computer", playerTwoName);
+        playerOne = new Player("human", playerOneName, "playerOne");
+        playerTwo = new Player("computer", playerTwoName, "playerTwo");
         break;
       case "twoPlayer":
-        playerOne = new Player("human", playerOneName);
-        playerTwo = new Player("human", playerTwoName);
+        playerOne = new Player("human", playerOneName, "playerOne");
+        playerTwo = new Player("human", playerTwoName, "playerTwo");
         break;
     }
 
@@ -38,8 +39,8 @@ const game = (() => {
 
   function initializeGame() {
     // Setting playerPlacingShips and playerReceivingAttack
-    activeGame.playerPlacingShips = activeGame.players[0];
-    activeGame.playerReceivingAttack = activeGame.players[1];
+    activeGame.playerPlacingShips = activeGame.players.playerOne;
+    activeGame.playerReceivingAttack = activeGame.players.playerTwo;
   }
 
   function setPlayerPlacingShips(player) {
@@ -54,7 +55,7 @@ const game = (() => {
     activeGame.placementOrientation = shipOrientation;
   }
 
-  function getPlacementOrientation(shipOrientation) {
+  function getPlacementOrientation() {
     return activeGame.placementOrientation;
   }
 
@@ -63,6 +64,26 @@ const game = (() => {
   }
   function setPlayerReceivingAttack(player) {
     activeGame.playerReceivingAttack = player;
+  }
+
+  function getPlayerReceivingAttack() {
+    return activeGame.playerReceivingAttack;
+  }
+
+  function setPlayerGivingAttack(player) {
+    activeGame.playerGivingAttack = player;
+  }
+
+  function getPlayerGivingAttack() {
+    return activeGame.playerReceivingAttack;
+  }
+
+  function getPlayerReceivingAttackName() {
+    return activeGame.playerReceivingAttack.playerName;
+  }
+
+  function getPlayerGivingAttackName() {
+    return activeGame.playerGivingAttack.playerName;
   }
 
   function allPlayerShipsPlaced(player) {
@@ -78,7 +99,6 @@ const game = (() => {
   }
 
   function getPlayerName(player) {
-    console.log("kdkdkdk", player);
     return player.playerName;
   }
 
@@ -96,6 +116,16 @@ const game = (() => {
 
   function togglePlaceShipOrientation() {
     activeGame.placementOrientation === "horizontal" ? (activeGame.placementOrientation = "vertical") : (activeGame.placementOrientation = "horizontal");
+  }
+
+  function togglePlayerReceivingGivingAttack() {
+    activeGame.playerReceivingAttack.playerId === "playerOne"
+      ? (activeGame.playerReceivingAttack = activeGame.players.playerTwo)
+      : (activeGame.playerReceivingAttack = activeGame.players.playerOne);
+
+    activeGame.playerGivingAttack.playerId === "playerOne"
+      ? (activeGame.playerGivingAttack = activeGame.players.playerTwo)
+      : (activeGame.playerGivingAttack = activeGame.players.playerOne);
   }
 
   function randomlyPlacePlayerShips() {
@@ -125,8 +155,6 @@ const game = (() => {
       activeGame.playerPlacingShips.playerGameboard.placeShip(randomShipName, randomCellCoordinate, randomShipOrientation);
       // game.getPlayerGameboard(game.getPlayerPlacingShips()).placeShip(randomShipName, randomCellCoordinate, randomShipOrientation);
     }
-    console.log("playerPlacingShipsGameboard.unplacedShips.size", activeGame.players.playerOne);
-    console.log("new plea ppc", activeGame.playerPlacingShips);
   }
 
   function playerHasShipsToPlace(player) {
@@ -156,6 +184,12 @@ const game = (() => {
     setShipToPlace: setShipToPlace,
     setPlayerPlacingShips: setPlayerPlacingShips,
     setPlayerReceivingAttack: setPlayerReceivingAttack,
+    setPlayerGivingAttack: setPlayerGivingAttack,
+    getPlayerGivingAttack: getPlayerGivingAttack,
+    togglePlayerReceivingGivingAttack: togglePlayerReceivingGivingAttack,
+    getPlayerReceivingAttack: getPlayerReceivingAttack,
+    getPlayerReceivingAttackName: getPlayerReceivingAttackName,
+    getPlayerGivingAttackName: getPlayerGivingAttackName,
     allPlayerShipsPlaced: allPlayerShipsPlaced,
     getPlayer: getPlayer,
     getPlayerName: getPlayerName,

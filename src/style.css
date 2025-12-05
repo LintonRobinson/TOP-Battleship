@@ -552,7 +552,7 @@ label {
 
 #gameplay-screen-wrapper {
   height: 100%;
-  padding-top: 120px;
+  padding-top: 50px;
 
   flex-direction: column;
   align-items: center;
@@ -708,6 +708,26 @@ label {
   flex-direction: column;
   align-items: center;
   gap: 20px;
+}
+
+#gameplay-instructions {
+  width: 500px;
+  background: rgba(255, 255, 255, 0.165);
+  border-radius: 15px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  border-left: #82ff6b solid 6px;
+  padding: 10px;
+  padding-left: 15px;
+
+  color: white;
+  position: relative;
+  bottom: 90px;
+
+  font-size: 0.85rem;
 }
 
 .gameplay-gameboard-wrapper span {
