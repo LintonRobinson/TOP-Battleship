@@ -5,7 +5,7 @@
 // Destroyer: The smallest ship in the game, occupying two spaces.
 
 class Ship {
-  constructor(shipName) {
+  constructor(shipName, initialShipPlacementCell, shipOrientation) {
     this.shipName = shipName;
     switch (shipName) {
       case "aircraftCarrier":
@@ -22,7 +22,11 @@ class Ship {
         this.shipLength = 2;
         break;
     }
+
     this.timesHit = 0;
+    this.initialShipPlacementCell = initialShipPlacementCell;
+    this.shipOrientation = shipOrientation;
+    this.activeShipCoordinates = [];
   }
 
   hitShip() {
@@ -35,6 +39,18 @@ class Ship {
     } else {
       return false;
     }
+  }
+
+  getInitialShipPlacementCell() {
+    return this.initialShipPlacementCell;
+  }
+
+  addToActiveShipCoordinates(shipCoordinate) {
+    this.activeShipCoordinates.push(shipCoordinate);
+  }
+
+  getActiveShipCoordinates() {
+    return this.activeShipCoordinates;
   }
 }
 

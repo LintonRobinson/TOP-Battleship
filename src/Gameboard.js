@@ -1,4 +1,7 @@
 import Ship from "./Ship.js";
+import { game } from "./game.js";
+import { isPlacementValid } from "./helpers.js";
+import { removeShipElementFromPlaceShipsWrapper } from "./ui.js";
 
 class Gameboard {
   constructor() {
@@ -6,77 +9,42 @@ class Gameboard {
     this.placedShips = new Set();
     this.activeShipCells = new Map();
     this.hitShipCells = new Set();
-    this.missedShots = new Set();
+    this.missedCells = new Set();
+  }
+
+  resetGameboard() {
+    this.unplacedShips = new Set(["aircraftCarrier", "battleship", "cruiser", "submarine", "destroyer"]);
+    this.placedShips = new Set();
+    this.activeShipCells = new Map();
+    this.hitShipCells = new Set();
+    this.missedCells = new Set();
   }
   placeShip(shipName, shipPlacementCell, shipOrientation) {
     const shipshipLengths = { aircraftCarrier: 5, battleship: 4, cruiser: 3, submarine: 3, destroyer: 2 };
     const shipLength = shipshipLengths[shipName];
     let currentCell = shipPlacementCell;
 
-    //
-    const isShipPlacedOverlapping = (shipLength, shipPlacementCell, shipOrientation) => {
-      const shipCells = [];
-      let currentCell = shipPlacementCell;
-      for (let i = 0; i < shipLength; i++) {
-        shipCells.push(currentCell);
-        currentCell = getNextCell(currentCell, shipOrientation);
-      }
-
-      for (const shipCell of shipCells) {
-        if (this.activeShipCells.has(shipCell)) {
-          return true;
-        }
-      }
-    };
-
     if (
       !this.unplacedShips.has(shipName) ||
-      !isShipPlacedOnGameboard(shipName, shipPlacementCell, shipOrientation) ||
-      isShipPlacedOverlapping(shipLength, shipPlacementCell, shipOrientation)
+      isPlacementValid(shipName, shipPlacementCell, shipOrientation, game.getPlayerGameboard(game.getPlayerPlacingShips())) != "valid"
     ) {
       return false;
+    } else {
+      this.unplacedShips.delete(shipName);
     }
 
-    const shipToPlace = new Ship(shipName);
+    const shipToPlace = new Ship(shipName, shipPlacementCell, shipOrientation);
     for (let i = 0; i < shipLength; i++) {
       this.activeShipCells.set(currentCell, shipToPlace);
       this.placedShips.add(shipToPlace);
+      shipToPlace.addToActiveShipCoordinates(currentCell);
       currentCell = getNextCell(currentCell, shipOrientation);
     }
-
-    this.unplacedShips.delete(shipName);
+    if (document.querySelector("#place-ships").contains(document.querySelector(`#${shipName}`))) {
+      removeShipElementFromPlaceShipsWrapper(shipName);
+    }
 
     return true;
-
-    function isShipPlacedOnGameboard(shipName, shipPlacementCell, shipOrientation) {
-      const shipLengths = { aircraftCarrier: 5, battleship: 4, cruiser: 3, submarine: 3, destroyer: 2 };
-      const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-      const gameboardRows = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-      if (shipOrientation === "horizontal") {
-        // Get index of starting cell
-        // Get current column as string and make uppercase
-        const cellColumn = shipPlacementCell.split("")[0].toUpperCase();
-        // Get index of gameboardColumns item that matches cellColumn
-        const letterIndex = gameboardColumns.indexOf(cellColumn);
-        // Add the ship length to the index. If greater than 9, out of bounds
-        if (letterIndex + shipLengths[shipName] < 9) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        // Get index of starting cell
-        // Get current row as string
-        const cellRow = shipPlacementCell.split("")[1];
-        // Get index of gameboardRows item that matches cellRow
-        const numberIndex = gameboardRows.indexOf(cellRow);
-        if (numberIndex + shipLengths[shipName] < 9) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    }
 
     function getNextCell(currentCell, shipOrientation) {
       const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
@@ -87,7 +55,10 @@ class Gameboard {
         // Get index of gameboardColumns item that matches currentCellColumn
         const letterIndex = gameboardColumns.indexOf(currentCellColumn);
         // Return a string (joined array) that its former array consisted of the incremented column, and same row
-        let nextCoordinate = [gameboardColumns[letterIndex + 1], currentCell.split("")[1]];
+        let nextCoordinate = [
+          gameboardColumns[letterIndex + 1],
+          currentCell.split("").length === 2 ? currentCell.split("")[1] : `${currentCell.split("")[1]}${currentCell.split("")[2]}`,
+        ];
         nextCoordinate = nextCoordinate.join("");
         return nextCoordinate;
       } else {
@@ -110,7 +81,7 @@ class Gameboard {
       this.hitShipCells.add(cellToAttack);
       return true;
     } else {
-      this.missedShots.add(cellToAttack);
+      this.missedCells.add(cellToAttack);
       return false;
     }
   }
@@ -123,7 +94,9 @@ class Gameboard {
 
 //const testGameboard = new Gameboard();
 
-//testGameboard.placeShip("aircraftCarrier", "H1", "horizontal");
+//testGameboard.placeShip("aircraftCarrier", "F1", "horizontal");
+
+//console.log("Placing ship", testGameboard.placeShip("aircraftCarrier", "F10", "horizontal"));
 //console.log("This is the activeShipCells", testGameboard.activeShipCells);
 
 export default Gameboard;

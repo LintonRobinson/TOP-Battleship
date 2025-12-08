@@ -1,17 +1,14 @@
 import Ship from "../Ship.js";
 
-describe("Ship Clas", () => {
+describe("Ship Class", () => {
   describe("shipName property", () => {
-    it.each([
-      ["aircraftCarrier"],
-      ["battleship"],
-      ["cruiser"],
-      ["submarine"],
-      ["destroyer"],
-    ])("initializes with shipName set to passed ship name", (testShip) => {
-      const ship = new Ship(testShip);
-      expect(ship.shipName).toBe(testShip);
-    });
+    it.each([["aircraftCarrier"], ["battleship"], ["cruiser"], ["submarine"], ["destroyer"]])(
+      "initializes with shipName set to passed ship name",
+      (testShip) => {
+        const ship = new Ship(testShip);
+        expect(ship.shipName).toBe(testShip);
+      },
+    );
   });
 
   describe("shipLength property", () => {
@@ -21,17 +18,20 @@ describe("Ship Clas", () => {
       ["cruiser", 3],
       ["submarine", 3],
       ["destroyer", 2],
-    ])(
-      "initializes with shipLength based on passed ship name '%s",
-      (testShip, expectation) => {
-        const ship = new Ship(testShip);
-        expect(ship.shipLength).toBe(expectation);
-      },
-    );
+    ])("initializes with shipLength based on passed ship name '%s", (testShip, expectation) => {
+      const ship = new Ship(testShip);
+      expect(ship.shipLength).toBe(expectation);
+    });
   });
 
-  it("Ship should initialize with the correct length based on shipType property", () => {
-    expect(testShip.length).toBe(5);
+  it("initializes initialShipPlacementCell property with the passed initialShipPlacementCell value", () => {
+    const ship = new Ship("aircraftCarrier", "A1");
+    expect(ship.initialShipPlacementCell).toBe("A1");
+  });
+
+  it("initializes shipOrientation property with the passed shipOrientation value", () => {
+    const ship = new Ship("aircraftCarrier", "A1", "horizontal");
+    expect(ship.shipOrientation).toBe("horizontal");
   });
 
   describe("hitShip method", () => {
@@ -56,14 +56,11 @@ describe("Ship Clas", () => {
       ["cruiser", 3],
       ["submarine", 3],
       ["destroyer", 2],
-    ])(
-      "return true or false dependent on if timesHit is equal to %s shipLength",
-      (testShip, expectation) => {
-        const ship = new Ship(testShip);
-        ship.timesHit = expectation;
-        expect(ship.isSunk()).toBe(true);
-      },
-    );
+    ])("return true or false dependent on if timesHit is equal to %s shipLength", (testShip, expectation) => {
+      const ship = new Ship(testShip);
+      ship.timesHit = expectation;
+      expect(ship.isSunk()).toBe(true);
+    });
   });
 });
 
