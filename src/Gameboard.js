@@ -9,7 +9,7 @@ class Gameboard {
     this.placedShips = new Set();
     this.activeShipCells = new Map();
     this.hitShipCells = new Set();
-    this.missedShots = new Set();
+    this.missedCells = new Set();
   }
 
   resetGameboard() {
@@ -17,7 +17,7 @@ class Gameboard {
     this.placedShips = new Set();
     this.activeShipCells = new Map();
     this.hitShipCells = new Set();
-    this.missedShots = new Set();
+    this.missedCells = new Set();
   }
   placeShip(shipName, shipPlacementCell, shipOrientation) {
     const shipshipLengths = { aircraftCarrier: 5, battleship: 4, cruiser: 3, submarine: 3, destroyer: 2 };
@@ -37,6 +37,7 @@ class Gameboard {
     for (let i = 0; i < shipLength; i++) {
       this.activeShipCells.set(currentCell, shipToPlace);
       this.placedShips.add(shipToPlace);
+      shipToPlace.addToActiveShipCoordinates(currentCell);
       currentCell = getNextCell(currentCell, shipOrientation);
     }
     if (document.querySelector("#place-ships").contains(document.querySelector(`#${shipName}`))) {
@@ -80,7 +81,7 @@ class Gameboard {
       this.hitShipCells.add(cellToAttack);
       return true;
     } else {
-      this.missedShots.add(cellToAttack);
+      this.missedCells.add(cellToAttack);
       return false;
     }
   }

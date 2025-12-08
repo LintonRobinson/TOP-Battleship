@@ -351,32 +351,78 @@ function startPlaceShipsUI() {
 function startGameplayUI() {
   const turnMessasageElement = document.querySelector("#turnMessage");
 
+  //
   game.setPlayerGivingAttack(game.getPlayer("playerOne"));
   game.setPlayerReceivingAttack(game.getPlayer("playerTwo"));
+  //
   document.querySelector(`#${game.getPlayerReceivingAttackId()}Gameboard`).classList.add("receivingAttack");
+  //
   turnMessasageElement.textContent = `${game.getPlayerGivingAttackName()} - Attack! (click ${game.getPlayerReceivingAttackName()}'s gameboard)`;
+  //
   renderGameplayGameboardCells("playerOneGameboard");
   renderGameplayGameboardCells("playerTwoGameboard");
   const gameplayScreenWrapper = document.querySelector("#gameplay-screen-wrapper");
 
   gameplayScreenWrapper.addEventListener("click", (event) => {
     if (event.target.classList.contains("gameboard-cell") & event.target.parentElement.classList.contains("receivingAttack")) {
-      handleGameplayGameboardTurnClick();
+      handleGameplayGameboardTurnClick(event);
     }
   });
 
   function handleGameplayGameboardTurnClick(event) {
+    if (
+      game.getGameboardHitShipCells(game.getPlayerReceivingAttackGameboard()).has(event.target.dataset.cellId) ||
+      game.getGameboardMissedShipCells(game.getPlayerReceivingAttackGameboard()).has(event.target.dataset.cellId)
+    ) {
+      return;
+    }
+    // Add conditional for hit/miss
+    game.receivePlayerAttack(event.target.dataset.cellId);
+    renderGameplayGameboardCells(`${game.getPlayerReceivingAttackId()}Gameboard`, game.getPlayerReceivingAttackGameboard());
+    updatePlaceSunkShipSidebarUi();
+    if (game.checkForGameWin()) {
+      //Update wiwin modal with winner name
+      const winnerMessageWrapperElement = document.querySelector("#winner-message-wrapper");
+      const winnerMessageElement = document.querySelector("#winner-message");
+      const winnerName = game.getGameWinnerName();
+      winnerMessageElement.textContent = `${winnerName} Wins! 🎉`;
+      winnerMessageWrapperElement.classList.remove("hidden");
+    }
+
     game.togglePlayerReceivingGivingAttack();
-    alert("Should be workin");
     toggleGameTurnMessage();
     toggleClickablePlayerGameboard();
 
     function toggleGameTurnMessage() {
-      console.log("this is giving now", game.getPlayerGivingAttackName());
       turnMessasageElement.textContent = `${game.getPlayerGivingAttackName()} - Attack! (click/attack ${game.getPlayerReceivingAttackName()}'s gameboard)`;
     }
 
-    function updatePlacerSunkShipSidebarUi() {}
+    function updatePlaceSunkShipSidebarUi() {
+      const playerGameboard = game.getPlayerReceivingAttackGameboard();
+      const playerReceivingAttackPlacedShips = game.getGameboardPlacedShips(playerGameboard);
+      const sunkShipNames = [];
+      const playerReceivingAttackId = game.getPlayerReceivingAttackId();
+
+      playerReceivingAttackPlacedShips.forEach((placedShip) => {
+        if (game.isShipSunk(placedShip)) {
+          let shipName = game.getShipName(placedShip);
+          let example = shipName.slice(0, 1);
+          console.log("shipName.slice(0, 1)", example);
+
+          const shipNameCapitalFirstLetter = shipName.slice(0, 1).toUpperCase();
+          const shipNameWithoutFirstLetter = shipName.slice(1, shipName.length);
+          shipName = shipNameCapitalFirstLetter;
+          shipName = shipName.concat(shipNameWithoutFirstLetter);
+          sunkShipNames.push(shipName);
+        }
+      });
+
+      sunkShipNames.forEach((sunkShipName) => {
+        console.log(playerReceivingAttackId, sunkShipName);
+        const sunkShipElement = document.querySelector(`#${playerReceivingAttackId}${sunkShipName}`);
+        sunkShipElement.classList.add("sunk-ship");
+      });
+    }
 
     function toggleClickablePlayerGameboard() {
       const gameplayGameboards = document.querySelectorAll(".gameplay-gameboard");
@@ -462,7 +508,6 @@ function renderGameplayGameboardCells(playerGameboardId, playerGameboard) {
 
   // Clear gameboard cells
   const gameboardCells = gameboard.querySelectorAll("*");
-
   gameboardCells.forEach((gameboardCell) => {
     gameboardCell.remove();
   });
@@ -476,6 +521,98 @@ function renderGameplayGameboardCells(playerGameboardId, playerGameboard) {
       gameboardCell.dataset.cellId = `${gameboardColumns[j]}${i}`;
       gameboard.appendChild(gameboardCell);
     }
+  }
+
+  addGameplayGameboardCellHoverEventListeners();
+
+  // Change bg of hit shots, for each hit shot. Loop through all cells if cell is in hit cell set change bg
+
+  // Remove ship.shipLength cells from gameboard
+
+  if (playerGameboard) {
+    const gameboardCells = gameboard.querySelectorAll(".gameboard-cell");
+
+    gameboardCells.forEach((gameboardCell) => {
+      if (game.getGameboardHitShipCells(playerGameboard).has(gameboardCell.dataset.cellId)) gameboardCell.classList.add("hit-cell");
+      if (game.getGameboardMissedShipCells(playerGameboard).has(gameboardCell.dataset.cellId)) gameboardCell.classList.add("missed-cell");
+    });
+    // Change bg of hit shots, for each hit shot. Loop through all cells if cell is in hit cell set change bg
+
+    const placedShips = playerGameboard.placedShips;
+    placedShips.forEach((ship) => {
+      if (game.isShipSunk(ship)) {
+        const initialShipPlacementCellColumn = ship.getInitialShipPlacementCell().split("")[0];
+        const initialShipPlacementCellRow =
+          ship.getInitialShipPlacementCell().split("").length < 3
+            ? ship.getInitialShipPlacementCell().split("")[1]
+            : ship.getInitialShipPlacementCell().split("")[1] + ship.getInitialShipPlacementCell().split("")[2];
+
+        const shipGridColumnStartIndex = gameboardColumns.findIndex((column) => column === initialShipPlacementCellColumn) + 1;
+
+        const shipGridRowStart = initialShipPlacementCellRow;
+
+        const gameboardCells = gameboard.querySelectorAll(".gameboard-cell");
+
+        // Change bg of hit shots, for each hit shot. Loop through all cells if cell is in hit cell set change bg
+
+        // Remove ship.shipLength cells from gameboard
+        const shipCoordinates = ship.getActiveShipCoordinates();
+        gameboardCells.forEach((gameboardCell) => {
+          if (shipCoordinates.includes(gameboardCell.dataset.cellId)) gameboardCell.remove();
+        });
+
+        const sunkShipElement = document.createElement("div");
+
+        sunkShipElement.classList.add(`${ship.shipOrientation}-placement-ship`);
+        sunkShipElement.classList.add(ship.shipName);
+        // Remove
+        for (let i = 0; i < ship.shipLength; i++) {
+          const shipCell = document.createElement("div");
+          shipCell.classList.add("ship-cell");
+          shipCell.classList.add("sunk-cell");
+          sunkShipElement.appendChild(shipCell);
+        }
+
+        // Grid placement
+        if (ship.shipOrientation === "horizontal") {
+          sunkShipElement.style.gridColumnStart = `${shipGridColumnStartIndex}`;
+          sunkShipElement.style.gridColumnEnd = `${shipGridColumnStartIndex + ship.shipLength}`;
+          sunkShipElement.style.gridRowStart = `${shipGridRowStart}`;
+          sunkShipElement.style.gridRowEnd = `${Number(shipGridRowStart) + 1}`;
+        } else {
+          sunkShipElement.style.gridColumnStart = `${shipGridColumnStartIndex}`;
+          sunkShipElement.style.gridColumnEnd = `${shipGridColumnStartIndex + 1}`;
+          sunkShipElement.style.gridRowStart = `${shipGridRowStart}`;
+          sunkShipElement.style.gridRowEnd = `${Number(shipGridRowStart) + ship.shipLength}`;
+        }
+        gameboard.appendChild(sunkShipElement);
+      }
+    });
+  }
+
+  function addGameplayGameboardCellHoverEventListeners() {
+    const gameplayGameboards = document.querySelectorAll(".gameplay-gameboard");
+    gameplayGameboards.forEach((gameboard) => {
+      gameboard.addEventListener("mouseover", (event) => {
+        if (event.target.classList.contains("gameboard-cell") && event.target.parentElement.classList.contains("receivingAttack")) {
+          if (
+            !game.getGameboardHitShipCells(game.getPlayerReceivingAttackGameboard()).has(event.target.dataset.cellId) &&
+            !game.getGameboardMissedShipCells(game.getPlayerReceivingAttackGameboard()).has(event.target.dataset.cellId)
+          )
+            event.target.style.backgroundColor = "#f4fff2";
+        }
+      });
+      gameboard.addEventListener("mouseout", (event) => {
+        if (event.target.classList.contains("gameboard-cell") && event.target.parentElement.classList.contains("receivingAttack")) {
+          if (
+            !game.getGameboardHitShipCells(game.getPlayerReceivingAttackGameboard()).has(event.target.dataset.cellId) &&
+            !game.getGameboardMissedShipCells(game.getPlayerReceivingAttackGameboard()).has(event.target.dataset.cellId)
+          )
+            event.target.style.backgroundColor = "rgb(51, 51, 51)";
+        }
+      });
+      //(gameboard.addEventListener("mouseout"), () => {});
+    });
   }
 }
 

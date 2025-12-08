@@ -26,6 +26,7 @@ class Ship {
     this.timesHit = 0;
     this.initialShipPlacementCell = initialShipPlacementCell;
     this.shipOrientation = shipOrientation;
+    this.activeShipCoordinates = [];
   }
 
   hitShip() {
@@ -38,6 +39,18 @@ class Ship {
     } else {
       return false;
     }
+  }
+
+  getInitialShipPlacementCell() {
+    return this.initialShipPlacementCell;
+  }
+
+  addToActiveShipCoordinates(shipCoordinate) {
+    this.activeShipCoordinates.push(shipCoordinate);
+  }
+
+  getActiveShipCoordinates() {
+    return this.activeShipCoordinates;
   }
 }
 

@@ -357,6 +357,10 @@ label {
   background-color: #82ff6b;
 }
 
+.ship-cell.sunk-cell {
+  background-color: #ff8080;
+}
+
 .gameboard-wrapper {
   display: flex;
   flex-direction: column;
@@ -376,12 +380,21 @@ label {
   transition: 0.2s;
 }
 
+.gameboard-cell.hit-cell {
+  background-color: #4d9336;
+}
+
+.gameboard-cell.missed-cell {
+  background-color: #e5a4a4;
+}
+
 .placing-ships-gameboard.placingShips .gameboard-cell:hover,
-.gameboard-cell.activeCell,
-.gameplay-gameboard.receivingAttack .gameboard-cell:hover {
+.gameboard-cell.activeCell {
   background-color: #f4fff2;
   transition: 0.2s;
 }
+
+/* .gameplay-gameboard.receivingAttack .gameboard-cell:hover */
 
 .gameboard-cell.badCellPlacement {
   background-color: #ff9191;
@@ -428,11 +441,6 @@ label {
 .placing-ships-gameboard {
   margin-bottom: 50px;
 }
-
-/* 
-#aircraftCarrier * {
-  pointer-events: none;
-} */
 
 .aircraftCarrier.vertical-placement-ship::after {
   content: "Aircraft Carrier";
@@ -774,6 +782,26 @@ label {
 
 #github-logo-white img {
   width: 40px;
+}
+
+#winner-message-wrapper.visable {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  backdrop-filter: grayscale(70%) blur(5px);
+  opacity: 1;
+  transition: 1s;
+}
+
+#winner-message-wrapper.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: 1s;
 }
 
 /******************************************

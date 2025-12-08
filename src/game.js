@@ -1,5 +1,4 @@
 import Player from "./Player.js";
-import Gameboard from "./Gameboard.js";
 import { renderPlaceShipGameboardCells, addShipElementsToPlaceShipsWrapper, renderPlacemenErrorMessage, updatePlaceYourShipsTitle } from "./ui.js";
 import { isPlacementValid, randomlyPlacePlayerShips } from "./helpers.js";
 
@@ -84,6 +83,10 @@ const game = (() => {
 
   function getPlayerReceivingAttackId() {
     return activeGame.playerReceivingAttack.playerId;
+  }
+
+  function getPlayerReceivingAttackGameboard() {
+    return activeGame.playerReceivingAttack.playerGameboard;
   }
 
   function getPlayerGivingAttackName() {
@@ -177,6 +180,50 @@ const game = (() => {
     activeGame.playerPlacingShips = activeGame.players.playerTwo;
   }
 
+  function receivePlayerAttack(cellToAttack) {
+    activeGame.playerReceivingAttack.playerGameboard.receiveAttack(cellToAttack);
+  }
+
+  function getPlayerReceivingAttackMissedShots() {
+    return activeGame.playerReceivingAttack.playerGameboard.missedShots;
+  }
+
+  function getPlayerReceivingAttackHitShots() {
+    return activeGame.playerReceivingAttack.playerGameboard.hitShots;
+  }
+
+  function isShipSunk(shipInstance) {
+    return shipInstance.isSunk();
+  }
+
+  function getShipActiveShipCoordinates(shipInstance) {
+    return shipInstance.getActiveShipCoordinates();
+  }
+
+  function getGameboardHitShipCells(playerGameboard) {
+    return playerGameboard.hitShipCells;
+  }
+
+  function getGameboardMissedShipCells(playerGameboard) {
+    return playerGameboard.missedCells;
+  }
+
+  function getGameboardPlacedShips(playerGameboard) {
+    return playerGameboard.placedShips;
+  }
+
+  function getShipName(shipInstance) {
+    return shipInstance.shipName;
+  }
+
+  function checkForGameWin() {
+    return activeGame.playerReceivingAttack.playerGameboard.areAllShipsSunk();
+  }
+
+  function getGameWinnerName() {
+    return activeGame.playerGivingAttack.playerName;
+  }
+
   return {
     activeGame: activeGame,
     setGameMode: setGameMode,
@@ -194,6 +241,7 @@ const game = (() => {
     getPlayerReceivingAttack: getPlayerReceivingAttack,
     getPlayerReceivingAttackName: getPlayerReceivingAttackName,
     getPlayerReceivingAttackId: getPlayerReceivingAttackId,
+    getPlayerReceivingAttackGameboard: getPlayerReceivingAttackGameboard,
     getPlayerGivingAttackName: getPlayerGivingAttackName,
     allPlayerShipsPlaced: allPlayerShipsPlaced,
     getPlayer: getPlayer,
@@ -205,59 +253,19 @@ const game = (() => {
     playerHasShipsToPlace: playerHasShipsToPlace,
     placePlayerShip: placePlayerShip,
     startPlayerTwoShipPlacements: startPlayerTwoShipPlacements,
+    receivePlayerAttack: receivePlayerAttack,
+    getPlayerReceivingAttackMissedShots: getPlayerReceivingAttackMissedShots,
+    getPlayerReceivingAttackHitShots: getPlayerReceivingAttackHitShots,
+    isShipSunk: isShipSunk,
+    getShipName: getShipName,
+    getShipActiveShipCoordinates: getShipActiveShipCoordinates,
+    getGameboardHitShipCells: getGameboardHitShipCells,
+    getGameboardMissedShipCells: getGameboardMissedShipCells,
+    getGameboardPlacedShips: getGameboardPlacedShips,
+    checkForGameWin: checkForGameWin,
+    getGameWinnerName: getGameWinnerName,
   };
 })();
-
-/*
-
-function startGame() {
-  const saveShipPlacementsBtn = document.querySelector("#saveShipPlacements");
-  saveShipPlacementsBtn.addEventListener("click", () => {
-    if (activeGame.playerPlacingShips === activeGame.playerOne) {
-      startPlayerTwoShipPlacements();
-      updatePlaceYourShipsTitle(activeGame.playerPlacingShips);
-      activeGame.placementOrientation = "vertical";
-    } else {
-      if (activeGame.playerPlacingShips.playerGameboard.unplacedShips.size) {
-        renderPlacemenErrorMessage("you must place all five ships");
-      }
-    }
-  });
-}
-
-*/
-
-// Adds event listeners to ".placing-ships-gameboard" that places ships when game gameboard-cell is clicked and activeGame.shipToPlace is not null
-
-// Adds event listeners to ".placing-ships-gameboard" that places ships when game gameboard-cell is clicked and activeGame.shipToPlace is not null
-function addGameplayGameboardClickEventListeners() {
-  const gameplayGameboardWrapper = document.querySelector(".gameplay-gameboard");
-  gameplayGameboardWrapper.forEach((gameboard) => {
-    gameboard.addEventListener("click", () => {});
-  });
-
-  placingShipsGameboardWrapper.addEventListener("click", (event) => {
-    // Places ship when game gameboard-cell is clicked and activeGame.shipToPlace is not null
-
-    if (
-      event.target.classList.contains("gameboard-cell") &&
-      activeGame.shipToPlace &&
-      isPlacementValid(activeGame.shipToPlace, event.target.dataset.cellId, activeGame.placementOrientation, activeGame.playerPlacingShips.playerGameboard) === "valid"
-    ) {
-      if (activeGame.playerPlacingShips.playerGameboard.unplacedShips.size) {
-        const clickedCellId = event.target.dataset.cellId;
-        activeGame.playerPlacingShips.playerGameboard.placeShip(activeGame.shipToPlace, clickedCellId, activeGame.placementOrientation);
-
-        activeGame.shipToPlace = null;
-        const placingShipsGameboardWrapper = document.querySelector(".placing-ships-gameboard");
-        placingShipsGameboardWrapper.classList.remove("placingShips");
-
-        renderPlaceShipGameboardCells(activeGame.playerPlacingShips.playerGameboard);
-      } else {
-      }
-    }
-  });
-}
 
 document.addEventListener("DOMContentLoaded", startGame);
 
