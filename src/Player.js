@@ -2,7 +2,7 @@ import Gameboard from "./Gameboard.js";
 class Player {
   constructor(playerType, playerName, playerId) {
     this.playerType = playerType === "human" ? "human" : "computer";
-    this.playerName = playerType === "human" ? playerName : "AI Opponent";
+    this.playerName = playerType === "human" ? playerName : "CPU 🤖";
     this.playerGameboard = new Gameboard();
     this.playerId = playerId;
   }

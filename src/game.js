@@ -10,11 +10,20 @@ const game = (() => {
     playerGivingAttack: null,
     shipToPlace: null,
     gameMode: null,
+    computerDifficulty: null,
     placementOrientation: "vertical",
   };
 
   function setGameMode(gameMode) {
     activeGame.gameMode = gameMode;
+  }
+
+  function getGameMode(gameMode) {
+    return activeGame.gameMode;
+  }
+
+  function setComputerDifficulty(computerDifficulty) {
+    activeGame.computerDifficulty = computerDifficulty;
   }
 
   function initializePlayers(playerOneName, playerTwoName) {
@@ -24,7 +33,7 @@ const game = (() => {
     switch (activeGame.gameMode) {
       case "onePlayer":
         playerOne = new Player("human", playerOneName, "playerOne");
-        playerTwo = new Player("computer", playerTwoName, "playerTwo");
+        playerTwo = new Player("computer", "CPU 🤖", "playerTwo");
         break;
       case "twoPlayer":
         playerOne = new Player("human", playerOneName, "playerOne");
@@ -227,6 +236,8 @@ const game = (() => {
   return {
     activeGame: activeGame,
     setGameMode: setGameMode,
+    getGameMode: getGameMode,
+    setComputerDifficulty: setComputerDifficulty,
     initializePlayers: initializePlayers,
     initializeGame: initializeGame,
     setPlacementOrientation: setPlacementOrientation,

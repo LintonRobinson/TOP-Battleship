@@ -11,17 +11,24 @@ function startGameSetupUI() {
 
     // Player vs player button click  hides select game mode screen and displays enter player names screen
     if (event.target.id === "player-vs-player") {
+      const enterPlayerNameWrapper = document.querySelector("#enter-player-name-wrapper");
+      enterPlayerNameWrapper.remove();
       game.setGameMode("twoPlayer");
       advanceScreen("#select-mode-wrapper", "#enter-player-names-wrapper");
     }
 
     // Player vs computer button click hides select game mode screen and displays select computer difficulty screen
     if (event.target.id === "player-vs-computer") {
+      const enterPlayerNamesWrapper = document.querySelector("#enter-player-names-wrapper");
+      enterPlayerNamesWrapper.remove();
+      game.setGameMode("onePlayer");
+
       advanceScreen("#select-mode-wrapper", "#select-computer-difficulty-wrapper");
     }
 
     // Select computer diffiulty button click hides select select computer difficulty and displays enter player name screen
     if (event.target.classList.contains("select-computer-difficulty-button")) {
+      game.setComputerDifficulty(event.target.id);
       advanceScreen("#select-computer-difficulty-wrapper", "#enter-player-name-wrapper");
     }
 
@@ -34,38 +41,42 @@ function startGameSetupUI() {
 
       if (game.getPlayerPlacingShips() === game.getPlayer("playerOne") && !game.playerHasShipsToPlace(game.getPlayer("playerOne"))) {
         game.startPlayerTwoShipPlacements();
-        updatePlaceYourShipsTitle(game.getPlayerPlacingShips());
-        game.setPlacementOrientation("vertical");
-        addShipElementsToPlaceShipsWrapper();
-        renderPlaceShipGameboardCells();
+        if (game.getGameMode() === "twoPlayer") {
+          updatePlaceYourShipsTitle(game.getPlayerPlacingShips());
+          game.setPlacementOrientation("vertical");
+          addShipElementsToPlaceShipsWrapper();
+          renderPlaceShipGameboardCells();
+        }
       }
 
-      //addShipElementsToPlaceShipsWrapper();
-      //addPlaceShipDragEventListeners();
-
       // Advance to gameplay screen and Update Gameboard text
-      if (!game.playerHasShipsToPlace(game.getPlayer("playerTwo"))) {
+      if (
+        (game.getGameMode() === "twoPlayer" && !game.playerHasShipsToPlace(game.getPlayer("playerTwo"))) ||
+        (game.getGameMode() === "onePlayer" && !game.playerHasShipsToPlace(game.getPlayer("playerOne")))
+      ) {
+        alert("Should have ran");
         advanceScreen("#place-ships-screen-wrapper", "#gameplay-screen-wrapper");
-
-        //addGameplayGameboardClickEventListeners(); playerTwoFleetTitle Ya Mama's Fleet
-
-        const playerOneGameboardTitle = document.querySelector("#playerOneGameboardTitle");
-        const playerTwoGameboardTitle = document.querySelector("#playerTwoGameboardTitle");
-        playerOneGameboardTitle.textContent = `${game.getPlayerName(game.getPlayer("playerOne"))}'s Gameboard`;
-        playerTwoGameboardTitle.textContent = `${game.getPlayerName(game.getPlayer("playerTwo"))}'s Gameboard`;
-
-        const playerOneFleetTitle = document.querySelector("#playerOneFleetTitle");
-        const playerTwoFleetTitle = document.querySelector("#playerTwoFleetTitle");
-        playerOneFleetTitle.textContent = `${game.getPlayerName(game.getPlayer("playerOne"))}'s Feet`;
-        playerTwoFleetTitle.textContent = `${game.getPlayerName(game.getPlayer("playerTwo"))}'s Fleet`;
+        updateGameplayScreenPlayerText();
         startGameplayUI();
       }
     }
+
+    function updateGameplayScreenPlayerText() {
+      const playerOneGameboardTitle = document.querySelector("#playerOneGameboardTitle");
+      const playerTwoGameboardTitle = document.querySelector("#playerTwoGameboardTitle");
+      playerOneGameboardTitle.textContent = `${game.getPlayerName(game.getPlayer("playerOne"))}'s Gameboard`;
+      playerTwoGameboardTitle.textContent = `${game.getPlayerName(game.getPlayer("playerTwo"))}'s Gameboard`;
+
+      const playerOneFleetTitle = document.querySelector("#playerOneFleetTitle");
+      const playerTwoFleetTitle = document.querySelector("#playerTwoFleetTitle");
+      playerOneFleetTitle.textContent = `${game.getPlayerName(game.getPlayer("playerOne"))}'s Feet`;
+      playerTwoFleetTitle.textContent = `${game.getPlayerName(game.getPlayer("playerTwo"))}'s Fleet`;
+    }
   });
 
-  const enterPlayerNamesForm = document.querySelector("#enter-player-names-wrapper");
+  const mainWrapper = document.querySelector("main");
   // Use submits player names
-  enterPlayerNamesForm.addEventListener("submit", (event) => {
+  mainWrapper.addEventListener("submit", (event) => {
     const playerOneName = document.querySelector("#playerOneName").value;
     event.preventDefault();
     // Place player ships button click hides enter player names screen and displays place player ships screen
@@ -84,6 +95,12 @@ function startGameSetupUI() {
 
     // Place player ships button click hides enter player name screen and displays place player ships screen
     if (event.target.id === "enter-player-name") {
+      alert("Ya Mama Runnin");
+      game.initializePlayers(playerOneName);
+      game.setPlayerPlacingShips(game.getPlayer("playerOne"));
+
+      // Update placeYourShipTitles with playerOne's playerName
+      updatePlaceYourShipsTitle(game.getPlayer("playerOne"));
       advanceScreen("#enter-player-name-wrapper", "#place-ships-screen-wrapper");
     }
 
@@ -177,12 +194,18 @@ function startPlaceShipsUI() {
         // If player one is player placing ships,
         if (game.allPlayerShipsPlaced(game.getPlayer("playerOne"))) {
           game.setPlayerPlacingShips(game.getPlayer("playerTwo"));
-          updatePlaceYourShipsTitle(activeGame.playerPlacingShips);
-          game.setPlacementOrientation("vertical");
+          if (game.getGameMode() === "twoPlayer") {
+            updatePlaceYourShipsTitle(activeGame.playerPlacingShips);
+            game.setPlacementOrientation("vertical");
+          }
         } else {
           if (activeGame.playerPlacingShips.playerGameboard.unplacedShips.size) {
             renderPlacemenErrorMessage("you must place all five ships");
           }
+        }
+
+        if (game.getGameMode() === "onePlayer") {
+          game.randomlyPlacePlayerShips();
         }
       }
     });
@@ -742,6 +765,7 @@ function renderPlacemenErrorMessage(errorMessage) {
 }
 
 function updatePlaceYourShipsTitle(player) {
+  console.log("The passed player", player);
   const placeYourShipsTitle = document.querySelector("#placeYourShipsTitle");
   const playerName = player.playerName;
   placeYourShipsTitle.textContent = `${playerName}, Place Your Ships`;
