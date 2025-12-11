@@ -54,7 +54,6 @@ function startGameSetupUI() {
         (game.getGameMode() === "twoPlayer" && !game.playerHasShipsToPlace(game.getPlayer("playerTwo"))) ||
         (game.getGameMode() === "onePlayer" && !game.playerHasShipsToPlace(game.getPlayer("playerOne")))
       ) {
-        alert("Should have ran");
         advanceScreen("#place-ships-screen-wrapper", "#gameplay-screen-wrapper");
         updateGameplayScreenPlayerText();
         startGameplayUI();
@@ -399,22 +398,37 @@ function startGameplayUI() {
     ) {
       return;
     }
-    // Add conditional for hit/miss
+
     game.receivePlayerAttack(event.target.dataset.cellId);
     renderGameplayGameboardCells(`${game.getPlayerReceivingAttackId()}Gameboard`, game.getPlayerReceivingAttackGameboard());
     updatePlaceSunkShipSidebarUi();
-    if (game.checkForGameWin()) {
-      //Update wiwin modal with winner name
-      const winnerMessageWrapperElement = document.querySelector("#winner-message-wrapper");
-      const winnerMessageElement = document.querySelector("#winner-message");
-      const winnerName = game.getGameWinnerName();
-      winnerMessageElement.textContent = `${winnerName} Wins! 🎉`;
-      winnerMessageWrapperElement.classList.remove("hidden");
-    }
 
-    game.togglePlayerReceivingGivingAttack();
     toggleGameTurnMessage();
-    toggleClickablePlayerGameboard();
+
+    //
+    if (game.getGameMode() === "twoPlayer") {
+      // receive ai attack,
+      if (game.checkForGameWin()) {
+        const winnerMessageWrapperElement = document.querySelector("#winner-message-wrapper");
+        const winnerMessageElement = document.querySelector("#winner-message");
+        const winnerName = game.getGameWinnerName();
+        winnerMessageElement.textContent = `${winnerName} Wins! 🎉`;
+        winnerMessageWrapperElement.classList.remove("hidden");
+      }
+      game.togglePlayerReceivingGivingAttack();
+      toggleClickablePlayerGameboard();
+    } else {
+      // receive ai attack,
+      if (game.checkForGameWin()) {
+        const winnerMessageWrapperElement = document.querySelector("#winner-message-wrapper");
+        const winnerMessageElement = document.querySelector("#winner-message");
+        const winnerName = game.getGameWinnerName();
+        winnerMessageElement.textContent = `${winnerName} Wins! 🎉`;
+        winnerMessageWrapperElement.classList.remove("hidden");
+      }
+      game.togglePlayerReceivingGivingAttack();
+      renderGameplayGameboardCells(`${game.getPlayerReceivingAttackId()}Gameboard`, game.getPlayerReceivingAttackGameboard());
+    }
 
     function toggleGameTurnMessage() {
       turnMessasageElement.textContent = `${game.getPlayerGivingAttackName()} - Attack! (click/attack ${game.getPlayerReceivingAttackName()}'s gameboard)`;
