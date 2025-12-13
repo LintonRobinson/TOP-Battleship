@@ -6,7 +6,29 @@ export class Cpu {
     this.currentHitShipOrgin;
     this.missedCells = new Set();
     this.hitCells = new Set();
+    this.coordinatesToExploreFromHitShip = [];
     this.sunkShips = new Set();
+    this.discoveredHitCells = [];
+  }
+
+  hasCellBeenAttacked(cellCoordinateToCheck) {
+    if (this.hitCells.has(cellCoordinateToCheck) || this.missedCells.has(cellCoordinateToCheck)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  addCoordinateToHitCells(coordinateToAdd) {
+    this.hitCells.add(coordinateToAdd);
+  }
+
+  addCoordinateToMissedCells(coordinateToAdd) {
+    this.missedCells.add(coordinateToAdd);
+  }
+
+  addCellToCoordinatesToExploreFromHitShip(cell) {
+    this.coordinatesToExploreFromHitShip.push(cell);
   }
 
   generateFutureShot(originCellCoordinate, cellRelativeOrientation) {
@@ -72,28 +94,12 @@ export class Cpu {
   }
 
   getCoordinateToAttackPlayerGameboard() {
-    if (this.newCoordinatesToExplore.length > 0) {
+    // If a potential hit, randomly select random targeted (existing random cell to sink), or discovered
+    if (this.coordinatesToExploreFromHitShip.length > 0) {
+    } else if (this.discoveredHitCells.length > 0) {
+    } else {
+      return { cellCoordinate: this.getRandomAvailableCoordinate(), cellCoordinateOrigin: "random" };
     }
-  }
-}
-
-function getNextCell(currentCell, shipOrientation) {
-  const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-  const gameboardRows = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-  if (shipOrientation === "horizontal") {
-    // Return a string (joined array) that its former array consisted of the incremented column, and same row
-    let nextCoordinate = [gameboardColumns[letterIndex + 1], cellRow];
-    nextCoordinate = nextCoordinate.join("");
-    return nextCoordinate;
-  } else {
-    // Get current row as string
-    const currentCellRow = currentCell.split("").length === 2 ? currentCell.split("")[1] : `${currentCell.split("")[1]}${currentCell.split("")[2]}`;
-    // Get index of gameboardRows item that matches currentCellRow
-    const numberIndex = gameboardRows.indexOf(currentCellRow);
-    // Return a string (joined array) that its former array consisted of the same column and incremented row
-    let nextCoordinate = [currentCell.split("")[0], gameboardRows[numberIndex + 1]];
-    nextCoordinate = nextCoordinate.join("");
-    return nextCoordinate;
   }
 }
 

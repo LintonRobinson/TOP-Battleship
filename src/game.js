@@ -1,6 +1,5 @@
 import Player from "./Player.js";
-import { renderPlaceShipGameboardCells, addShipElementsToPlaceShipsWrapper, renderPlacemenErrorMessage, updatePlaceYourShipsTitle } from "./ui.js";
-import { isPlacementValid, randomlyPlacePlayerShips } from "./helpers.js";
+import { Cpu } from "./cpu.js";
 
 const game = (() => {
   const activeGame = {
@@ -10,6 +9,7 @@ const game = (() => {
     playerGivingAttack: null,
     shipToPlace: null,
     gameMode: null,
+    cpu: null,
     computerDifficulty: null,
     placementOrientation: "vertical",
   };
@@ -18,7 +18,7 @@ const game = (() => {
     activeGame.gameMode = gameMode;
   }
 
-  function getGameMode(gameMode) {
+  function getGameMode() {
     return activeGame.gameMode;
   }
 
@@ -34,6 +34,7 @@ const game = (() => {
       case "onePlayer":
         playerOne = new Player("human", playerOneName, "playerOne");
         playerTwo = new Player("computer", "CPU 🤖", "playerTwo");
+        activeGame.cpu = new Cpu();
         break;
       case "twoPlayer":
         playerOne = new Player("human", playerOneName, "playerOne");
@@ -229,8 +230,36 @@ const game = (() => {
     return activeGame.playerReceivingAttack.playerGameboard.areAllShipsSunk();
   }
 
+  function checkPlayerForGameLose(player) {
+    return player.playerGameboard.areAllShipsSunk();
+  }
+
   function getGameWinnerName() {
     return activeGame.playerGivingAttack.playerName;
+  }
+
+  function cpuAttackPlayerOne() {
+    const cellToAttack = activeGame.cpu.getCoordinateToAttackPlayerGameboard();
+
+    if (activeGame.players.playerOne.playerGameboard.receiveAttack(cellToAttack.cellCoordinate)) {
+      switch (cellToAttack.cellCoordinateOrigin) {
+        case "random":
+          // Push surrounding cells if they are available
+          const topNeighborCell = activeGame.cpu.generateFutureShot("top", cellToAttack.cellCoordinate);
+          const bottomNeighborCell = activeGame.cpu.generateFutureShot("bottom", cellToAttack.cellCoordinate);
+          const leftNeighborCell = activeGame.cpu.generateFutureShot("left", cellToAttack.cellCoordinate);
+          const rightNeighborCell = activeGame.cpu.generateFutureShot("right", cellToAttack.cellCoordinate);
+
+          if (!activeGame.cpu.hasCellBeenAttacked(topNeighborCell)) activeGame.cpu.addCellToCoordinatesToExploreFromHitShip(topNeighborCell);
+          if (!activeGame.cpu.hasCellBeenAttacked(bottomNeighborCell)) activeGame.cpu.addCellToCoordinatesToExploreFromHitShip(bottomNeighborCell);
+          if (!activeGame.cpu.hasCellBeenAttacked(leftNeighborCell)) activeGame.cpu.addCellToCoordinatesToExploreFromHitShip(leftNeighborCell);
+          if (!activeGame.cpu.hasCellBeenAttacked(rightNeighborCell)) activeGame.cpu.addCellToCoordinatesToExploreFromHitShip(rightNeighborCell);
+
+          break;
+      }
+    } else {
+      activeGame.cpu.addCoordinateToMissedCells(cellToAttack.cellCoordinate);
+    }
   }
 
   return {
@@ -274,7 +303,9 @@ const game = (() => {
     getGameboardMissedShipCells: getGameboardMissedShipCells,
     getGameboardPlacedShips: getGameboardPlacedShips,
     checkForGameWin: checkForGameWin,
+    checkPlayerForGameLose: checkPlayerForGameLose,
     getGameWinnerName: getGameWinnerName,
+    cpuAttackPlayerOne: cpuAttackPlayerOne,
   };
 })();
 
