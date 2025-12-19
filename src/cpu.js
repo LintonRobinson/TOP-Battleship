@@ -1,14 +1,58 @@
+import { game } from "./game.js";
+
 export class Cpu {
   constructor(computerMode) {
     this.computerMode = computerMode;
-    this.attackQueue = [];
-    this.priorityAttackQueue = [];
-    this.currentHitShipOrgin;
     this.missedCells = new Set();
     this.hitCells = new Set();
-    this.coordinatesToExploreFromHitShip = [];
+    this.cellsToExploreFromHitShip = [];
+    this.currentHitShipOriginCoordinate = null;
+    this.opponentSunkShips = new Set();
+    this.cellsToExploreFromHitShipQueueIndexPosition = 0;
     this.sunkShips = new Set();
     this.discoveredHitCells = [];
+    this.isolatedHitCellsFromSunkShip = [];
+  }
+
+  resetToDefaultsAfterSunkShip() {
+    this.cellsToExploreFromHitShip = [];
+    this.currentHitShipOriginCoordinate = null;
+    this.discoveredHitCells = [];
+  }
+
+  wasNewShipSunk(ship) {
+    if (this.opponentSunkShips.has(ship)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  addIsolatedHitCellsFromSunkShipHitCells(cell) {
+    cell.cellCoordinateOrigin = "cellCoordinateOrigin";
+    cell.isCoordinateOriginalSurroundngCell = false;
+
+    this.isolatedHitCellsFromSunkShip.push(cell);
+  }
+
+  addCoordinateToDiscoveredHitCells(coordinate) {
+    this.discoveredHitCells.push(coordinate);
+  }
+
+  getDiscoveredHitCells() {
+    return this.discoveredHitCells;
+  }
+
+  clearDiscoveredHitCells() {
+    this.discoveredHitCells = [];
+  }
+
+  removeCoordinateFromdiscoveredHitCells(index) {
+    this.discoveredHitCells.splice(index, 1);
+  }
+
+  addShipToOpponentSunkShips(sunkShip) {
+    this.opponentSunkShips.add(sunkShip);
   }
 
   hasCellBeenAttacked(cellCoordinateToCheck) {
@@ -27,11 +71,32 @@ export class Cpu {
     this.missedCells.add(coordinateToAdd);
   }
 
-  addCellToCoordinatesToExploreFromHitShip(cell) {
-    this.coordinatesToExploreFromHitShip.push(cell);
+  addCellToCellsToExploreFromHitShip(cell) {
+    this.cellsToExploreFromHitShip.push(cell);
   }
 
-  generateFutureShot(originCellCoordinate, cellRelativeOrientation) {
+  addCellToFrontOfCellsToExploreFromHitShip(cell) {
+    this.cellsToExploreFromHitShip.unshift(cell);
+  }
+
+  setCurrentHitShipOriginCoordinate(coordinate) {
+    this.currentHitShipOriginCoordinate = coordinate;
+  }
+
+  getCurrentHitShipOriginCoordinate() {
+    return this.currentHitShipOriginCoordinate;
+  }
+
+  removeCurrentHitShipOriginCoordinate() {
+    this.currentHitShipOriginCoordinate = null;
+  }
+
+  removeCellFromCellsToExploreFromHitShip(cellCoordinate) {
+    const cellIndex = this.cellsToExploreFromHitShip.findIndex((cell) => cell.cellCoordinate === cellCoordinate);
+    this.cellsToExploreFromHitShip.splice(cellIndex);
+  }
+
+  generateFutureShot(originCellCoordinate, cellRelativeOrientation, isCoordinateOriginalSurroundngCell) {
     const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
     // Get current column as string and make uppercase
     const originCellColumn = originCellCoordinate.split("")[0].toUpperCase();
@@ -47,6 +112,7 @@ export class Cpu {
         return {
           cellCoordinate: `${originCellColumn}${Number(originCellRow) - 1}`,
           relativeCellOrientationOrigin: "top",
+          isCoordinateOriginalSurroundngCell: isCoordinateOriginalSurroundngCell,
         };
         break;
       case "bottom":
@@ -54,21 +120,28 @@ export class Cpu {
         return {
           cellCoordinate: `${originCellColumn}${Number(originCellRow) + 1}`,
           relativeCellOrientationOrigin: "bottom",
+          isCoordinateOriginalSurroundngCell: isCoordinateOriginalSurroundngCell,
         };
 
         break;
       case "left":
         if (originCellColumn === "A") return;
-        return `${gameboardColumns[columnletterIndex - 1]}${originCellRow}`;
+        return {
+          cellCoordinate: `${gameboardColumns[columnletterIndex - 1]}${originCellRow}`,
+          relativeCellOrientationOrigin: "left",
+          isCoordinateOriginalSurroundngCell: isCoordinateOriginalSurroundngCell,
+        };
         break;
       case "right":
         if (originCellColumn === "J") return;
-        return `${gameboardColumns[columnletterIndex + 1]}${originCellRow}`;
+        return {
+          cellCoordinate: `${gameboardColumns[columnletterIndex + 1]}${originCellRow}`,
+          relativeCellOrientationOrigin: "right",
+          isCoordinateOriginalSurroundngCell: isCoordinateOriginalSurroundngCell,
+        };
         break;
     }
   }
-
-  findNextShots() {}
 
   getRandomAvailableCoordinate() {
     const gameboardColumns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
@@ -95,34 +168,45 @@ export class Cpu {
 
   getCoordinateToAttackPlayerGameboard() {
     // If a potential hit, randomly select random targeted (existing random cell to sink), or discovered
-    if (this.coordinatesToExploreFromHitShip.length > 0) {
-    } else if (this.discoveredHitCells.length > 0) {
+
+    if (this.cellsToExploreFromHitShip.length > 0) {
+      const cellToReturn = {
+        cell: this.cellsToExploreFromHitShip[0],
+        cellCoordinate: this.cellsToExploreFromHitShip[0].cellCoordinate,
+        cellCoordinateOrigin: "cellsToExploreFromHitShip",
+        isCoordinateOriginalSurroundngCell: this.cellsToExploreFromHitShip[0].isCoordinateOriginalSurroundngCell,
+      };
+
+      this.cellsToExploreFromHitShip.shift();
+
+      return cellToReturn;
+    } else if (this.isolatedHitCellsFromSunkShip.length > 0) {
+      this.setCurrentHitShipOriginCoordinate(this.isolatedHitCellsFromSunkShip[0].cellCoordinate);
+      // Push surrounding cells if they are available
+      const topNeighborCell = this.generateFutureShot(this.isolatedHitCellsFromSunkShip[0].cellCoordinate, "top", true);
+      const bottomNeighborCell = this.generateFutureShot(this.isolatedHitCellsFromSunkShip[0].cellCoordinate, "bottom", true);
+      const leftNeighborCell = this.generateFutureShot(this.isolatedHitCellsFromSunkShip[0].cellCoordinate, "left", true);
+      const rightNeighborCell = this.generateFutureShot(this.isolatedHitCellsFromSunkShip[0].cellCoordinate, "right", true);
+
+      if (topNeighborCell && !this.hasCellBeenAttacked(topNeighborCell.cellCoordinate)) this.addCellToCellsToExploreFromHitShip(topNeighborCell);
+
+      if (rightNeighborCell && !this.hasCellBeenAttacked(rightNeighborCell.cellCoordinate)) this.addCellToCellsToExploreFromHitShip(rightNeighborCell);
+
+      if (bottomNeighborCell && !this.hasCellBeenAttacked(bottomNeighborCell.cellCoordinate)) this.addCellToCellsToExploreFromHitShip(bottomNeighborCell);
+
+      if (leftNeighborCell && !this.hasCellBeenAttacked(leftNeighborCell.cellCoordinate)) this.addCellToCellsToExploreFromHitShip(leftNeighborCell);
+
+      const cellToReturn = {
+        cell: this.cellsToExploreFromHitShip[0],
+        cellCoordinate: this.cellsToExploreFromHitShip[0].cellCoordinate,
+        cellCoordinateOrigin: "cellsToExploreFromHitShip",
+        isCoordinateOriginalSurroundngCell: this.cellsToExploreFromHitShip[0].isCoordinateOriginalSurroundngCell,
+      };
+
+      this.isolatedHitCellsFromSunkShip.shift();
+      return cellToReturn;
     } else {
       return { cellCoordinate: this.getRandomAvailableCoordinate(), cellCoordinateOrigin: "random" };
     }
   }
 }
-
-// when a random selection is made, thats what to pull from
-
-// vertical, horizontal
-
-// when there is a hit, get the origin of the object cell
-
-// active previous hit array?
-
-// random cell has all surrounding
-
-//targeted hit (more than two cells in a row) takes priority
-
-// If hit turn into sunk ship no suggestions
-
-// If hit cell was consecutive, move opposite orientation cell to priority
-
-// Last shot cell object variable
-
-// Last shot
-
-// potential shot object has property that says if it should be active,
-
-// linked list?

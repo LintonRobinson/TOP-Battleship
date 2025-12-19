@@ -47,6 +47,7 @@ class Ship {
 
   addToActiveShipCoordinates(shipCoordinate) {
     this.activeShipCoordinates.push(shipCoordinate);
+    console.log("activeShipCoordinates", this.activeShipCoordinates);
   }
 
   getActiveShipCoordinates() {

@@ -21,7 +21,6 @@ function startGameSetupUI() {
     if (event.target.id === "player-vs-computer") {
       const enterPlayerNamesWrapper = document.querySelector("#enter-player-names-wrapper");
       enterPlayerNamesWrapper.remove();
-      alert("ooo weee buddy");
       game.setGameMode("onePlayer");
 
       advanceScreen("#select-mode-wrapper", "#select-computer-difficulty-wrapper");
@@ -51,8 +50,8 @@ function startGameSetupUI() {
       }
 
       if (game.getGameMode() === "onePlayer") {
-        alert("Yaaaaa amamii");
         game.randomlyPlacePlayerShips();
+        console.log("Player GB", game.getPlayerGameboard(game.getPlayer("playerOne")));
         console.log("CPU GB", game.getPlayerGameboard(game.getPlayer("playerTwo")));
       }
 
@@ -197,7 +196,7 @@ function startPlaceShipsUI() {
 
       if (event.target.id === "saveShipPlacements") {
         // If player one is player placing ships,
-        alert(game.getGameMode());
+
         if (game.allPlayerShipsPlaced(game.getPlayer("playerOne"))) {
           game.setPlayerPlacingShips(game.getPlayer("playerTwo"));
 

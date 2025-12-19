@@ -239,27 +239,107 @@ const game = (() => {
   }
 
   function cpuAttackPlayerOne() {
+    const directionOpposite = { top: "bottom", right: "left", bottom: "top", left: "right" };
     const cellToAttack = activeGame.cpu.getCoordinateToAttackPlayerGameboard();
 
     if (activeGame.players.playerOne.playerGameboard.receiveAttack(cellToAttack.cellCoordinate)) {
+      activeGame.cpu.addCoordinateToDiscoveredHitCells(cellToAttack);
       switch (cellToAttack.cellCoordinateOrigin) {
         case "random":
-          // Push surrounding cells if they are available
-          const topNeighborCell = activeGame.cpu.generateFutureShot("top", cellToAttack.cellCoordinate);
-          const bottomNeighborCell = activeGame.cpu.generateFutureShot("bottom", cellToAttack.cellCoordinate);
-          const leftNeighborCell = activeGame.cpu.generateFutureShot("left", cellToAttack.cellCoordinate);
-          const rightNeighborCell = activeGame.cpu.generateFutureShot("right", cellToAttack.cellCoordinate);
+          activeGame.cpu.setCurrentHitShipOriginCoordinate(cellToAttack.cellCoordinate);
 
-          if (!activeGame.cpu.hasCellBeenAttacked(topNeighborCell)) activeGame.cpu.addCellToCoordinatesToExploreFromHitShip(topNeighborCell);
-          if (!activeGame.cpu.hasCellBeenAttacked(bottomNeighborCell)) activeGame.cpu.addCellToCoordinatesToExploreFromHitShip(bottomNeighborCell);
-          if (!activeGame.cpu.hasCellBeenAttacked(leftNeighborCell)) activeGame.cpu.addCellToCoordinatesToExploreFromHitShip(leftNeighborCell);
-          if (!activeGame.cpu.hasCellBeenAttacked(rightNeighborCell)) activeGame.cpu.addCellToCoordinatesToExploreFromHitShip(rightNeighborCell);
+          // Push surrounding cells if they are available
+          const topNeighborCell = activeGame.cpu.generateFutureShot(cellToAttack.cellCoordinate, "top", true);
+          const bottomNeighborCell = activeGame.cpu.generateFutureShot(cellToAttack.cellCoordinate, "bottom", true);
+          const leftNeighborCell = activeGame.cpu.generateFutureShot(cellToAttack.cellCoordinate, "left", true);
+          const rightNeighborCell = activeGame.cpu.generateFutureShot(cellToAttack.cellCoordinate, "right", true);
+
+          if (topNeighborCell && !activeGame.cpu.hasCellBeenAttacked(topNeighborCell.cellCoordinate)) activeGame.cpu.addCellToCellsToExploreFromHitShip(topNeighborCell);
+
+          if (rightNeighborCell && !activeGame.cpu.hasCellBeenAttacked(rightNeighborCell.cellCoordinate))
+            activeGame.cpu.addCellToCellsToExploreFromHitShip(rightNeighborCell);
+
+          if (bottomNeighborCell && !activeGame.cpu.hasCellBeenAttacked(bottomNeighborCell.cellCoordinate))
+            activeGame.cpu.addCellToCellsToExploreFromHitShip(bottomNeighborCell);
+
+          if (leftNeighborCell && !activeGame.cpu.hasCellBeenAttacked(leftNeighborCell.cellCoordinate))
+            activeGame.cpu.addCellToCellsToExploreFromHitShip(leftNeighborCell);
+
+          break;
+
+        case "cellsToExploreFromHitShip":
+          const neighborCell = activeGame.cpu.generateFutureShot(cellToAttack.cellCoordinate, cellToAttack.cell.relativeCellOrientationOrigin, false);
+          // If the last attempt in the direction was a hit and the next in the direction was a hit, go in the opposite direction
+
+          if (
+            (neighborCell && !activeGame.cpu.hasCellBeenAttacked(neighborCell.cellCoordinate)) ||
+            (!neighborCell && !activeGame.cpu.hasCellBeenAttacked(neighborCell.cellCoordinate))
+          ) {
+            activeGame.cpu.addCellToFrontOfCellsToExploreFromHitShip(neighborCell);
+          } else if (neighborCell && activeGame.cpu.hasCellBeenAttacked(neighborCell.cellCoordinate)) {
+            const nextOppositeCell = activeGame.cpu.generateFutureShot(
+              cellToAttack.cellCoordinate,
+              directionOpposite[cellToAttack.cell.relativeCellOrientationOrigin],
+              false,
+            );
+
+            activeGame.cpu.addCellToFrontOfCellsToExploreFromHitShip(nextOppositeCell);
+
+            // Remove duplicate cell
+          }
+
+          // activeGame.cpu.removeCellFromCellsToExploreFromHitShip(cellToAttack.cellCoordinate);
 
           break;
       }
+
+      activeGame.cpu.addCoordinateToHitCells(cellToAttack.cellCoordinate);
+
+      // For each ship in opponents placed ship, record if a ship is sunk and update cpu set of sunk ships
+      //if ship isnt there, add
+
+      // if the ship was sunk, clear cells to explore
+
+      // if the ship is sunk and loop through discoveredHitCells if coordinate is in the ship that is sunk activeShipCoordinates, remove from discovered cells. Get coordinate cpu func will need control statement that checks if random his has lead to sunk ship, get number of sunk ships at start?
+      activeGame.players.playerOne.playerGameboard.placedShips.forEach((placedShipObject) => {
+        if (placedShipObject.isSunk() && activeGame.cpu.wasNewShipSunk(placedShipObject)) {
+          activeGame.cpu.addShipToOpponentSunkShips(placedShipObject);
+
+          const cpuDiscoveredHitCells = activeGame.cpu.getDiscoveredHitCells();
+
+          const activeShipCoordinates = placedShipObject.activeShipCoordinates;
+          cpuDiscoveredHitCells.forEach((discoveredHitCell) => {
+            if (!activeShipCoordinates.includes(discoveredHitCell.cellCoordinate)) {
+              activeGame.cpu.addIsolatedHitCellsFromSunkShipHitCells(discoveredHitCell);
+            } else {
+            }
+          });
+
+          activeGame.cpu.resetToDefaultsAfterSunkShip();
+
+          // AAAADDDDDDDDD HIT SHIP CORRECTLY
+        }
+      });
+
+      // Check if the number of sunkShips increased. If it has, add remainder of the
+
+      // Get the discovered cells, and the new ship that is sunk.
     } else {
+      // Missed SHot
       activeGame.cpu.addCoordinateToMissedCells(cellToAttack.cellCoordinate);
+      if (cellToAttack.isCoordinateOriginalSurroundngCell === false) {
+        // add opposite from cell orgin
+        const neighborCell = activeGame.cpu.generateFutureShot(
+          activeGame.cpu.getCurrentHitShipOriginCoordinate(),
+          directionOpposite[cellToAttack.cell.relativeCellOrientationOrigin],
+        );
+        if (neighborCell && !activeGame.cpu.hasCellBeenAttacked(neighborCell.cellCoordinate)) activeGame.cpu.addCellToFrontOfCellsToExploreFromHitShip(neighborCell);
+      }
     }
+
+    console.log("THE ATTACKED CELL", cellToAttack);
+    console.log("cpu hit CELLS", activeGame.cpu.hitCells);
+    console.log("cpu miss CELLS", activeGame.cpu.missedCells);
   }
 
   return {
