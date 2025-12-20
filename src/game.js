@@ -1,5 +1,6 @@
 import Player from "./Player.js";
 import { Cpu } from "./cpu.js";
+import { updatePlaceSunkShipSidebarUi } from "./ui.js";
 
 const game = (() => {
   const activeGame = {
@@ -34,7 +35,7 @@ const game = (() => {
       case "onePlayer":
         playerOne = new Player("human", playerOneName, "playerOne");
         playerTwo = new Player("computer", "CPU 🤖", "playerTwo");
-        activeGame.cpu = new Cpu();
+        activeGame.cpu = new Cpu(activeGame.computerDifficulty);
         break;
       case "twoPlayer":
         playerOne = new Player("human", playerOneName, "playerOne");
@@ -240,9 +241,13 @@ const game = (() => {
 
   function cpuAttackPlayerOne() {
     const directionOpposite = { top: "bottom", right: "left", bottom: "top", left: "right" };
-    const cellToAttack = activeGame.cpu.getCoordinateToAttackPlayerGameboard();
+    let cellToAttack = activeGame.cpu.getCoordinateToAttackPlayerGameboard();
 
+    while (activeGame.cpu.hasCellBeenAttacked(cellToAttack.cellCoordinate)) {
+      cellToAttack = activeGame.cpu.getCoordinateToAttackPlayerGameboard();
+    }
     if (activeGame.players.playerOne.playerGameboard.receiveAttack(cellToAttack.cellCoordinate)) {
+      updatePlaceSunkShipSidebarUi();
       activeGame.cpu.addCoordinateToDiscoveredHitCells(cellToAttack);
       switch (cellToAttack.cellCoordinateOrigin) {
         case "random":
@@ -273,7 +278,7 @@ const game = (() => {
 
           if (
             (neighborCell && !activeGame.cpu.hasCellBeenAttacked(neighborCell.cellCoordinate)) ||
-            (!neighborCell && !activeGame.cpu.hasCellBeenAttacked(neighborCell.cellCoordinate))
+            (!neighborCell && !activeGame.cpu.hasCellBeenAttacked(neighborCell?.cellCoordinate))
           ) {
             activeGame.cpu.addCellToFrontOfCellsToExploreFromHitShip(neighborCell);
           } else if (neighborCell && activeGame.cpu.hasCellBeenAttacked(neighborCell.cellCoordinate)) {
@@ -324,6 +329,14 @@ const game = (() => {
       // Check if the number of sunkShips increased. If it has, add remainder of the
 
       // Get the discovered cells, and the new ship that is sunk.
+
+      if (activeGame.players.playerOne.playerGameboard.areAllShipsSunk()) {
+        const winnerMessageWrapperElement = document.querySelector("#winner-message-wrapper");
+        const winnerMessageElement = document.querySelector("#winner-message");
+        const winnerName = activeGame.players.playerOne.playerName;
+        winnerMessageElement.textContent = `${winnerName} Wins! 🎉`;
+        winnerMessageWrapperElement.classList.remove("hidden");
+      }
     } else {
       // Missed SHot
       activeGame.cpu.addCoordinateToMissedCells(cellToAttack.cellCoordinate);

@@ -1,9 +1,13 @@
 import { game } from "./game.js";
-import { isPlacementValid, randomlyPlacePlayerShips } from "./helpers.js";
+import { isPlacementValid } from "./helpers.js";
 
 function startGameSetupUI() {
   // Screen navigation
   document.addEventListener("click", (event) => {
+    if (event.target.matches(".resetGame")) {
+      window.location.reload();
+    }
+
     // Start game button click  hides start game screen and displays select game mode screen
     if (event.target.id === "startGame") {
       advanceScreen("#start-game-wrapper", "#select-mode-wrapper");
@@ -29,16 +33,17 @@ function startGameSetupUI() {
     // Select computer diffiulty button click hides select select computer difficulty and displays enter player name screen
     if (event.target.classList.contains("select-computer-difficulty-button")) {
       game.setComputerDifficulty(event.target.id);
+
       advanceScreen("#select-computer-difficulty-wrapper", "#enter-player-name-wrapper");
     }
 
     if (event.target.id === "saveShipPlacements") {
-      // If player one is player placing ships,
-
+      // If the player placing ships still has ships to place, display error
       if (game.playerHasShipsToPlace(game.getPlayerPlacingShips())) {
         renderPlacemenErrorMessage("you must place all five ships");
       }
 
+      // If
       if (game.getPlayerPlacingShips() === game.getPlayer("playerOne") && !game.playerHasShipsToPlace(game.getPlayer("playerOne"))) {
         game.startPlayerTwoShipPlacements();
         if (game.getGameMode() === "twoPlayer") {
@@ -427,7 +432,7 @@ function startGameplayUI() {
         winnerMessageElement.textContent = `${winnerName} Wins! 🎉`;
         winnerMessageWrapperElement.classList.remove("hidden");
       }
-      // game.togglePlayerReceivingGivingAttack();
+
       game.cpuAttackPlayerOne();
       renderGameplayGameboardCells("playerOneGameboard", game.getPlayerGameboard(game.getPlayer("playerOne")));
       if (game.checkPlayerForGameLose(game.getPlayer("playerOne"))) {
@@ -441,33 +446,6 @@ function startGameplayUI() {
 
     function toggleGameTurnMessage() {
       turnMessasageElement.textContent = `${game.getPlayerGivingAttackName()} - Attack! (click/attack ${game.getPlayerReceivingAttackName()}'s gameboard)`;
-    }
-
-    function updatePlaceSunkShipSidebarUi() {
-      const playerGameboard = game.getPlayerReceivingAttackGameboard();
-      const playerReceivingAttackPlacedShips = game.getGameboardPlacedShips(playerGameboard);
-      const sunkShipNames = [];
-      const playerReceivingAttackId = game.getPlayerReceivingAttackId();
-
-      playerReceivingAttackPlacedShips.forEach((placedShip) => {
-        if (game.isShipSunk(placedShip)) {
-          let shipName = game.getShipName(placedShip);
-          let example = shipName.slice(0, 1);
-          console.log("shipName.slice(0, 1)", example);
-
-          const shipNameCapitalFirstLetter = shipName.slice(0, 1).toUpperCase();
-          const shipNameWithoutFirstLetter = shipName.slice(1, shipName.length);
-          shipName = shipNameCapitalFirstLetter;
-          shipName = shipName.concat(shipNameWithoutFirstLetter);
-          sunkShipNames.push(shipName);
-        }
-      });
-
-      sunkShipNames.forEach((sunkShipName) => {
-        console.log(playerReceivingAttackId, sunkShipName);
-        const sunkShipElement = document.querySelector(`#${playerReceivingAttackId}${sunkShipName}`);
-        sunkShipElement.classList.add("sunk-ship");
-      });
     }
 
     function toggleClickablePlayerGameboard() {
@@ -746,6 +724,33 @@ function updatePlaceYourShipsTitle(player) {
   placeYourShipsTitle.textContent = `${playerName}, Place Your Ships`;
 }
 
+function updatePlaceSunkShipSidebarUi() {
+  const playerGameboards = [game.getPlayerGameboard(game.getPlayer("playerOne")), game.getPlayerGameboard(game.getPlayer("playerTwo"))];
+
+  playerGameboards.forEach((playerGameboard, index) => {
+    const playerReceivingAttackPlacedShips = game.getGameboardPlacedShips(playerGameboard);
+    const sunkShipNames = [];
+    const playerReceivingAttackIds = ["playerOne", "playerTwo"];
+
+    playerReceivingAttackPlacedShips.forEach((placedShip) => {
+      if (game.isShipSunk(placedShip)) {
+        let shipName = game.getShipName(placedShip);
+
+        const shipNameCapitalFirstLetter = shipName.slice(0, 1).toUpperCase();
+        const shipNameWithoutFirstLetter = shipName.slice(1, shipName.length);
+        shipName = shipNameCapitalFirstLetter;
+        shipName = shipName.concat(shipNameWithoutFirstLetter);
+        sunkShipNames.push(shipName);
+      }
+    });
+
+    sunkShipNames.forEach((sunkShipName) => {
+      const sunkShipElement = document.querySelector(`#${playerReceivingAttackIds[index]}${sunkShipName}`);
+      sunkShipElement.classList.add("sunk-ship");
+    });
+  });
+}
+
 function resetPlaceShipWrapper() {
   removeShipElementFromPlaceShipsWrapper("aircraftCarrier");
   removeShipElementFromPlaceShipsWrapper("battleship");
@@ -764,6 +769,7 @@ export {
   addShipElementsToPlaceShipsWrapper,
   renderPlacemenErrorMessage,
   updatePlaceYourShipsTitle,
+  updatePlaceSunkShipSidebarUi,
 };
 
 // MAKE SHIP ORIENTATION PROP ON SHIP, AND SHIP INSTANCES MAP ON GAMEBOARD CLASS

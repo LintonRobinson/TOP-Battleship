@@ -1,8 +1,8 @@
 import { game } from "./game.js";
 
 export class Cpu {
-  constructor(computerMode) {
-    this.computerMode = computerMode;
+  constructor(cpuDifficulty) {
+    this.cpuDifficulty = cpuDifficulty;
     this.missedCells = new Set();
     this.hitCells = new Set();
     this.cellsToExploreFromHitShip = [];
@@ -72,11 +72,12 @@ export class Cpu {
   }
 
   addCellToCellsToExploreFromHitShip(cell) {
-    this.cellsToExploreFromHitShip.push(cell);
+    console.log("This is cell when trying to add to cellsToExploreFromHitShip");
+    if (cell && !this.missedCells.has(cell.cellCoordinate) && !this.hitCells.has(cell.cellCoordinate)) this.cellsToExploreFromHitShip.push(cell);
   }
 
   addCellToFrontOfCellsToExploreFromHitShip(cell) {
-    this.cellsToExploreFromHitShip.unshift(cell);
+    if (cell && !this.missedCells.has(cell.cellCoordinate) && !this.hitCells.has(cell.cellCoordinate)) this.cellsToExploreFromHitShip.unshift(cell);
   }
 
   setCurrentHitShipOriginCoordinate(coordinate) {
@@ -169,6 +170,8 @@ export class Cpu {
   getCoordinateToAttackPlayerGameboard() {
     // If a potential hit, randomly select random targeted (existing random cell to sink), or discovered
 
+    if (this.cpuDifficulty === "easyMode") return { cellCoordinate: this.getRandomAvailableCoordinate(), cellCoordinateOrigin: "random" };
+
     if (this.cellsToExploreFromHitShip.length > 0) {
       const cellToReturn = {
         cell: this.cellsToExploreFromHitShip[0],
@@ -181,20 +184,24 @@ export class Cpu {
 
       return cellToReturn;
     } else if (this.isolatedHitCellsFromSunkShip.length > 0) {
-      this.setCurrentHitShipOriginCoordinate(this.isolatedHitCellsFromSunkShip[0].cellCoordinate);
-      // Push surrounding cells if they are available
-      const topNeighborCell = this.generateFutureShot(this.isolatedHitCellsFromSunkShip[0].cellCoordinate, "top", true);
-      const bottomNeighborCell = this.generateFutureShot(this.isolatedHitCellsFromSunkShip[0].cellCoordinate, "bottom", true);
-      const leftNeighborCell = this.generateFutureShot(this.isolatedHitCellsFromSunkShip[0].cellCoordinate, "left", true);
-      const rightNeighborCell = this.generateFutureShot(this.isolatedHitCellsFromSunkShip[0].cellCoordinate, "right", true);
+      while (!this.cellsToExploreFromHitShip[0]) {
+        this.setCurrentHitShipOriginCoordinate(this.isolatedHitCellsFromSunkShip[0].cellCoordinate);
+        // Push surrounding cells if they are available
+        const topNeighborCell = this.generateFutureShot(this.isolatedHitCellsFromSunkShip[0].cellCoordinate, "top", true);
+        const bottomNeighborCell = this.generateFutureShot(this.isolatedHitCellsFromSunkShip[0].cellCoordinate, "bottom", true);
+        const leftNeighborCell = this.generateFutureShot(this.isolatedHitCellsFromSunkShip[0].cellCoordinate, "left", true);
+        const rightNeighborCell = this.generateFutureShot(this.isolatedHitCellsFromSunkShip[0].cellCoordinate, "right", true);
 
-      if (topNeighborCell && !this.hasCellBeenAttacked(topNeighborCell.cellCoordinate)) this.addCellToCellsToExploreFromHitShip(topNeighborCell);
+        if (topNeighborCell && !this.hasCellBeenAttacked(topNeighborCell.cellCoordinate)) this.addCellToCellsToExploreFromHitShip(topNeighborCell);
 
-      if (rightNeighborCell && !this.hasCellBeenAttacked(rightNeighborCell.cellCoordinate)) this.addCellToCellsToExploreFromHitShip(rightNeighborCell);
+        if (rightNeighborCell && !this.hasCellBeenAttacked(rightNeighborCell.cellCoordinate)) this.addCellToCellsToExploreFromHitShip(rightNeighborCell);
 
-      if (bottomNeighborCell && !this.hasCellBeenAttacked(bottomNeighborCell.cellCoordinate)) this.addCellToCellsToExploreFromHitShip(bottomNeighborCell);
+        if (bottomNeighborCell && !this.hasCellBeenAttacked(bottomNeighborCell.cellCoordinate)) this.addCellToCellsToExploreFromHitShip(bottomNeighborCell);
 
-      if (leftNeighborCell && !this.hasCellBeenAttacked(leftNeighborCell.cellCoordinate)) this.addCellToCellsToExploreFromHitShip(leftNeighborCell);
+        if (leftNeighborCell && !this.hasCellBeenAttacked(leftNeighborCell.cellCoordinate)) this.addCellToCellsToExploreFromHitShip(leftNeighborCell);
+
+        if (!this.cellsToExploreFromHitShip[0]) this.isolatedHitCellsFromSunkShip.shift();
+      }
 
       const cellToReturn = {
         cell: this.cellsToExploreFromHitShip[0],
@@ -204,6 +211,7 @@ export class Cpu {
       };
 
       this.isolatedHitCellsFromSunkShip.shift();
+
       return cellToReturn;
     } else {
       return { cellCoordinate: this.getRandomAvailableCoordinate(), cellCoordinateOrigin: "random" };
